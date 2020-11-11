@@ -4,6 +4,7 @@ import com.nwpu.bsss.domain.UserEntity;
 import com.nwpu.bsss.exceptions.ValidationException;
 import com.nwpu.bsss.repository.UserRepository;
 import com.nwpu.bsss.service.UserService;
+import com.nwpu.bsss.utils.UserInfoValidator;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -34,8 +35,7 @@ public class UserController {
     private UserService userService;
 
     @PostMapping(path = "/register")
-    public ResponseEntity<UserEntity> registerUser
-            (@RequestBody UserEntity user, BindingResult bindingResult) {
+    public ResponseEntity<UserEntity> registerUser(@RequestBody UserEntity user, BindingResult bindingResult) {
 
         //add time stamp
         user.setTime(new Timestamp(new Date().getTime()));

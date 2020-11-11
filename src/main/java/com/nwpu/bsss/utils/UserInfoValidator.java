@@ -1,4 +1,4 @@
-package com.nwpu.bsss.controller;
+package com.nwpu.bsss.utils;
 
 import com.nwpu.bsss.domain.UserEntity;
 import org.springframework.validation.Errors;
