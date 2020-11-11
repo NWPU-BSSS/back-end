@@ -1,0 +1,32 @@
+spring:
+  datasource:
+#    name: bsss
+#    url: jdbc:mysql://localhost:3306/bsss?serverTimezone=UTC
+#    username: root
+#    password: root
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    name: BSSS_Dev
+    url: jdbc:mysql://47.108.48.139:3306/BSSS_Dev?serverTimezone=Asia/Shanghai&useSSL=false
+    username: root
+    password: Bsss1234!
+  jpa:
+    hibernate:
+      naming:
+        physical-strategy: org.hibernate.boot.model.naming.PhysicalNamingStrategyStandardImpl
+#      ddl-auto: update
+    database-platform: org.hibernate.dialect.MySQLDialect
+    show-sql: true
+    open-in-view: false
+    database: mysql
+  thymeleaf:
+    cache: false
+#  security:
+#    user:
+#      name: user
+#      password: "000"
+
+server:
+  port: 8080
+
+#mybatis:
+#  mapper-locations: classpath:mapper/*.xml
