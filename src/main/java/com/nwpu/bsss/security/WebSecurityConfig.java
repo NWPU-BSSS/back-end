@@ -1,5 +1,6 @@
 package com.nwpu.bsss.security;
 
+import com.nwpu.bsss.security.filter.CustomAuthenticationFilter;
 import com.nwpu.bsss.security.handler.LoginFailureHandler;
 import com.nwpu.bsss.security.handler.LoginSuccessHandler;
 import com.nwpu.bsss.security.handler.MyLogoutHandler;
@@ -12,6 +13,7 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.authentication.Http403ForbiddenEntryPoint;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.security.web.authentication.rememberme.JdbcTokenRepositoryImpl;
 import org.springframework.security.web.authentication.rememberme.PersistentTokenRepository;
 
@@ -41,13 +43,14 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http.csrf().disable() //禁用跨站csrf攻击防御
-                .formLogin()
-//                .loginPage("/login")//用户未登录时，访问任何资源都转跳到该路径，即登录页面
+                .formLogin()    //必须出现，不然重新配置的filter就不会启动
+                .loginPage("/login")//用户未登录时，访问任何资源都转跳到该路径，即登录页面
+                .usernameParameter("email") //定义表单的用户名处的 “name”
                 .loginProcessingUrl("/user/login")
+                .permitAll()
                 .successHandler(loginSuccessHandler)
                 .failureHandler(loginFailureHandler)
-                .permitAll()
-//                .defaultSuccessUrl("/success")//登录认证成功后默认转跳的路径
+                .defaultSuccessUrl("/success")//登录认证成功后默认转跳的路径
                 .and()
                 .rememberMe()
                 .userDetailsService(myUserDetailsService)
@@ -58,14 +61,16 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .authenticationEntryPoint(new Http403ForbiddenEntryPoint())
                 .and()
                 .authorizeRequests()
-                .antMatchers("/login","/").permitAll()//不需要通过登录验证就可以被访问的资源路径
+                .antMatchers("/login","/","/user/register").permitAll()//不需要通过登录验证就可以被访问的资源路径
                 .anyRequest().authenticated()
                 .and()
                 .logout()
-//                .logoutSuccessUrl("/")
+                .logoutSuccessUrl("/")
                 .logoutSuccessHandler(logoutHandler)
                 .deleteCookies("remember-me");
 
+        //用重写的Filter替换掉原有的UsernamePasswordAuthenticationFilter
+        http.addFilterAt(customAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class);
     }
 
     @Bean   //注入passedEncoder
@@ -73,6 +78,10 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         return new BCryptPasswordEncoder();
     }
 
+    /**
+     * Token的持久化
+     * @return 返回一个Token的持久化层
+     */
     @Bean
     PersistentTokenRepository persistentTokenRepository(){
         JdbcTokenRepositoryImpl jdbcTokenRepository = new JdbcTokenRepositoryImpl();
@@ -83,4 +92,20 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         jdbcTokenRepository.setDataSource(dataSource);
         return jdbcTokenRepository;
     }
+
+    //注册自定义的UsernamePasswordAuthenticationFilter
+    @Bean
+    CustomAuthenticationFilter customAuthenticationFilter() throws Exception {
+        CustomAuthenticationFilter filter = new CustomAuthenticationFilter();
+        filter.setAuthenticationSuccessHandler(loginSuccessHandler);
+        filter.setAuthenticationFailureHandler(loginFailureHandler);
+        filter.setAuthenticationManager(authenticationManagerBean());
+        filter.setFilterProcessesUrl("/user/login");
+        filter.setUsernameParameter("email");
+
+        //这句很关键，重用WebSecurityConfigurerAdapter配置的AuthenticationManager，不然要自己组装AuthenticationManager
+        filter.setAuthenticationManager(authenticationManagerBean());
+        return filter;
+    }
+
 }
