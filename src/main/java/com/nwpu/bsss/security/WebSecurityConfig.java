@@ -61,7 +61,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .authenticationEntryPoint(new Http403ForbiddenEntryPoint())
                 .and()
                 .authorizeRequests()
-                .antMatchers("/login","/","/user/register").permitAll()//不需要通过登录验证就可以被访问的资源路径
+                .antMatchers("/login", "/", "/user/register").permitAll()//不需要通过登录验证就可以被访问的资源路径
                 .anyRequest().authenticated()
                 .and()
                 .logout()
@@ -80,10 +80,11 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
     /**
      * Token的持久化
+     *
      * @return 返回一个Token的持久化层
      */
     @Bean
-    PersistentTokenRepository persistentTokenRepository(){
+    PersistentTokenRepository persistentTokenRepository() {
         JdbcTokenRepositoryImpl jdbcTokenRepository = new JdbcTokenRepositoryImpl();
 
         //create table 只能用一次，第二次往后记得注释掉
@@ -99,7 +100,6 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         CustomAuthenticationFilter filter = new CustomAuthenticationFilter();
         filter.setAuthenticationSuccessHandler(loginSuccessHandler);
         filter.setAuthenticationFailureHandler(loginFailureHandler);
-        filter.setAuthenticationManager(authenticationManagerBean());
         filter.setFilterProcessesUrl("/user/login");
         filter.setUsernameParameter("email");
 

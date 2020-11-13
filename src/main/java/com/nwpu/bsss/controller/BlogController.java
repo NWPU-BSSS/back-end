@@ -2,46 +2,73 @@ package com.nwpu.bsss.controller;
 
 import com.nwpu.bsss.domain.BlogEntity;
 import com.nwpu.bsss.domain.dto.ReleaseBlogBody;
-import com.nwpu.bsss.response.ArticleListResponse;
-import com.nwpu.bsss.response.Code;
-import com.nwpu.bsss.response.MyResponseEntity;
+import com.nwpu.bsss.response.*;
 import com.nwpu.bsss.service.BlogService;
+import com.nwpu.bsss.service.UserService;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
 import java.sql.Timestamp;
 import java.util.Date;
+import java.util.List;
 
 @RestController
 public class BlogController {
-	
+
 	@Resource
 	private BlogService blogService;
-	
+	@Resource
+    private UserService userService;
+
 	@PostMapping("/article")
-	public MyResponseEntity<BlogEntity> releaseBlog(@RequestBody ReleaseBlogBody blogRequest) {
-		
+	public MyResponseEntity<PostArticleResponse> releaseBlog(@RequestBody ReleaseBlogBody blogRequest) {
+
 		BlogEntity blogEntity = new BlogEntity();
-		
+
 		blogEntity.setAuthor(blogRequest.getUserId());
 		blogEntity.setCreateTime(new Timestamp(new Date().getTime()));
 		blogEntity.setPlaintext(blogRequest.getContent());
 		blogEntity.setTitle(blogRequest.getTitle());
-		
+
 		long id = this.blogService.createBlog(blogEntity);
-		
-		return new MyResponseEntity<>(Code.OK, "ok", blogEntity);
+		PostArticleResponse postArticleResponse = new PostArticleResponse();
+		postArticleResponse.setArticleId(id);
+
+		return new MyResponseEntity<>(Code.OK, "ok", postArticleResponse);
 	}
-	
+
 	@GetMapping("/article")
-	public MyResponseEntity<BlogEntity> findBlog(@RequestParam("articleId") int id) {
-		return new MyResponseEntity<>(Code.OK, "ok", this.blogService.findByBlogID(id));
+	public MyResponseEntity<GetArticleResponse> findBlog(@RequestParam("articleId") int id) {
+	    BlogEntity blogEntity = this.blogService.findByBlogID(id);
+	    try {
+            GetArticleResponse getArticleResponse = new GetArticleResponse();
+            long authorId = blogEntity.getAuthor();
+            String email = "匿名";
+            try {
+                email = userService.findByUserID(authorId).getEmail();
+            } catch (NullPointerException ignore){
+            }
+            getArticleResponse.setAuthor(email);
+            getArticleResponse.setContent(blogEntity.getPlaintext());
+            getArticleResponse.setTitle(blogEntity.getTitle());
+            getArticleResponse.setTime(blogEntity.getCreateTime().toString());
+            return new MyResponseEntity<>(Code.OK, "ok", getArticleResponse);
+        } catch (NullPointerException e) {
+            return new MyResponseEntity<>(Code.BAD_OPERATION, "找不到该博客", null);
+        }
 	}
-	
+
 	@GetMapping("/articleList")
 	@ResponseBody
-	public ArticleListResponse getArticleList() {
-		// TODO: 11/12/2020  This method can't be implemented until this API is specified
-		return new ArticleListResponse(null);
+	public MyResponseEntity<List<ArticleListResponse.ArticleBrief>> getArticleList() {
+        List<BlogEntity> blogEntityList = blogService.findAll();
+        ArticleListResponse articleListResponse = new ArticleListResponse();
+        for(BlogEntity b : blogEntityList) {
+            ArticleListResponse.ArticleBrief articleBrief = new ArticleListResponse.ArticleBrief();
+            articleBrief.setArticleId(b.getId());
+            articleBrief.setTitle(b.getTitle());
+            articleListResponse.getArticles().add(articleBrief);
+        }
+		return new MyResponseEntity<>(Code.OK, "ok", articleListResponse.getArticles());
 	}
 }
