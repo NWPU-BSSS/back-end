@@ -42,6 +42,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
+        /*
         http.csrf().disable() //禁用跨站csrf攻击防御
                 .formLogin()    //必须出现，不然重新配置的filter就不会启动
                 .loginPage("/login")//用户未登录时，访问任何资源都转跳到该路径，即登录页面
@@ -68,9 +69,13 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .logoutSuccessUrl("/")
                 .logoutSuccessHandler(logoutHandler)
                 .deleteCookies("remember-me");
+                */
+        http.csrf().disable().authorizeRequests().anyRequest().permitAll()
+                .and().logout().permitAll()
+                .and().formLogin().permitAll();
 
         //用重写的Filter替换掉原有的UsernamePasswordAuthenticationFilter
-        http.addFilterAt(customAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class);
+        //http.addFilterAt(customAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class);
     }
 
     @Bean   //注入passedEncoder

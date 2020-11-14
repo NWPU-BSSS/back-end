@@ -27,7 +27,7 @@ public class LoginFailureHandler implements AuthenticationFailureHandler {
     public void onAuthenticationFailure(HttpServletRequest httpServletRequest
             , HttpServletResponse httpServletResponse
             , AuthenticationException e) throws IOException {
-        httpServletResponse.setStatus(HttpStatus.UNAUTHORIZED.value());
+        httpServletResponse.setStatus(HttpStatus.OK.value());
         Map<String, Object> map = new HashMap<>();
         map.put("code", Code.BAD_OPERATION);
         map.put("msg", "账号或密码错误");
