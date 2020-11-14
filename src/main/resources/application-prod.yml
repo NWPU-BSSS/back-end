@@ -5,8 +5,8 @@ spring:
     #    username: root
     #    password: root
     driver-class-name: com.mysql.cj.jdbc.Driver
-    name: BSSS_Dev
-    url: jdbc:mysql://47.108.48.139:3306/BSSS_Dev?serverTimezone=Asia/Shanghai&useSSL=FALSE&useUnicode=true&characterEncoding=UTF-8
+    #BSSS datebase didn't create yet.
+    name: BSSS
+    url: jdbc:mysql://localhost:3306/BSSS_Dev?serverTimezone=Asia/Shanghai&useSSL=FALSE&useUnicode=true&characterEncoding=UTF-8
     username: root
     password: Bsss1234!
-
