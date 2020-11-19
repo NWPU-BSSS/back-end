@@ -33,9 +33,9 @@ public class BlogController {
 		
 		BlogEntity blogEntity = new BlogEntity();
 		
-		blogEntity.setAuthor(blogRequest.getUserId());
-		blogEntity.setCreateTime(new Timestamp(new Date().getTime()));
-		blogEntity.setPlaintext(blogRequest.getContent());
+		blogEntity.setAuthorId(blogRequest.getUserId());
+		blogEntity.setReleaseTime(new Timestamp(new Date().getTime()));
+		blogEntity.setContent(blogRequest.getContent());
 		blogEntity.setTitle(blogRequest.getTitle());
 		
 		long id = this.blogService.createBlog(blogEntity);
@@ -50,16 +50,16 @@ public class BlogController {
 		BlogEntity blogEntity = this.blogService.findByBlogID(id);
 		try {
 			GetArticleResponse getArticleResponse = new GetArticleResponse();
-			long authorId = blogEntity.getAuthor();
+			long authorId = blogEntity.getAuthorId();
 			String email = "匿名";
 			try {
 				email = this.userService.findByUserID(authorId).getEmail();
 			} catch (NullPointerException ignore) {
 			}
 			getArticleResponse.setAuthor(email);
-			getArticleResponse.setContent(blogEntity.getPlaintext());
+			getArticleResponse.setContent(blogEntity.getContent());
 			getArticleResponse.setTitle(blogEntity.getTitle());
-			getArticleResponse.setTime(blogEntity.getCreateTime().toString());
+			getArticleResponse.setTime(blogEntity.getReleaseTime().toString());
 			return new MyResponseEntity<>(Code.OK, "ok", getArticleResponse);
 		} catch (NullPointerException e) {
 			return new MyResponseEntity<>(Code.BAD_OPERATION, "找不到该博客", null);

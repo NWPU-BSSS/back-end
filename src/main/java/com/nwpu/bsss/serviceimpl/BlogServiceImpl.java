@@ -11,23 +11,23 @@ import java.util.List;
 
 @Service
 public class BlogServiceImpl implements BlogService {
-
-    @Resource
-    private BlogRepository blogRepository;
-
-    @Override
-    @Transactional
-    public long createBlog(BlogEntity blogEntity) {
-        return blogRepository.save(blogEntity).getId();
-    }
-
-    @Override
-    public BlogEntity findByBlogID(long id) {
-        return blogRepository.findBlogById(id);
-    }
-
-    @Override
-    public List<BlogEntity> findAll() {
-        return blogRepository.findAll();
-    }
+	
+	@Resource
+	private BlogRepository blogRepository;
+	
+	@Override
+	@Transactional
+	public long createBlog(BlogEntity blogEntity) {
+		return this.blogRepository.save(blogEntity).getId();
+	}
+	
+	@Override
+	public BlogEntity findByBlogID(long id) {
+		return this.blogRepository.findById(id).orElse(null);
+	}
+	
+	@Override
+	public List<BlogEntity> findAll() {
+		return this.blogRepository.findAll();
+	}
 }
