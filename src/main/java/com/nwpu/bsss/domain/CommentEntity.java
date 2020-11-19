@@ -130,7 +130,7 @@ public class CommentEntity implements Comparable<CommentEntity> {
 		if (this.parent != null) {
 			parentId = this.parent.id;
 		}
-		int level = -1;
+		int level = 0;
 		CommentEntity p = this.parent;
 		while (p != null) {
 			p = p.parent;
