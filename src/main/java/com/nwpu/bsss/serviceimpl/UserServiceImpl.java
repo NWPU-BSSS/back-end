@@ -1,6 +1,8 @@
 package com.nwpu.bsss.serviceimpl;
 
 import com.nwpu.bsss.domain.UserEntity;
+import com.nwpu.bsss.domain.UserInfoEntity;
+import com.nwpu.bsss.repository.UserInfoRepository;
 import com.nwpu.bsss.repository.UserRepository;
 import com.nwpu.bsss.service.UserService;
 
@@ -14,6 +16,9 @@ public class UserServiceImpl implements UserService {
 
     @Resource
     private UserRepository userRepository;
+
+    @Resource
+    private UserInfoRepository userInfoRepository;
 
     @Override
     @Transactional
@@ -30,5 +35,9 @@ public class UserServiceImpl implements UserService {
     public UserEntity findByUserEmail(String email) {
         return userRepository.findByEmail(email);
     }
+
+    @Override
+    public UserInfoEntity findUserInfoByUserId(long id) {return userInfoRepository.findUserInfoById(id);}
+
 
 }
