@@ -13,13 +13,22 @@ public class CommentEntity implements Comparable<CommentEntity> {
 	private long id;
 	private long userId;
 	private long blogId;
-	private CommentEntity parent;
+	private long parentId;
 	private Set<CommentEntity> children;
 	private String content;
 	private Timestamp time;
 	
 	public CommentEntity() {
 		this.children = new HashSet<>();
+	}
+	
+	public CommentEntity(long userId, long blogId, long parentId, String content) {
+		this.userId = userId;
+		this.blogId = blogId;
+		this.parentId = parentId;
+		this.content = content;
+		this.children = new HashSet<>();
+		this.time = new Timestamp(System.currentTimeMillis());
 	}
 	
 	
@@ -54,20 +63,24 @@ public class CommentEntity implements Comparable<CommentEntity> {
 		this.blogId = blogId;
 	}
 	
-	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "CommentId")
-	public CommentEntity getParent() {
-		return this.parent;
+	/**
+	 * 如果是主楼，则{@code parentId == -1}
+	 */
+	@Basic
+	@Column(name = "CommentId")
+	public long getParentId() {
+		return this.parentId;
 	}
 	
-	public void setParent(CommentEntity parent) {
-		this.parent = parent;
+	public void setParentId(Long parentId) {
+		this.parentId = Objects.requireNonNullElse(parentId, -1L);
 	}
 	
-	@OneToMany(mappedBy = "parent",
-			cascade = CascadeType.ALL,
+	
+	@OneToMany(cascade = CascadeType.ALL,
 			fetch = FetchType.EAGER,
 			orphanRemoval = true)
+	@JoinColumn(name = "CommentId")
 	public Set<CommentEntity> getChildren() {
 		return this.children;
 	}
@@ -113,7 +126,7 @@ public class CommentEntity implements Comparable<CommentEntity> {
 		return this.id == that.id &&
 				this.userId == that.userId &&
 				this.blogId == that.blogId &&
-				this.parent.equals(that.parent) &&
+				this.parentId == that.parentId &&
 				this.children.equals(that.children) &&
 				this.content.equals(that.content) &&
 				this.time.equals(that.time);
@@ -121,29 +134,19 @@ public class CommentEntity implements Comparable<CommentEntity> {
 	
 	@Override
 	public int hashCode() {
-		return Objects.hash(this.id, this.userId, this.blogId, this.parent, this.content, this.time);
+		return Objects.hash(this.id, this.userId, this.blogId, this.parentId, this.content, this.time);
 	}
 	
 	@Override
 	public String toString() {
-		long parentId = -1;
-		if (this.parent != null) {
-			parentId = this.parent.id;
-		}
-		int level = 0;
-		CommentEntity p = this.parent;
-		while (p != null) {
-			p = p.parent;
-			++level;
-		}
-		return "\t".repeat(level) + "CommentEntity{" +
-				"id=" + this.id +
-				", userId=" + this.userId +
-				", blogId=" + this.blogId +
-				", parentId=" + parentId +
-				", children=" + this.getChildren() +
-				", content='" + this.content + '\'' +
-				", time=" + this.time +
-				"}\n";
+		return "CommentEntity{\n" +
+				"\tid=" + this.id + ",\n" +
+				"\tuserId=" + this.userId + ",\n" +
+				"\tblogId=" + this.blogId + ",\n" +
+				"\tparentId=" + this.parentId + ",\n" +
+				"\tcontent='" + this.content + '\'' + ",\n" +
+				"\tchildren=" + this.getChildren() + ",\n" +
+				"time=" + this.time + "\n" +
+				"\t}\n";
 	}
 }
