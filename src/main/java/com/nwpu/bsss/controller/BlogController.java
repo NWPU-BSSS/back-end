@@ -26,14 +26,9 @@ public class BlogController {
 	private CommentService commentService;
 	
 	@GetMapping("/comments")
-	public MyResponseEntity<List<CommentElement>> getComments(@RequestParam("blogId") String blogId) {
-		try {
-			long lBlogId = Long.parseLong(blogId);
-			List<CommentElement> commentList = this.commentService.getCommentList(lBlogId);
-			return new MyResponseEntity<>(Code.OK, "ok", commentList);
-		} catch (NumberFormatException e) {
-			return new MyResponseEntity<>(Code.BAD_REQUEST, "博客ID格式错误", null);
-		}
+	public MyResponseEntity<List<CommentElement>> getComments(@RequestParam("blogId") long blogId) {
+		List<CommentElement> commentList = this.commentService.getCommentList(blogId);
+		return new MyResponseEntity<>(Code.OK, "ok", commentList);
 	}
 	
 	@PostMapping("/article")
