@@ -61,8 +61,8 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 				.authenticationEntryPoint(new Http403ForbiddenEntryPoint())
 				.and()
 				.authorizeRequests()
-				.antMatchers("/login", "/**", "/user/register").permitAll()//不需要通过登录验证就可以被访问的资源路径
-				.anyRequest().authenticated()
+				.antMatchers("/login", "/", "/user/register").permitAll()//不需要通过登录验证就可以被访问的资源路径
+				.anyRequest().permitAll()
 				.and()
 				.logout()
 				.logoutSuccessUrl("/")

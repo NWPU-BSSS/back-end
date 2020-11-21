@@ -9,24 +9,34 @@ import java.util.Date;
  */
 public class CommentElement {
 	
+	private long id;
 	private long userId;
 	private String nickname;
-	private String avatarUrl;
+	private String avatar;
 	private String content;
 	private Date time;
 	private int level;
 	private long reply2UserId;
 	private String reply2Nickname;
 	
-	public CommentElement(CommentEntity entity, String nickname, String avatarUrl, int level, long reply2UserId, String reply2Nickname) {
+	public CommentElement(CommentEntity entity, String nickname, String avatar, int level, long reply2UserId, String reply2Nickname) {
+		this.id = entity.getId();
 		this.userId = entity.getUserId();
 		this.nickname = nickname;
-		this.avatarUrl = avatarUrl;
+		this.avatar = avatar;
 		this.content = entity.getContent();
 		this.time = entity.getTime();
 		this.level = level;
 		this.reply2UserId = reply2UserId;
 		this.reply2Nickname = reply2Nickname;
+	}
+	
+	public long getId() {
+		return this.id;
+	}
+	
+	public void setId(long id) {
+		this.id = id;
 	}
 	
 	public long getUserId() {
@@ -45,12 +55,12 @@ public class CommentElement {
 		this.nickname = nickname;
 	}
 	
-	public String getAvatarUrl() {
-		return this.avatarUrl;
+	public String getAvatar() {
+		return this.avatar;
 	}
 	
-	public void setAvatarUrl(String avatarUrl) {
-		this.avatarUrl = avatarUrl;
+	public void setAvatar(String avatar) {
+		this.avatar = avatar;
 	}
 	
 	public String getContent() {
@@ -98,7 +108,7 @@ public class CommentElement {
 		return "CommentElement{" +
 				"\n\tuserId=" + this.userId +
 				",\n\t nickname='" + this.nickname + '\'' +
-				",\n\t avatarUrl='" + this.avatarUrl + '\'' +
+				",\n\t avatarUrl='" + this.avatar + '\'' +
 				",\n\t content='" + this.content + '\'' +
 				",\n\t time=" + this.time +
 				",\n\t level=" + this.level +
