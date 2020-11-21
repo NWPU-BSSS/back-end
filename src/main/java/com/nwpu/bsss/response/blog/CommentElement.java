@@ -9,6 +9,7 @@ import java.util.Date;
  */
 public class CommentElement {
 	
+	private long id;
 	private long userId;
 	private String nickname;
 	private String avatarUrl;
@@ -19,6 +20,7 @@ public class CommentElement {
 	private String reply2Nickname;
 	
 	public CommentElement(CommentEntity entity, String nickname, String avatarUrl, int level, long reply2UserId, String reply2Nickname) {
+		this.id = entity.getId();
 		this.userId = entity.getUserId();
 		this.nickname = nickname;
 		this.avatarUrl = avatarUrl;
@@ -27,6 +29,14 @@ public class CommentElement {
 		this.level = level;
 		this.reply2UserId = reply2UserId;
 		this.reply2Nickname = reply2Nickname;
+	}
+	
+	public long getId() {
+		return this.id;
+	}
+	
+	public void setId(long id) {
+		this.id = id;
 	}
 	
 	public long getUserId() {
