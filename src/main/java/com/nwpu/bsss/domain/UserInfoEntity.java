@@ -16,9 +16,10 @@ public class UserInfoEntity {
 	private long studentNo;
 	private String className;
 	private boolean isVerified;
-	private long resume;
-	private long introduction;
-	private long realName;
+	private String resume;
+	private String introduction;
+	private String realName;
+	private String avatarUrl;
 	
 	@Id
 	@Column(name = "Id")
@@ -59,20 +60,26 @@ public class UserInfoEntity {
 	
 	@Basic(optional = false)
 	@Column(name = "Resume")
-	public long getResume() {
+	public String getResume() {
 		return this.resume;
 	}
 	
 	@Basic(optional = false)
 	@Column(name = "Introduction")
-	public long getIntroduction() {
+	public String getIntroduction() {
 		return this.introduction;
 	}
 	
 	@Basic(optional = false)
 	@Column(name = "RealName")
-	public long getRealName() {
+	public String getRealName() {
 		return this.realName;
+	}
+	
+	@Basic(optional = false)
+	@Column(name = "Avatar")
+	public String getAvatarUrl() {
+		return this.avatarUrl;
 	}
 	
 	public void setId(long id) {
@@ -99,15 +106,19 @@ public class UserInfoEntity {
 		this.isVerified = verified;
 	}
 	
-	public void setResume(long resume) {
+	public void setResume(String resume) {
 		this.resume = resume;
 	}
 	
-	public void setIntroduction(long introduction) {
+	public void setIntroduction(String introduction) {
 		this.introduction = introduction;
 	}
 	
-	public void setRealName(long realName) {
+	public void setRealName(String realName) {
 		this.realName = realName;
+	}
+	
+	public void setAvatarUrl(String avatarUrl) {
+		this.avatarUrl = avatarUrl;
 	}
 }

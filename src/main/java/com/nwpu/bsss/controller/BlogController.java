@@ -3,8 +3,9 @@ package com.nwpu.bsss.controller;
 import com.nwpu.bsss.domain.BlogEntity;
 import com.nwpu.bsss.domain.dto.ReleaseBlogBody;
 import com.nwpu.bsss.response.*;
-import com.nwpu.bsss.response.blog.CommentList;
+import com.nwpu.bsss.response.blog.CommentElement;
 import com.nwpu.bsss.service.BlogService;
+import com.nwpu.bsss.service.CommentService;
 import com.nwpu.bsss.service.UserService;
 import org.springframework.web.bind.annotation.*;
 
@@ -14,17 +15,19 @@ import java.util.Date;
 import java.util.List;
 
 @RestController
+@RequestMapping("/blog")
 public class BlogController {
 	
 	@Resource
 	private BlogService blogService;
 	@Resource
 	private UserService userService;
+	@Resource
+	private CommentService commentService;
 	
 	@GetMapping("/comments")
-	public MyResponseEntity<CommentList> getComments(@RequestParam("blogId") String blogId) {
-		CommentList commentList = new CommentList();
-		
+	public MyResponseEntity<List<CommentElement>> getComments(@RequestParam("blogId") long blogId) {
+		List<CommentElement> commentList = this.commentService.getCommentList(blogId);
 		return new MyResponseEntity<>(Code.OK, "ok", commentList);
 	}
 	
