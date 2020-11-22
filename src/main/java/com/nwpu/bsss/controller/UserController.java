@@ -15,11 +15,15 @@ import org.springframework.web.bind.annotation.*;
 import javax.annotation.Resource;
 import java.sql.Timestamp;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
 
 
 @RestController
 @RequestMapping("/user")
 public class UserController {
+
+	public static Map<String,Long> token2Id = new HashMap<>();
 
 	@Resource
 	private UserService userService;

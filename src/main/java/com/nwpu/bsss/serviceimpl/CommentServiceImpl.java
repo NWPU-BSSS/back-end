@@ -16,20 +16,20 @@ import java.util.Set;
 
 @Service
 public class CommentServiceImpl implements CommentService {
-	
+
 	@Resource
 	private CommentRepository commentRepository;
-	
+
 	@Resource
 	private UserInfoRepository userInfoRepository;
-	
+
 	@Override
 	@Transactional
 	public long createComment(long userId, long blogId, long parentId, String content) {
 		CommentEntity entity = new CommentEntity(userId, blogId, parentId, content);
 		return this.commentRepository.save(entity).getId();
 	}
-	
+
 	@Override
 	public List<CommentElement> getCommentList(long blogId) {
 		Set<CommentEntity> commentEntitySet = this.commentRepository.findRootCommentsByBlogId(blogId);
@@ -39,7 +39,12 @@ public class CommentServiceImpl implements CommentService {
 		this.dfsChildren(1, ret, dummyHead, 1, null);
 		return ret;
 	}
-	
+
+	@Override
+	public long getCommentsNum(long blogId) {
+		return this.commentRepository.getBlogCommentsNum(blogId);
+	}
+
 	/**
 	 * DFS将children展平
 	 *

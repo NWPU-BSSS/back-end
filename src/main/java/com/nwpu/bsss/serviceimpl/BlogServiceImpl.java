@@ -22,12 +22,17 @@ public class BlogServiceImpl implements BlogService {
 	}
 	
 	@Override
-	public BlogEntity findByBlogID(long id) {
-		return this.blogRepository.findById(id).orElse(null);
+	public BlogEntity findByBlogId(long id) {
+		return this.blogRepository.findByBlogId(id);
 	}
 	
 	@Override
 	public List<BlogEntity> findAll() {
 		return this.blogRepository.findAll();
+	}
+
+	@Override
+	public void saveBlog(BlogEntity blogEntity) {
+		this.blogRepository.save(blogEntity);
 	}
 }
