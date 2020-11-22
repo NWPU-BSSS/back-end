@@ -18,14 +18,12 @@ public class BloggerInfoResponse {
     private long fanNum;
     private long commentNum;
     private long favoriteNum;
-    public BloggerInfoResponse(Long userId){
-        UserServiceImpl userServiceImpl = new UserServiceImpl();
-        UserInfoEntity userInfo = userServiceImpl.findUserInfoByUserId(userId);
+    public BloggerInfoResponse(String className){
         this.avatar = null;
         this.codeAge = 1;
         this.level = 1;
-        this.verfied = userInfo.isVerified();
-        this.className = userInfo.getClassName();
+        this.verfied = true;
+        this.className = className;
         this.blogNum = 0;
         this.fanNum = 0;
         this.commentNum = 0;
