@@ -52,7 +52,6 @@ public class BlogController {
     @PostMapping("/blog")
     public MyResponseEntity postBlog(@RequestHeader("accessToken") String accessToken,
                                      @RequestBody PostBlogBody body) {
-        UserController.token2Id.put("asdfasdfasdfzxvzx",1L);
         Long userId = UserController.token2Id.get(accessToken);
         if(userId==null)
           return new MyResponseEntity(Code.BAD_OPERATION,"token无效！！",null);
