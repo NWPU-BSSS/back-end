@@ -31,6 +31,7 @@ public class BlogController {
 		return new MyResponseEntity<>(Code.OK, "ok", commentList);
 	}
 	
+	/*
 	@PostMapping("/article")
 	public MyResponseEntity<PostArticleResponse> releaseBlog(@RequestBody ReleaseBlogBody blogRequest) {
 		
@@ -47,7 +48,7 @@ public class BlogController {
 		
 		return new MyResponseEntity<>(Code.OK, "ok", postArticleResponse);
 	}
-	
+
 	@GetMapping("/article")
 	public MyResponseEntity<GetArticleResponse> findBlog(@RequestParam("articleId") int id) {
 		BlogEntity blogEntity = this.blogService.findByBlogID(id);
@@ -68,7 +69,7 @@ public class BlogController {
 			return new MyResponseEntity<>(Code.BAD_OPERATION, "找不到该博客", null);
 		}
 	}
-	
+	*/
 	@GetMapping("/articleList")
 	@ResponseBody
 	public MyResponseEntity<List<ArticleListResponse.ArticleBrief>> getArticleList() {

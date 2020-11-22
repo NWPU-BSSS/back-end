@@ -7,7 +7,7 @@ import com.nwpu.bsss.serviceimpl.UserServiceImpl;
 
 import javax.persistence.Id;
 
-//Todo
+//Todo：
 public class BloggerInfoResponse {
     private String avatar;
     private long codeAge;

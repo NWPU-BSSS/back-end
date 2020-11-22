@@ -1,6 +1,7 @@
 package com.nwpu.bsss.controller;
 
 import com.nwpu.bsss.domain.UserEntity;
+import com.nwpu.bsss.domain.dto.Tag;
 import com.nwpu.bsss.exceptions.ValidationException;
 import com.nwpu.bsss.response.*;
 import com.nwpu.bsss.service.UserService;
@@ -58,31 +59,6 @@ public class UserController {
 			return new MyResponseEntity<>(Code.BAD_OPERATION, "用户不存在", null);
 		}
 	}
-	@GetMapping(path = "/blog/blogger")
-	public MyResponseEntity<BloggerInfoResponse> getBloggerInfo(@RequestParam("userId") String userId){
-		try{
-			long id = Long.parseLong(userId);
-			BloggerInfoResponse bloggerInfoResponse = new BloggerInfoResponse(id);
-			return new MyResponseEntity<>(Code.OK,"ok", bloggerInfoResponse);
-		} catch(NumberFormatException e){
-			return new MyResponseEntity<>(Code.BAD_OPERATION, "用户ID格式错误", null);
-		} catch(NullPointerException e){
-			return new MyResponseEntity<>(Code.BAD_OPERATION, "用户不存在", null);
-		}
 
-	}
-
-	@GetMapping(path = "/blog/blogger/tags")
-	public MyResponseEntity<ArrayList<String>> getBloggerTag(@RequestParam("userId") String userId){
-		try{
-			long id = Long.parseLong(userId);
-			BloggerTagResponse bloggerTagResponse = new BloggerTagResponse(id);
-			return new MyResponseEntity<>(Code.OK,"ok", bloggerTagResponse.getTagList());
-		} catch(NumberFormatException e){
-			return new MyResponseEntity<>(Code.BAD_OPERATION, "用户ID格式错误", null);
-		} catch(NullPointerException e){
-			return new MyResponseEntity<>(Code.BAD_OPERATION, "用户不存在", null);
-		}
-	}
 
 }
