@@ -1,11 +1,14 @@
 package com.nwpu.bsss.controller;
 
 import com.nwpu.bsss.domain.BlogEntity;
-import com.nwpu.bsss.domain.dto.ReleaseBlogBody;
-import com.nwpu.bsss.response.*;
+import com.nwpu.bsss.domain.dto.PostBlogBody;
+import com.nwpu.bsss.response.Code;
+import com.nwpu.bsss.response.GetBlogResponse;
+import com.nwpu.bsss.response.MyResponseEntity;
 import com.nwpu.bsss.response.blog.CommentElement;
 import com.nwpu.bsss.service.BlogService;
 import com.nwpu.bsss.service.CommentService;
+import com.nwpu.bsss.service.LikeService;
 import com.nwpu.bsss.service.UserService;
 import org.springframework.web.bind.annotation.*;
 
@@ -15,7 +18,6 @@ import java.util.Date;
 import java.util.List;
 
 @RestController
-@RequestMapping("/blog")
 public class BlogController {
 	
 	@Resource
@@ -24,62 +26,47 @@ public class BlogController {
 	private UserService userService;
 	@Resource
 	private CommentService commentService;
+	@Resource
+	private LikeService likeService;
 	
-	@GetMapping("/comments")
+	@GetMapping("/blog/comments")
 	public MyResponseEntity<List<CommentElement>> getComments(@RequestParam("blogId") long blogId) {
 		List<CommentElement> commentList = this.commentService.getCommentList(blogId);
 		return new MyResponseEntity<>(Code.OK, "ok", commentList);
 	}
 	
-	@PostMapping("/article")
-	public MyResponseEntity<PostArticleResponse> releaseBlog(@RequestBody ReleaseBlogBody blogRequest) {
+	@GetMapping("/blog")
+	public MyResponseEntity<GetBlogResponse> getBlogInfo(@RequestParam("blogId") int blogId) {
 		
-		BlogEntity blogEntity = new BlogEntity();
+		BlogEntity blogEntity = this.blogService.findByBlogId(blogId);
+		if (blogEntity == null) {
+			return new MyResponseEntity<>(Code.BAD_OPERATION, "没有找到博客", null);
+		}
 		
-		blogEntity.setAuthorId(blogRequest.getUserId());
-		blogEntity.setReleaseTime(new Timestamp(new Date().getTime()));
-		blogEntity.setContent(blogRequest.getContent());
-		blogEntity.setTitle(blogRequest.getTitle());
+		GetBlogResponse getBlogResponse = new GetBlogResponse();
+		getBlogResponse.setTitle(blogEntity.getTitle());
+		getBlogResponse.setContent(blogEntity.getContent());
+		getBlogResponse.setLikesNum(this.likeService.getLikesNum(blogId));
+		getBlogResponse.setCommentsNum(this.commentService.getCommentsNum(blogId));
+		getBlogResponse.setShareNum(77L);//to-do
+		getBlogResponse.setFavoriteNum(88L);
 		
-		long id = this.blogService.createBlog(blogEntity);
-		PostArticleResponse postArticleResponse = new PostArticleResponse();
-		postArticleResponse.setArticleId(id);
-		
-		return new MyResponseEntity<>(Code.OK, "ok", postArticleResponse);
+		return new MyResponseEntity<>(Code.OK, "ok", getBlogResponse);
 	}
 	
-	@GetMapping("/article")
-	public MyResponseEntity<GetArticleResponse> findBlog(@RequestParam("articleId") int id) {
-		BlogEntity blogEntity = this.blogService.findByBlogID(id);
-		try {
-			GetArticleResponse getArticleResponse = new GetArticleResponse();
-			long authorId = blogEntity.getAuthorId();
-			String email = "匿名";
-			try {
-				email = this.userService.findByUserID(authorId).getEmail();
-			} catch (NullPointerException ignore) {
-			}
-			getArticleResponse.setAuthor(email);
-			getArticleResponse.setContent(blogEntity.getContent());
-			getArticleResponse.setTitle(blogEntity.getTitle());
-			getArticleResponse.setTime(blogEntity.getReleaseTime().toString());
-			return new MyResponseEntity<>(Code.OK, "ok", getArticleResponse);
-		} catch (NullPointerException e) {
-			return new MyResponseEntity<>(Code.BAD_OPERATION, "找不到该博客", null);
+	@PostMapping("/blog")
+	public MyResponseEntity postBlog(@RequestHeader("accessToken") String accessToken,
+	                                 @RequestBody PostBlogBody body) {
+		Long userId = UserController.token2Id.get(accessToken);
+		if (userId == null) {
+			return new MyResponseEntity(Code.BAD_OPERATION, "token无效！！", null);
 		}
-	}
-	
-	@GetMapping("/articleList")
-	@ResponseBody
-	public MyResponseEntity<List<ArticleListResponse.ArticleBrief>> getArticleList() {
-		List<BlogEntity> blogEntityList = this.blogService.findAll();
-		ArticleListResponse articleListResponse = new ArticleListResponse();
-		for (BlogEntity b : blogEntityList) {
-			ArticleListResponse.ArticleBrief articleBrief = new ArticleListResponse.ArticleBrief();
-			articleBrief.setArticleId(b.getId());
-			articleBrief.setTitle(b.getTitle());
-			articleListResponse.getArticles().add(articleBrief);
-		}
-		return new MyResponseEntity<>(Code.OK, "ok", articleListResponse.getArticles());
+		
+		BlogEntity blogEntity = new BlogEntity(body.getTitle(), body.getTagA(), body.getTagB(), body.getTagC(), userId,
+				new Timestamp(new Date().getTime()), new Timestamp(new Date().getTime()), body.getContent());
+		
+		this.blogService.saveBlog(blogEntity);
+		return new MyResponseEntity(Code.OK, "博客发布成功", null);
+		
 	}
 }

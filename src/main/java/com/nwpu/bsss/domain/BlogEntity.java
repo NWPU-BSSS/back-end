@@ -1,9 +1,12 @@
 package com.nwpu.bsss.domain;
 
+import lombok.NoArgsConstructor;
+
 import javax.persistence.*;
 import java.sql.Timestamp;
 import java.util.Objects;
 
+@NoArgsConstructor
 @Entity
 @Table(name = "Blogs")
 public class BlogEntity {
@@ -16,7 +19,19 @@ public class BlogEntity {
 	private Timestamp releaseTime;
 	private Timestamp lastModifiedTime;
 	private String content;
-	
+
+	public BlogEntity(String title, String tagA, String tagB, String tagC,
+					  long authorId, Timestamp releaseTime, Timestamp lastModifiedTime, String content) {
+		this.title = title;
+		this.tagA = tagA;
+		this.tagB = tagB;
+		this.tagC = tagC;
+		this.authorId = authorId;
+		this.releaseTime = releaseTime;
+		this.lastModifiedTime = lastModifiedTime;
+		this.content = content;
+	}
+
 	@Id
 	@Column(name = "id")
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
