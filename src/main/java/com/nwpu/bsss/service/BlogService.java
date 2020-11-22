@@ -8,8 +8,9 @@ public interface BlogService {
 
     long createBlog(BlogEntity blogEntity);
 
-    BlogEntity findByBlogID(long id);
+    BlogEntity findByBlogId(long id);
 
     List<BlogEntity> findAll();
 
+    void saveBlog(BlogEntity blogEntity);
 }

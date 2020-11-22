@@ -1,7 +1,10 @@
 package com.nwpu.bsss.domain;
 
+import com.nwpu.bsss.domain.dto.RegisterBody;
+
 import javax.persistence.*;
 import java.sql.Timestamp;
+import java.util.Date;
 import java.util.Objects;
 
 @Entity
@@ -13,7 +16,19 @@ public class UserEntity {
 	private String password;
 	private Timestamp time;
 	private long phone;
-	
+
+	public UserEntity() {
+
+	}
+
+	public UserEntity(RegisterBody registerBody) {
+		userName = registerBody.getUsername();
+		email = registerBody.getEmail();
+		password = registerBody.getPassword();
+		time = new Timestamp(new Date().getTime());
+		phone = registerBody.getPhone();
+	}
+
 	@Id
 	@Column(name = "id")
 	@GeneratedValue(strategy = GenerationType.IDENTITY)

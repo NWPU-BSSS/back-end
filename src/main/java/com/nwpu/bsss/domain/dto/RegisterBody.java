@@ -1,17 +1,14 @@
 package com.nwpu.bsss.domain.dto;
 
-import lombok.Getter;
-import lombok.Setter;
+import lombok.Data;
 import org.springframework.stereotype.Component;
 
-/**
- * 目前用于重建 filter
- */
-@Getter
-@Setter
+@Data
 @Component
-public class LoginUserBody {
+public class RegisterBody {
     private String username;
-    private String email;
     private String password;
+    private String email;
+    private long verifyCode;
+    private long phone;
 }

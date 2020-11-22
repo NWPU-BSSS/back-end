@@ -13,4 +13,6 @@ public interface CommentService {
 	long createComment(long userId, long blogId, long parentId, String content);
 	
 	List<CommentElement> getCommentList(long blogId);
+
+	long getCommentsNum(long blogId);
 }
