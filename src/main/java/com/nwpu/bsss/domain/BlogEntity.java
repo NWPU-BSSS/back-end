@@ -1,9 +1,12 @@
 package com.nwpu.bsss.domain;
 
+import lombok.NoArgsConstructor;
+
 import javax.persistence.*;
 import java.sql.Timestamp;
 import java.util.Objects;
 
+@NoArgsConstructor
 @Entity
 @Table(name = "Blogs")
 public class BlogEntity {
