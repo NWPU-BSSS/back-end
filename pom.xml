@@ -89,6 +89,11 @@
             <artifactId>spring-security-test</artifactId>
             <scope>test</scope>
         </dependency>
+        <dependency>
+            <groupId>com.dtflys.forest</groupId>
+            <artifactId>spring-boot-starter-forest</artifactId>
+            <version>1.5.0-BETA8</version>
+        </dependency>
     </dependencies>
 
     <build>

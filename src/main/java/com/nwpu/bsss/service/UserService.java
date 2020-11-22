@@ -10,4 +10,6 @@ public interface UserService {
 
     UserEntity findByUserEmail(String email);
 
+    UserEntity findByUsername(String username);
+
 }

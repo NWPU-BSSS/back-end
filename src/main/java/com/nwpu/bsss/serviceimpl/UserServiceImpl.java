@@ -31,4 +31,9 @@ public class UserServiceImpl implements UserService {
         return userRepository.findByEmail(email);
     }
 
+    @Override
+    public UserEntity findByUsername(String username) {
+        return userRepository.findUserByUserName(username);
+    }
+
 }

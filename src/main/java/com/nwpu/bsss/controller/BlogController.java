@@ -9,7 +9,6 @@ import com.nwpu.bsss.response.blog.CommentElement;
 import com.nwpu.bsss.service.BlogService;
 import com.nwpu.bsss.service.CommentService;
 import com.nwpu.bsss.service.LikeService;
-import com.nwpu.bsss.service.UserService;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
@@ -22,8 +21,6 @@ public class BlogController {
 	
 	@Resource
 	private BlogService blogService;
-	@Resource
-	private UserService userService;
 	@Resource
 	private CommentService commentService;
 	@Resource
@@ -55,18 +52,18 @@ public class BlogController {
 	}
 	
 	@PostMapping("/blog")
-	public MyResponseEntity postBlog(@RequestHeader("accessToken") String accessToken,
+	public MyResponseEntity<Object> postBlog(@RequestHeader("accessToken") String accessToken,
 	                                 @RequestBody PostBlogBody body) {
 		Long userId = UserController.token2Id.get(accessToken);
 		if (userId == null) {
-			return new MyResponseEntity(Code.BAD_OPERATION, "token无效！！", null);
+			return new MyResponseEntity<>(Code.BAD_OPERATION, "token无效", null);
 		}
 		
 		BlogEntity blogEntity = new BlogEntity(body.getTitle(), body.getTagA(), body.getTagB(), body.getTagC(), userId,
 				new Timestamp(new Date().getTime()), new Timestamp(new Date().getTime()), body.getContent());
 		
 		this.blogService.saveBlog(blogEntity);
-		return new MyResponseEntity(Code.OK, "博客发布成功", null);
+		return new MyResponseEntity<>(Code.OK, "博客发布成功", null);
 		
 	}
 }
