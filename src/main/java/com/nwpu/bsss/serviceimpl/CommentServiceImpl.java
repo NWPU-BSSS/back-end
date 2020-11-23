@@ -68,4 +68,9 @@ public class CommentServiceImpl implements CommentService {
 			this.dfsChildren(level + 1, ret, entity, userId, nickname);
 		}
 	}
+
+	@Override
+	public long saveComment(CommentEntity commentEntity) {
+		return this.commentRepository.save(commentEntity).getId();
+	}
 }

@@ -1,7 +1,9 @@
 package com.nwpu.bsss.controller;
 
 import com.nwpu.bsss.domain.BlogEntity;
+import com.nwpu.bsss.domain.CommentEntity;
 import com.nwpu.bsss.domain.dto.PostBlogBody;
+import com.nwpu.bsss.domain.dto.PostCommentBody;
 import com.nwpu.bsss.response.Code;
 import com.nwpu.bsss.response.GetBlogResponse;
 import com.nwpu.bsss.response.MyResponseEntity;
@@ -65,5 +67,21 @@ public class BlogController {
 		this.blogService.saveBlog(blogEntity);
 		return new MyResponseEntity<>(Code.OK, "博客发布成功", null);
 		
+	}
+
+	@PostMapping("/blog/comment")
+	public MyResponseEntity postComment(@RequestHeader("accessToken") String accessToken,
+									 @RequestParam("blogId") long blogId,
+									 @RequestBody PostCommentBody body) {
+		Long userId = UserController.token2Id.get(accessToken);
+		if (userId == null) {
+			return new MyResponseEntity(Code.BAD_OPERATION, "token无效", null);
+		}
+
+		CommentEntity commentEntity=new CommentEntity(userId,blogId,body.getCommentId(),body.getContent());
+
+		this.commentService.saveComment(commentEntity);
+		return new MyResponseEntity(Code.OK, "博客发布成功", null);
+
 	}
 }
