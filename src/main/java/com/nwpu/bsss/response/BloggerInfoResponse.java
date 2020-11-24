@@ -1,18 +1,11 @@
 package com.nwpu.bsss.response;
 
-import com.nwpu.bsss.domain.UserEntity;
-import com.nwpu.bsss.domain.UserInfoEntity;
-import com.nwpu.bsss.service.UserService;
-import com.nwpu.bsss.serviceimpl.UserServiceImpl;
-
-import javax.persistence.Id;
-
 //Todo：
 public class BloggerInfoResponse {
     private String avatar;
     private long codeAge;
     private long level;
-    private boolean verfied;
+    private boolean verified;
     private String className;
     private long blogNum;
     private long fanNum;
@@ -22,7 +15,7 @@ public class BloggerInfoResponse {
         this.avatar = null;
         this.codeAge = 1;
         this.level = 1;
-        this.verfied = true;
+        this.verified = true;
         this.className = className;
         this.blogNum = 0;
         this.fanNum = 0;
@@ -55,12 +48,12 @@ public class BloggerInfoResponse {
         this.level = level;
     }
 
-    public boolean isVerfied() {
-        return verfied;
+    public boolean isVerified() {
+        return verified;
     }
 
-    public void setVerfied(boolean verfied) {
-        this.verfied = verfied;
+    public void setVerified(boolean verified) {
+        this.verified = verified;
     }
 
     public String getClassName() {
