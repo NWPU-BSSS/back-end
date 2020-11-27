@@ -38,9 +38,9 @@ public class BloggerInfoController {
 	}
 	
 	@GetMapping(path = "/blogger/tags")
-	public MyResponseEntity<ArrayList<Tag>> getBloggerTag(@RequestParam("userId") String userId) {
+	public MyResponseEntity<ArrayList<Tag>> getBloggerTag(@RequestParam("bloggerId") String bloggerId) {
 		try {
-			long id = Long.parseLong(userId);
+			long id = Long.parseLong(bloggerId);
 			BloggerTagResponse bloggerTagResponse = new BloggerTagResponse();
 			return new MyResponseEntity<>(Code.OK, "ok", bloggerTagResponse.getTagList());
 		} catch (NumberFormatException e) {
