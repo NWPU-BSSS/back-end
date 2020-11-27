@@ -41,6 +41,16 @@ public class UserController {
         return new MyResponseEntity<>(Code.OK, "用户名已被占用", new UsernameCheckResponse(true));
     }
 
+    @PostMapping(path = "/emailCheck")
+    public MyResponseEntity<UsernameCheckResponse> checkEmail(@RequestBody RegisterBody registerBody) {
+
+        UserEntity userEntity = userService.findByUserEmail(registerBody.getEmail());
+        if (userEntity == null) {
+            return new MyResponseEntity<>(Code.OK, "邮箱未被占用", new UsernameCheckResponse(false));
+        }
+        return new MyResponseEntity<>(Code.OK, "邮箱已被占用", new UsernameCheckResponse(true));
+    }
+
     @PostMapping(path = "/register/verifyCode")
     public MyResponseEntity<RegisterResponse> sendVerifyCode(@RequestBody RegisterBody registerBody) {
 
