@@ -1,6 +1,5 @@
 package com.nwpu.bsss.domain;
 
-
 import lombok.Data;
 
 import javax.persistence.*;
@@ -9,7 +8,19 @@ import javax.persistence.*;
 @Entity
 @Table(name = "UserInfos")
 public class UserInfoEntity {
-	
+
+	public UserInfoEntity() {
+		this.nickName = "yourNickName";
+		this.gender = 0;
+		this.studentNo = 2000000000;
+		this.className = "14000000";
+		this.isVerified = false;
+		this.resume = "I'm a NPUer";
+		this.introduction = "I love NPU";
+		this.realName = "";
+		this.avatarUrl = "/avatar/default";
+	}
+
 	private long id;
 	private String nickName;
 	private int gender;
@@ -23,7 +34,6 @@ public class UserInfoEntity {
 	
 	@Id
 	@Column(name = "Id")
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	public long getId() {
 		return this.id;
 	}
@@ -35,7 +45,7 @@ public class UserInfoEntity {
 	}
 	
 	@Basic(optional = false)
-	@Column(name = "gender")
+	@Column(name = "Gender")
 	public int getGender() {
 		return this.gender;
 	}

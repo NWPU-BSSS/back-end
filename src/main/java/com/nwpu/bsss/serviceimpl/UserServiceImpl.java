@@ -28,6 +28,17 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    public void deleteUser(UserEntity userEntity) {
+        //TODO:这里临时做了一个删除行的操作，后期需要使用时需要考虑各方面安全问题
+        userRepository.delete(userEntity);
+    }
+
+    @Override
+    public long createUserInfo(UserInfoEntity userInfoEntity) {
+        return userInfoRepository.save(userInfoEntity).getId();
+    }
+
+    @Override
     public UserEntity findByUserID(long id) {
         return userRepository.findUserById(id);
     }

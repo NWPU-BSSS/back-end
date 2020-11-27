@@ -1,7 +1,7 @@
 package com.nwpu.bsss.controller;
 
 import com.nwpu.bsss.domain.UserEntity;
-import com.nwpu.bsss.domain.dto.Tag;
+import com.nwpu.bsss.domain.UserInfoEntity;
 import com.nwpu.bsss.domain.dto.LoginUserBody;
 import com.nwpu.bsss.domain.dto.RegisterBody;
 import com.nwpu.bsss.exceptions.ValidationException;
@@ -16,7 +16,6 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
 import java.sql.Timestamp;
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
@@ -58,7 +57,9 @@ public class UserController {
     @PostMapping(path = "/register")
     public MyResponseEntity<RegisterResponse> registerUser(@RequestBody RegisterBody registerBody, BindingResult bindingResult) {
 
+        //一个是用户实体，一个是用户扩展信息实体
         UserEntity user = new UserEntity(registerBody);
+        UserInfoEntity userInfo = new UserInfoEntity();
 
         //validate email format
         new UserInfoValidator().validate(user, bindingResult);
@@ -75,10 +76,23 @@ public class UserController {
             return new MyResponseEntity<>(Code.BAD_OPERATION, "邮箱验证失败", null);
         } else {    //true
             try {
-                long userId = this.userService.createUser(user); //userId 暂时没用
-                return new MyResponseEntity<>(Code.OK, "注册成功", null);
+                //创建用户
+                long userId = userService.createUser(user);
+                //外键设置
+                userInfo.setId(userId);
             } catch (DataIntegrityViolationException e) {
                 return new MyResponseEntity<>(Code.BAD_OPERATION, "该邮箱已被占用，请重试", null);
+            }
+
+            try {
+                //创建用户扩展信息
+                userService.createUserInfo(userInfo);
+                return new MyResponseEntity<>(Code.OK, "注册成功", null);
+            } catch (Exception e) {
+                e.printStackTrace();
+                //如果UserInfo创建失败，同时删除刚创建的新user。
+                userService.deleteUser(user);
+                return new MyResponseEntity<>(Code.BAD_OPERATION, "未知错误", null);
             }
         }
     }
@@ -123,20 +137,32 @@ public class UserController {
         }
     }
 
-//	@GetMapping(path = "/info")
-//	public MyResponseEntity<UserInfoResponse> getUserInfo(@RequestParam("userId") String userId) {
-//		try {
-//			long id = Long.parseLong(userId);
-//			UserInfoResponse userInfoResponse = new UserInfoResponse();
-//			userInfoResponse.setEmail(this.userService.findByUserID(id).getEmail());
-//
-//			return new MyResponseEntity<>(Code.OK, "ok", userInfoResponse);
-//		} catch (NumberFormatException e) {
-//			return new MyResponseEntity<>(Code.BAD_OPERATION, "用户ID格式错误", null);
-//		} catch (NullPointerException e) {
-//			return new MyResponseEntity<>(Code.BAD_OPERATION, "用户不存在", null);
-//		}
-//	}
+    @GetMapping("/baseInfo")
+    public MyResponseEntity<UserBaseInfoResponse> getUserBaseInfo(@RequestHeader("accessToken") String token) {
+        //TODO: 这里暂时用了UserInfoEntity作为数据的承载，等待数据库有baseInfo对应的视图时应该更改，并且给予对应的UserBaseInfo的构造函数。
+        try {
+            Long id = token2Id.get(token);
+            if (id == null) {
+                return new MyResponseEntity<>(Code.BAD_OPERATION, "token无效", null);
+            }
+
+            UserInfoEntity userInfoEntity = userService.findUserInfoByUserId(id);
+
+            UserBaseInfoResponse userBaseInfoResponse = new UserBaseInfoResponse();
+
+            userBaseInfoResponse.setAvatar(userInfoEntity.getAvatarUrl());
+            userBaseInfoResponse.setNickname(userInfoEntity.getNickName());
+            userBaseInfoResponse.setLevel(1);
+            userBaseInfoResponse.setCodeAge(1);
+            userBaseInfoResponse.setBlogNum(0);
+            userBaseInfoResponse.setFollowNum(0);
+            userBaseInfoResponse.setFanNum(0);
+
+            return new MyResponseEntity<>(Code.OK, "成功查找到本用户信息", userBaseInfoResponse);
+        } catch (NullPointerException e) {
+            return new MyResponseEntity<>(Code.BAD_OPERATION, "用户不存在", null);
+        }
+    }
 
 
 }
