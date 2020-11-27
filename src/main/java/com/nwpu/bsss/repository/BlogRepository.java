@@ -2,9 +2,15 @@ package com.nwpu.bsss.repository;
 
 import com.nwpu.bsss.domain.BlogEntity;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
 
-public interface BlogRepository extends JpaRepository<BlogEntity,Long> {
+import java.util.Set;
 
-    BlogEntity findBlogById(long id);
+public interface BlogRepository extends JpaRepository<BlogEntity, Long> {
+	
+	Set<BlogEntity> findAllByAuthorId(long authorId);
 
+	@Query(nativeQuery = true, value = "select * from Blogs where Id=?1 ")
+	BlogEntity findByBlogId(long Id);
+	
 }

@@ -5,7 +5,7 @@ import java.sql.Timestamp;
 import java.util.Objects;
 
 @Entity
-@Table(name = "Announcement")
+@Table(name = "Announcements")
 public class AnnouncementEntity {
     private long id;
     private String content;
@@ -14,7 +14,7 @@ public class AnnouncementEntity {
 
     @Id
     @Column(name = "id")
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     public long getId() {
         return id;
     }
