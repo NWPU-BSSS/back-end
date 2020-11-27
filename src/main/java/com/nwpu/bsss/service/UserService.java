@@ -3,11 +3,13 @@ package com.nwpu.bsss.service;
 import com.nwpu.bsss.domain.UserEntity;
 import com.nwpu.bsss.domain.UserInfoEntity;
 
-import java.util.Optional;
-
 public interface UserService {
 
     long createUser(UserEntity userEntity);
+
+    void deleteUser(UserEntity userEntity);
+
+    long createUserInfo(UserInfoEntity userInfoEntity);
 
     UserEntity findByUserID(long id);
 
