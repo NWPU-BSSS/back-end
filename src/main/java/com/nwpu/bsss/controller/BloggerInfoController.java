@@ -23,9 +23,9 @@ public class BloggerInfoController {
 	private UserService userService;
 	
 	@GetMapping(path = "/blogger")
-	public MyResponseEntity<BloggerInfoResponse> getBloggerInfo(@RequestParam("userId") String userId) {
+	public MyResponseEntity<BloggerInfoResponse> getBloggerInfo(@RequestParam("bloggerId") String bloggerId) {
 		try {
-			Long id = Long.parseLong(userId);
+			Long id = Long.parseLong(bloggerId);
 			UserInfoEntity userInfoEntity = this.userService.findUserInfoByUserId(id);
 			BloggerInfoResponse bloggerInfoResponse = new BloggerInfoResponse(userInfoEntity.getClassName());
 			return new MyResponseEntity<>(Code.OK, "ok", bloggerInfoResponse);

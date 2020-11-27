@@ -12,14 +12,14 @@ import java.util.Map;
 @SpringBootTest
 class BlogControllerTest {
 	
-	@Resource
-	private RestTemplate restTemplate;
-	private static final String PREFIX = "localhost:8080/blog/";
-	
-	@Test
-	void getComments() {
-		Map<String, String> map = new HashMap<>();
-		map.put("blogId", String.valueOf(1L));
-		System.out.println(this.restTemplate.getForObject(PREFIX + "comments", ArrayList.class, map));
-	}
+	//@Resource
+	//private RestTemplate restTemplate;
+	//private static final String PREFIX = "localhost:8080/blog/";
+	//
+	//@Test
+	//void getComments() {
+	//	Map<String, String> map = new HashMap<>();
+	//	map.put("blogId", String.valueOf(1L));
+	//	System.out.println(this.restTemplate.getForObject(PREFIX + "comments", ArrayList.class, map));
+	//}
 }
