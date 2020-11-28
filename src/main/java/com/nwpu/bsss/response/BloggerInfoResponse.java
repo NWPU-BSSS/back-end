@@ -1,5 +1,12 @@
 package com.nwpu.bsss.response;
 
+import com.nwpu.bsss.domain.UserEntity;
+import com.nwpu.bsss.domain.UserInfoEntity;
+import com.nwpu.bsss.service.UserService;
+import com.nwpu.bsss.serviceimpl.UserServiceImpl;
+
+import javax.persistence.Id;
+
 //Todo：
 public class BloggerInfoResponse {
     private String avatar;
