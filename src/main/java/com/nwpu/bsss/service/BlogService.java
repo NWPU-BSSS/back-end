@@ -13,4 +13,6 @@ public interface BlogService {
     List<BlogEntity> findAll();
 
     void saveBlog(BlogEntity blogEntity);
+
+    List<BlogEntity> getREblog();
 }

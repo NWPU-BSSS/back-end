@@ -4,6 +4,7 @@ import com.nwpu.bsss.domain.BlogEntity;
 import com.nwpu.bsss.domain.CommentEntity;
 import com.nwpu.bsss.domain.dto.PostBlogBody;
 import com.nwpu.bsss.domain.dto.PostCommentBody;
+import com.nwpu.bsss.domain.dto.PostBlogBody;
 import com.nwpu.bsss.response.Code;
 import com.nwpu.bsss.response.GetBlogResponse;
 import com.nwpu.bsss.response.MyResponseEntity;
