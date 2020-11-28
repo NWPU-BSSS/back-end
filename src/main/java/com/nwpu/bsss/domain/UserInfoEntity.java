@@ -1,5 +1,6 @@
 package com.nwpu.bsss.domain;
 
+
 import lombok.Data;
 
 import javax.persistence.*;
@@ -34,6 +35,7 @@ public class UserInfoEntity {
 	
 	@Id
 	@Column(name = "Id")
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	public long getId() {
 		return this.id;
 	}
