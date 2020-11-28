@@ -19,33 +19,38 @@ import java.util.Optional;
 @RestController
 @RequestMapping("home")
 public class HomeController {
-
-    @Resource
-    BlogService blogService;
-
-    @Resource
-    AnnounService announService;
-
-
-    @GetMapping("blog/recommend")
-    public MyResponseEntity<Object> getRecommendBlog(@RequestParam String accessToken){
-        // TODO: 2020/11/23 验证accessToken是否有效
-        List<BlogEntity> blogList = blogService.getREblog();
-        return new MyResponseEntity<>(Code.OK,"每日推荐博文15条",blogList);
-
-    }
-
-    @GetMapping("recommend")
-    public MyResponseEntity<Object> getAnnouncement(@RequestParam String accessToken){
-        // TODO: 2020/11/23 验证accessToken是否有效
-        Optional<AnnouncementEntity> anno = announService.getFisrtAnnoun();
-
-        if(anno.isPresent()){
-            return new MyResponseEntity<>(Code.OK,"今日推荐",anno);
-        }
-        else{
-            List<AnnouncementEntity> list = new ArrayList<>();
-            return new MyResponseEntity<>(Code.BAD_OPERATION,"无公告",list);
-        }
-    }
+	
+	@Resource
+	BlogService blogService;
+	
+	@Resource
+	AnnounService announService;
+	
+	
+	@GetMapping("blog/recommend")
+	public MyResponseEntity<Object> getRecommendBlog(@RequestParam("accessToken") String accessToken) {
+		Long userId = UserController.token2Id.get(accessToken);
+		if (userId == null) {
+			return new MyResponseEntity<>(Code.BAD_OPERATION, "token无效", null);
+		}
+		List<BlogEntity> blogList = this.blogService.getREblog();
+		return new MyResponseEntity<>(Code.OK, "每日推荐博文15条", blogList);
+		
+	}
+	
+	@GetMapping("recommend")
+	public MyResponseEntity<Object> getAnnouncement(@RequestParam("accessToken") String accessToken) {
+		Long userId = UserController.token2Id.get(accessToken);
+		if (userId == null) {
+			return new MyResponseEntity<>(Code.BAD_OPERATION, "token无效", null);
+		}
+		Optional<AnnouncementEntity> anno = this.announService.getFisrtAnnoun();
+		
+		if (anno.isPresent()) {
+			return new MyResponseEntity<>(Code.OK, "今日推荐", anno);
+		} else {
+			List<AnnouncementEntity> list = new ArrayList<>();
+			return new MyResponseEntity<>(Code.BAD_OPERATION, "无公告", list);
+		}
+	}
 }
