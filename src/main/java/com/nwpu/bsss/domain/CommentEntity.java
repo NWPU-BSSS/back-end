@@ -73,7 +73,7 @@ public class CommentEntity implements Comparable<CommentEntity> {
 	}
 	
 	public void setParentId(Long parentId) {
-		this.parentId = Objects.requireNonNullElse(parentId, -1L);
+//		this.parentId = Objects.requireNonNullElse(parentId, -1L);
 	}
 	
 	

@@ -18,13 +18,13 @@ class CommentRepositoryTest {
 	@Transactional
 	void findByBlogIdAndParent() {
 		Set<CommentEntity> comments = this.repository.findRootCommentsByBlogId(1L);
-		System.out.println("啦".repeat(20));
+//		System.out.println("啦".repeat(20));
 		for (CommentEntity i : comments) {
 			System.out.println(i);
 		}
-		System.out.println("啦".repeat(20));
+//		System.out.println("啦".repeat(20));
 		System.out.println(this.repository.findById(2L));
-		System.out.println("啦".repeat(20));
+//		System.out.println("啦".repeat(20));
 		System.out.println(this.repository.findById(3L));
 	}
 }
