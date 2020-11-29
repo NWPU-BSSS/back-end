@@ -19,13 +19,13 @@ import lombok.Setter;
 
 
 public class GetBlogResponse {
-    protected String title;
-    protected String content;
-    protected long likesNum;
-    protected long commentsNum;
-    protected long shareNum;
-    protected long favoriteNum;
-
+	protected String title;
+	protected String content;
+	protected long likeNum;
+	protected long commentNum;
+	protected long shareNum;
+	protected long favoriteNum;
+	
 }
 
 
