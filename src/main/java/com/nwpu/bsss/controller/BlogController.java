@@ -81,7 +81,7 @@ public class BlogController {
 		CommentEntity commentEntity = new CommentEntity(userId, blogId, body.getCommentId(), body.getContent());
 		
 		this.commentService.saveComment(commentEntity);
-		return new MyResponseEntity<>(Code.OK, "博客发布成功", null);
+		return new MyResponseEntity<>(Code.OK, "评论发布成功", null);
 		
 	}
 }
