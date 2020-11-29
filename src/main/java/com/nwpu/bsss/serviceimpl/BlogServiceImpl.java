@@ -56,9 +56,9 @@ public class BlogServiceImpl implements BlogService {
 		Random rand = new Random();
 		HashMap<Integer, Integer> map = new HashMap<>();
 		//返回条数为15条
-		int number = 15;
+		int number = Integer.min((int) count, 15);
 		while (number > 0) {
-			int no = rand.nextInt((int) count) + 1;
+			int no = rand.nextInt((int) count);
 			if (map.get(no) == null) {
 				map.put(no, 1);
 				seq.add(no);
