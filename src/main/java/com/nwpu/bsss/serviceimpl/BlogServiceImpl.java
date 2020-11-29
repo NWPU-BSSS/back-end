@@ -46,7 +46,6 @@ public class BlogServiceImpl implements BlogService {
 		List<Integer> seq = this.GenerateSEQ(count);
 		List<BlogEntity> res = new ArrayList<>();
 		for (Integer no : seq) {
-			System.out.println("*".repeat(10) + no);
 			res.add(blogList.get(no));
 		}
 		return res;
