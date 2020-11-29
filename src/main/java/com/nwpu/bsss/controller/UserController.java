@@ -92,19 +92,18 @@ public class UserController {
                 long userId = userService.createUser(user);
                 //外键设置
                 userInfo.setId(userId);
+                try {
+                    //创建用户扩展信息
+                    userService.createUserInfo(userInfo);
+                    return new MyResponseEntity<>(Code.OK, "注册成功", null);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    //如果UserInfo创建失败，同时删除刚创建的新user。
+                    userService.deleteUser(user);
+                    return new MyResponseEntity<>(Code.BAD_OPERATION, "未知错误", null);
+                }
             } catch (DataIntegrityViolationException e) {
                 return new MyResponseEntity<>(Code.BAD_OPERATION, "该邮箱已被占用，请重试", null);
-            }
-
-            try {
-                //创建用户扩展信息
-                userService.createUserInfo(userInfo);
-                return new MyResponseEntity<>(Code.OK, "注册成功", null);
-            } catch (Exception e) {
-                e.printStackTrace();
-                //如果UserInfo创建失败，同时删除刚创建的新user。
-                userService.deleteUser(user);
-                return new MyResponseEntity<>(Code.BAD_OPERATION, "未知错误", null);
             }
         }
     }
