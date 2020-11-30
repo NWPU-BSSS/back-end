@@ -2,6 +2,7 @@ package com.nwpu.bsss.controller;
 
 import com.nwpu.bsss.domain.AnnouncementEntity;
 import com.nwpu.bsss.domain.BlogEntity;
+import com.nwpu.bsss.domain.dto.ReBlogJsonBody;
 import com.nwpu.bsss.response.Code;
 import com.nwpu.bsss.response.MyResponseEntity;
 import com.nwpu.bsss.service.AnnounService;
@@ -33,7 +34,7 @@ public class HomeController {
 		if (userId == null) {
 			return new MyResponseEntity<>(Code.BAD_OPERATION, "token无效", null);
 		}
-		List<BlogEntity> blogList = this.blogService.getREblog();
+		List<ReBlogJsonBody> blogList = this.blogService.getREblog();
 		return new MyResponseEntity<>(Code.OK, "每日推荐博文15条", blogList);
 		
 	}

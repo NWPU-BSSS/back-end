@@ -1,7 +1,10 @@
 package com.nwpu.bsss.serviceimpl;
 
 import com.nwpu.bsss.domain.BlogEntity;
+import com.nwpu.bsss.domain.UserInfoEntity;
+import com.nwpu.bsss.domain.dto.ReBlogJsonBody;
 import com.nwpu.bsss.repository.BlogRepository;
+import com.nwpu.bsss.repository.UserInfoRepository;
 import com.nwpu.bsss.service.BlogService;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -17,6 +20,9 @@ public class BlogServiceImpl implements BlogService {
 	
 	@Resource
 	private BlogRepository blogRepository;
+
+	@Resource
+	private UserInfoRepository userInfoRepository;
 	
 	@Override
 	@Transactional
@@ -40,13 +46,19 @@ public class BlogServiceImpl implements BlogService {
 	}
 	
 	@Override
-	public List<BlogEntity> getREblog() {
+	public List<ReBlogJsonBody> getREblog() {
+
 		List<BlogEntity> blogList = this.blogRepository.findAll();
 		long count = blogList.size();
 		List<Integer> seq = this.GenerateSEQ(count);
-		List<BlogEntity> res = new ArrayList<>();
+
+		List<ReBlogJsonBody> res = new ArrayList<>();
+
 		for (Integer no : seq) {
-			res.add(blogList.get(no));
+			BlogEntity blog = blogList.get(no);
+			UserInfoEntity userInfo = userInfoRepository.findUserInfoById(blog.getAuthorId());
+
+			res.add(ReBlogJsonBody.parseJson(blog,userInfo.getNickName(),userInfo.getAvatarUrl()));
 		}
 		return res;
 	}

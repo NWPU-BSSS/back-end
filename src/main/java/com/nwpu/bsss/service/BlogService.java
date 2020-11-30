@@ -1,6 +1,7 @@
 package com.nwpu.bsss.service;
 
 import com.nwpu.bsss.domain.BlogEntity;
+import com.nwpu.bsss.domain.dto.ReBlogJsonBody;
 
 import java.util.List;
 
@@ -14,5 +15,5 @@ public interface BlogService {
 
     void saveBlog(BlogEntity blogEntity);
 
-    List<BlogEntity> getREblog();
+    List<ReBlogJsonBody> getREblog();
 }
