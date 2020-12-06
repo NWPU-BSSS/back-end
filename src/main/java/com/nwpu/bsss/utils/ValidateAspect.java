@@ -44,10 +44,8 @@ public class ValidateAspect {
                 log.error("用户无效");
                 return new MyResponseEntity<>(Code.BAD_OPERATION, "token无效", null);
             }
-            else{
-                result = joinPoint.proceed();
-            }
         }
+        result = joinPoint.proceed();
         log.info(accessToken);
 
 

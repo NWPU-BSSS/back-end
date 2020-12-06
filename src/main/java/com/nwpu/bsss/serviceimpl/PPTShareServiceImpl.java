@@ -38,19 +38,23 @@ public class PPTShareServiceImpl implements PPTShareService {
             FileEntity newFile = new FileEntity();
 
             newFile.setFileName(file.getOriginalFilename());
-            newFile.setTime(new Timestamp(new Date().getTime()));
+            newFile.setTime(new Timestamp(System.currentTimeMillis()));
             newFile.setUserId(userId);
 
             fileId = fileRepository.save(newFile).getFileId();
+            log.info("文件："+file.getOriginalFilename() + " 文件ID:" + fileId +" 已成功存储");
         }
         else{
-            fileId = lookFile.get().getFileId();
-            log.info(" 文件ID:" + fileId +" 已更新");
+            FileEntity fileEntity = lookFile.get();
+            fileId = fileEntity.getFileId();
+            fileEntity.setTime(new Timestamp(System.currentTimeMillis()));
+
+            fileRepository.save(fileEntity);
+            log.info("文件ID:" + fileId +" 已更新");
         }
 
         fileComponent.uploadFile(file,userId);
 
-        log.info("文件："+file.getOriginalFilename() + " 文件ID:" + fileId +" 已成功存储");
         return fileId;
     }
 

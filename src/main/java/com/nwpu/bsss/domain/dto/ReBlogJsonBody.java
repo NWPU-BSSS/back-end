@@ -26,6 +26,8 @@ public class ReBlogJsonBody {
     public static ReBlogJsonBody parseJson(BlogEntity blog,String nickname,String avatar){
 
         ReBlogJsonBody res = new ReBlogJsonBody();
+        final int maxWord = 100;
+        String content = blog.getContent();
 
         res.blogId = blog.getId();
         res.userId = blog.getAuthorId();
@@ -33,7 +35,7 @@ public class ReBlogJsonBody {
         res.tagA = blog.getTagA();
         res.tagB = blog.getTagB();
         res.tagC = blog.getTagC();
-        res.preview = blog.getContent();
+        res.preview = content.substring(0,Integer.min(content.length()-1,maxWord));
         res.avatar = avatar;
         res.nickname = nickname;
         res.lastModifiedTime = blog.getLastModifiedTime();
