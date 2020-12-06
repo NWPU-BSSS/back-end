@@ -15,6 +15,11 @@ spring:
   jackson:
     time-zone: Hongkong
     date-format: yyyy-MM-dd HH:mm:ss
+  servlet:
+    multipart:
+      enabled: true
+      max-file-size: 100MB
+      max-request-size: 100MB
 #  security:
 #    user:
 #      name: user
@@ -23,6 +28,8 @@ server:
   port: 8080
   servlet:
     context-path: /api
+
+filepath: ./file/
 
 #mybatis:
 #  mapper-locations: classpath:mapper/*.xml
