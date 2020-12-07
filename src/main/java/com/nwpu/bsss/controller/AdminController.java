@@ -33,7 +33,7 @@ public class AdminController {
 		List<UserListElement> list = entities.stream()
 				.map(e -> new UserListElement(
 								e.getId(),
-								e.getNickName(),// TODO: 12/7/2020 username
+								this.userService.findByUserID(e.getId()).getUserName(),
 								e.getNickName(),
 								e.getAvatarUrl(),
 								e.getIntroduction(),

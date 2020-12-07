@@ -4,6 +4,7 @@ import com.nwpu.bsss.domain.BlogEntity;
 import com.nwpu.bsss.domain.CommentEntity;
 import com.nwpu.bsss.domain.dto.PostBlogBody;
 import com.nwpu.bsss.domain.dto.PostCommentBody;
+import com.nwpu.bsss.domain.dto.PostFavBody;
 import com.nwpu.bsss.response.Code;
 import com.nwpu.bsss.response.GetBlogResponse;
 import com.nwpu.bsss.response.MyResponseEntity;
@@ -92,9 +93,9 @@ public class BlogController {
 	
 	@PostMapping("/fav")
 	public MyResponseEntity<Object> addFavorite(@RequestHeader("accessToken") String accessToken,
-	                                            @RequestParam("blogId") long blogId) {
+	                                            @RequestBody PostFavBody favBody) {
 		long userId = UserController.token2Id.get(accessToken);
-		this.favoriteService.addFavorite(userId, blogId);
+		this.favoriteService.setFavorite(userId, favBody.getBlogId(), favBody.isFavorite());
 		return new MyResponseEntity<>(Code.OK, "ok", null);
 	}
 	

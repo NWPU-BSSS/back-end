@@ -8,8 +8,8 @@ import java.sql.Timestamp;
 public class FavoriteEntity {
 	
 	private long id;
-	private long blogId;
 	private long userId;
+	private long blogId;
 	private Timestamp time;
 	
 	public FavoriteEntity() {
@@ -28,16 +28,17 @@ public class FavoriteEntity {
 		return this.id;
 	}
 	
-	@Basic(optional = false)
-	@Column(name = "BlogId")
-	public long getBlogId() {
-		return this.blogId;
-	}
 	
 	@Basic(optional = false)
 	@Column(name = "UserId")
 	public long getUserId() {
 		return this.userId;
+	}
+	
+	@Basic(optional = false)
+	@Column(name = "BlogId")
+	public long getBlogId() {
+		return this.blogId;
 	}
 	
 	@Basic(optional = false)

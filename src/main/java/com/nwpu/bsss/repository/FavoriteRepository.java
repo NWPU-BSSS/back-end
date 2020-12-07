@@ -9,4 +9,5 @@ public interface FavoriteRepository extends JpaRepository<FavoriteEntity, Long> 
 	
 	boolean existsByUserIdAndBlogId(long userId, long blogId);
 	
+	void deleteByUserIdAndBlogId(long userId, long blogId);
 }
