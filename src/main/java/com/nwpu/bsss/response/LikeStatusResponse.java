@@ -6,24 +6,14 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 /**
- * Project: bsss
- *
  * @author liuziyu
+ * @desc ...
+ * @date 2020-12-07 16:32:10
  */
 @Getter
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-
-public class GetBlogResponse {
-	protected String title;
-	protected String content;
-	protected long likeNum;
-	protected long commentNum;
-	protected long shareNum;
-	protected long favoriteNum;
-	
+public class LikeStatusResponse {
+    protected boolean status;
 }
-
-
-
