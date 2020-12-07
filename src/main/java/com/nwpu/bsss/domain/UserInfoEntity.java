@@ -19,6 +19,7 @@ public class UserInfoEntity {
 		this.resume = "I'm a NPUer";
 		this.introduction = "I love NPU";
 		this.realName = "";
+		this.level = 1;
 		this.avatarUrl = "/avatar/default";
 	}
 
@@ -31,6 +32,7 @@ public class UserInfoEntity {
 	private String resume;
 	private String introduction;
 	private String realName;
+	private int level;
 	private String avatarUrl;
 	
 	@Id
@@ -87,7 +89,11 @@ public class UserInfoEntity {
 	public String getRealName() {
 		return this.realName;
 	}
-	
+
+	@Basic(optional = false)
+	@Column(name = "level")
+	public int getLevel(){return this.level;}
+
 	@Basic(optional = false)
 	@Column(name = "Avatar")
 	public String getAvatarUrl() {
@@ -129,7 +135,9 @@ public class UserInfoEntity {
 	public void setRealName(String realName) {
 		this.realName = realName;
 	}
-	
+
+	public void setLevel(int level) {this.level = level; }
+
 	public void setAvatarUrl(String avatarUrl) {
 		this.avatarUrl = avatarUrl;
 	}
