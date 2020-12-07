@@ -4,13 +4,16 @@ import com.nwpu.bsss.domain.BlogEntity;
 import com.nwpu.bsss.domain.CommentEntity;
 import com.nwpu.bsss.domain.dto.PostBlogBody;
 import com.nwpu.bsss.domain.dto.PostCommentBody;
+import com.nwpu.bsss.domain.dto.PostFavBody;
 import com.nwpu.bsss.response.Code;
 import com.nwpu.bsss.response.GetBlogResponse;
 import com.nwpu.bsss.response.LikeStatusResponse;
 import com.nwpu.bsss.response.MyResponseEntity;
 import com.nwpu.bsss.response.blog.CommentElement;
+import com.nwpu.bsss.response.blog.IsFavoriteResponse;
 import com.nwpu.bsss.service.BlogService;
 import com.nwpu.bsss.service.CommentService;
+import com.nwpu.bsss.service.FavoriteService;
 import com.nwpu.bsss.service.LikeService;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.web.bind.annotation.*;
@@ -21,6 +24,7 @@ import java.util.Date;
 import java.util.List;
 
 @RestController
+@RequestMapping("blog")
 public class BlogController {
 
     @Resource
