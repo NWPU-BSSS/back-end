@@ -9,7 +9,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
-import java.util.List;
 
 @Service    //注入spring容器
 public class UserServiceImpl implements UserService {
@@ -55,10 +54,5 @@ public class UserServiceImpl implements UserService {
 	@Override
 	public UserEntity findByUsername(String username) {
 		return this.userRepository.findUserByUserName(username);
-	}
-	
-	@Override
-	public List<UserInfoEntity> findAll() {
-		return this.userInfoRepository.findAll();
 	}
 }

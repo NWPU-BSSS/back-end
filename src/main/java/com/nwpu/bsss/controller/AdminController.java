@@ -30,15 +30,14 @@ public class AdminController {
 	
 	@Resource
 	AdminService adminService;
-	
 	@Resource
-	private UserService userService;
+	UserService userService;
 	
 	private static final String InternalError = "内部错误";
 	
 	@GetMapping("/users")
 	public MyResponseEntity<List<UserListElement>> getUserList() {
-		List<UserInfoEntity> entities = this.userService.findAll();
+		List<UserInfoEntity> entities = this.adminService.findAllUsers();
 		List<UserListElement> list = entities.stream()
 				.map(e -> new UserListElement(
 								e.getId(),

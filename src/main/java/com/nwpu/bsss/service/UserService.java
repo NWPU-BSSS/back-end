@@ -3,8 +3,6 @@ package com.nwpu.bsss.service;
 import com.nwpu.bsss.domain.UserEntity;
 import com.nwpu.bsss.domain.UserInfoEntity;
 
-import java.util.List;
-
 
 public interface UserService {
 	
@@ -21,6 +19,4 @@ public interface UserService {
 	UserInfoEntity findUserInfoByUserId(Long id);
 	
 	UserEntity findByUsername(String username);
-	
-	List<UserInfoEntity> findAll();
 }
