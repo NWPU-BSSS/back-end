@@ -1,12 +1,15 @@
 package com.nwpu.bsss.controller;
 
+import com.nwpu.bsss.domain.FollowEntity;
 import com.nwpu.bsss.domain.UserEntity;
 import com.nwpu.bsss.domain.UserInfoEntity;
+import com.nwpu.bsss.domain.dto.SubscribeBloggerBody;
 import com.nwpu.bsss.domain.dto.Tag;
 import com.nwpu.bsss.domain.dto.LoginUserBody;
 import com.nwpu.bsss.domain.dto.RegisterBody;
 import com.nwpu.bsss.exceptions.ValidationException;
 import com.nwpu.bsss.response.*;
+import com.nwpu.bsss.service.FollowService;
 import com.nwpu.bsss.service.UserService;
 import com.nwpu.bsss.utils.UserInfoValidator;
 import com.nwpu.bsss.utils.VerifyClient;
@@ -32,6 +35,8 @@ public class UserController {
     private UserService userService;
     @Resource
     private VerifyClient verifyClient;
+    @Resource
+    private FollowService followService;
 
     @PostMapping(path = "/usernameCheck")
     public MyResponseEntity<UsernameCheckResponse> checkUsername(@RequestBody RegisterBody registerBody) {
@@ -175,5 +180,36 @@ public class UserController {
         }
     }
 
+    @PostMapping(path = "/user/subscribe")
+    public MyResponseEntity<Object> subscribeBlogger(@RequestHeader("accessToken") String token, @RequestParam("userId") long userId,
+                                                     @RequestBody SubscribeBloggerBody subscribeBloggerBody){
+            FollowEntity followEntity;
+            boolean subscribe = subscribeBloggerBody.isSubscribe();
+            long bloggerId = subscribeBloggerBody.getBloggerId();
+            if(userService.findByUserID(bloggerId) == null)
+                return new MyResponseEntity<>(Code.BAD_OPERATION, "博主不存在", null);
+            if(bloggerId == userId)
+                return new MyResponseEntity<>(Code.BAD_OPERATION, "不能关注自己", null);
+            if(subscribe){
+                if(followService.isFollowed(bloggerId, userId)){
+                    return new MyResponseEntity<>(Code.BAD_OPERATION, "已经关注该博主", null);
+                }
+                else{
+                    followService.addFollow(bloggerId, userId);
+                    return new MyResponseEntity<>(Code.OK, "ok", null);
+                }
+            }
+            else {
+                if(followService.isFollowed(bloggerId, userId)){
+                    followService.deleteFollow(bloggerId, userId);
+                    return new MyResponseEntity<>(Code.OK, "ok", null);
+                }
+                else {
+                    return new MyResponseEntity<>(Code.BAD_OPERATION, "已经取关该博主", null);
+                }
+            }
+
+
+    }
 
 }
