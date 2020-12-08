@@ -20,7 +20,7 @@ public class UserInfoResponse {
     private String university;
     private String academy;
     private String className;
-    private Timestamp graduateTime;
+    private String graduateTime;
     private long codeAge;
     private int level;
     private String avatar;
