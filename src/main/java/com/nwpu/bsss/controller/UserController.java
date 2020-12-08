@@ -1,11 +1,13 @@
 package com.nwpu.bsss.controller;
 
+import com.nwpu.bsss.domain.UserEntity;
 import com.nwpu.bsss.domain.UserInfoEntity;
 import com.nwpu.bsss.response.*;
 import com.nwpu.bsss.service.UserService;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
+import java.util.Date;
 
 /**
  * @author JerryChan
@@ -62,7 +64,6 @@ public class UserController {
         userInfoResponse.setUniversity("西北工业大学");
         userInfoResponse.setAcademy("软件学院");
         userInfoResponse.setClassName(userInfoEntity.getClassName());
-        userInfoEntity.getStudentNo();
         long enrollTime=userInfoEntity.getStudentNo()/1000000L;
         userInfoResponse.setGraduateTime(String.valueOf(enrollTime+4));
         long codeAgeTime=new Date().getTime()-userEntity.getTime().getTime();
