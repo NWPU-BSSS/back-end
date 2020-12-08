@@ -2,8 +2,7 @@ package com.nwpu.bsss.service;
 
 import com.nwpu.bsss.domain.UserEntity;
 import com.nwpu.bsss.domain.UserInfoEntity;
-
-import java.util.Optional;
+import com.nwpu.bsss.response.UserSubscribeStatusResponse;
 
 public interface UserService {
 
@@ -20,5 +19,7 @@ public interface UserService {
     UserInfoEntity findUserInfoByUserId(Long id);
     
     UserEntity findByUsername(String username);
+
+    UserSubscribeStatusResponse findUserSubscribeStatusResponse(Long userId,Long bloggerId);
 
 }

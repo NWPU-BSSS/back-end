@@ -1,9 +1,12 @@
 package com.nwpu.bsss.serviceimpl;
 
+import com.nwpu.bsss.domain.FollowEntity;
 import com.nwpu.bsss.domain.UserEntity;
 import com.nwpu.bsss.domain.UserInfoEntity;
+import com.nwpu.bsss.repository.FollowRepository;
 import com.nwpu.bsss.repository.UserInfoRepository;
 import com.nwpu.bsss.repository.UserRepository;
+import com.nwpu.bsss.response.UserSubscribeStatusResponse;
 import com.nwpu.bsss.service.UserService;
 
 import org.springframework.stereotype.Service;
@@ -20,6 +23,9 @@ public class UserServiceImpl implements UserService {
 
     @Resource
     private UserInfoRepository userInfoRepository;
+
+    @Resource
+    private FollowRepository followRepository;
 
     @Override
     @Transactional
@@ -53,6 +59,20 @@ public class UserServiceImpl implements UserService {
 
     public UserEntity findByUsername(String username) {
         return userRepository.findUserByUserName(username);
+    }
+
+    @Override
+    public UserSubscribeStatusResponse findUserSubscribeStatusResponse(Long userId,Long bloggerId){
+        FollowEntity follow = new FollowEntity();
+        UserSubscribeStatusResponse userSubscribeStatusResponse = new UserSubscribeStatusResponse();
+        follow = followRepository.getFollow(userId,bloggerId);
+        if(follow==null){
+            userSubscribeStatusResponse.setStatus(false);
+        }
+        else{
+            userSubscribeStatusResponse.setStatus(true);
+        }
+        return userSubscribeStatusResponse;
     }
 
 }
