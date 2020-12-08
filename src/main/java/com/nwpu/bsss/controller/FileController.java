@@ -26,12 +26,11 @@ public class FileController {
      */
     @PostMapping(value = "/upload")
     public MyResponseEntity<Object> uploading(@RequestParam("file") MultipartFile file,
+                                              @RequestParam("userId") String userId,
                                               @RequestHeader("accessToken") String accessToken) {
-        Long userId = UserController.token2Id.get(accessToken);
-
         long id;
         try {
-            id = shareService.uploadFile(file,userId);
+            id = shareService.uploadFile(file,Long.parseLong(userId));
         }catch (IOException e){
             log.info("上传失败");
             return new MyResponseEntity<>(Code.BAD_OPERATION,"文件上传失败",null);
@@ -47,6 +46,7 @@ public class FileController {
     @RequestMapping("/download")
     public void downLoad(HttpServletResponse response,
                          @RequestHeader("accessToken") String accessToken,
+                         @RequestParam("userId") String userId,
                          @RequestParam("fileId")long fileId) {
         try{
             shareService.downloadFile(response,fileId);
