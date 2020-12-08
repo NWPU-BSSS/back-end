@@ -184,6 +184,10 @@ public class UserController {
         UserEntity userEntity=userService.findByUserID(userId);
         UserInfoEntity userInfoEntity=userService.findUserInfoByUserId(userId);
 
+        if(userEntity==null || userInfoEntity==null){
+            return new MyResponseEntity<>(Code.BAD_REQUEST,"未查询到该id对应的用户",null);
+        }
+
         UserInfoResponse userInfoResponse=new UserInfoResponse();
         userInfoResponse.setUsername(userEntity.getUserName());
         userInfoResponse.setNickname(userInfoEntity.getNickName());
