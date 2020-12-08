@@ -1,5 +1,6 @@
 package com.nwpu.bsss.service;
 
+import com.nwpu.bsss.domain.dto.KeywordBlogJsonBody;
 import com.nwpu.bsss.domain.dto.ReBlogJsonBody;
 
 import javax.annotation.Resource;
@@ -14,5 +15,6 @@ import java.util.List;
 public interface BlogListService {
 	
 	List<ReBlogJsonBody> getREblog();
-	
+
+	List<KeywordBlogJsonBody> getKeywordBlog(String word);
 }

@@ -1,18 +1,16 @@
 package com.nwpu.bsss.serviceimpl;
 
 import com.nwpu.bsss.domain.BlogEntity;
+import com.nwpu.bsss.domain.FavoriteEntity;
 import com.nwpu.bsss.domain.UserInfoEntity;
+import com.nwpu.bsss.domain.dto.KeywordBlogJsonBody;
 import com.nwpu.bsss.domain.dto.ReBlogJsonBody;
-import com.nwpu.bsss.repository.BlogRepository;
-import com.nwpu.bsss.repository.UserInfoRepository;
+import com.nwpu.bsss.repository.*;
 import com.nwpu.bsss.service.BlogListService;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Random;
+import java.util.*;
 
 /**
  * Created: 2020-12-07 20:54:03<b>
@@ -26,7 +24,13 @@ public class BlogListServiceImpl implements BlogListService {
 	private BlogRepository blogRepository;
 	@Resource
 	private UserInfoRepository userInfoRepository;
-	
+	@Resource
+	private CommentRepository commentRepository;
+	@Resource
+	private FavoriteRepository favoriteRepository;
+	@Resource
+	private LikeRepository likeRepository;
+
 	@Override
 	public List<ReBlogJsonBody> getREblog() {
 		
@@ -44,7 +48,22 @@ public class BlogListServiceImpl implements BlogListService {
 		}
 		return res;
 	}
-	
+
+	@Override
+	public List<KeywordBlogJsonBody> getKeywordBlog(String word) {
+		List<BlogEntity> keywordBlogEntities=new ArrayList<BlogEntity>();
+		keywordBlogEntities.addAll(this.blogRepository.findByKeyword(word));
+		List<KeywordBlogJsonBody> res=new ArrayList<KeywordBlogJsonBody>();
+		for(BlogEntity currentBlog:keywordBlogEntities){
+			UserInfoEntity userInfo = this.userInfoRepository.findUserInfoById(currentBlog.getAuthorId());
+			long favoriteNum=this.favoriteRepository.getBlogFavoritesNum(currentBlog.getId());
+			long likeNum=this.likeRepository.getBlogLikesNum(currentBlog.getId());
+			long commentNum=this.commentRepository.getBlogCommentsNum(currentBlog.getId());
+			res.add(KeywordBlogJsonBody.parseJson(currentBlog,userInfo.getNickName(),userInfo.getAvatarUrl(),favoriteNum,likeNum,commentNum));
+		}
+		return res;
+	}
+
 	private List<Integer> GenerateSEQ(long count) {
 		List<Integer> seq = new ArrayList<>();
 		Random rand = new Random();
