@@ -11,7 +11,7 @@ import javax.persistence.*;
 public class UserInfoEntity {
 
 	public UserInfoEntity() {
-		this.nickname = "yourNickName";
+		this.nickName = "yourNickName";
 		this.gender = 0;
 		this.studentNo = 2000000000;
 		this.className = "14000000";
@@ -24,7 +24,7 @@ public class UserInfoEntity {
 	}
 
 	private long id;
-	private String nickname;
+	private String nickName;
 	private int gender;
 	private long studentNo;
 	private String className;
@@ -44,8 +44,8 @@ public class UserInfoEntity {
 	
 	@Basic(optional = false)
 	@Column(name = "Nickname")
-	public String getNickname() {
-		return this.nickname;
+	public String getNickName() {
+		return this.nickName;
 	}
 	
 	@Basic(optional = false)
@@ -104,14 +104,14 @@ public class UserInfoEntity {
 		this.id = id;
 	}
 	
-	public void setNickname(String nickname) {
-		this.nickname = nickname;
+	public void setNickName(String nickName) {
+		this.nickName = nickName;
 	}
 	
 	public void setGender(int gender) {
 		this.gender = gender;
 	}
-	
+
 	public void setStudentNo(long studentNo) {
 		this.studentNo = studentNo;
 	}
