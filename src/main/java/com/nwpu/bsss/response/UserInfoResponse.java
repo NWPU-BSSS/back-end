@@ -16,7 +16,7 @@ public class UserInfoResponse {
     private String nickname;
     private String introduction;
     private String realName;
-    private String gender;
+    private int gender;
     private String university;
     private String academy;
     private String className;
