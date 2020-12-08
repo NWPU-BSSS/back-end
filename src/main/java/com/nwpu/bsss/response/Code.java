@@ -8,7 +8,8 @@ import com.fasterxml.jackson.annotation.JsonValue;
 public enum Code {
 	OK(1),
 	BAD_OPERATION(0),
-	BAD_REQUEST(-1);
+	BAD_REQUEST(-1),
+	INVALID_TOKEN(-2);
 	
 	private int code;
 	
