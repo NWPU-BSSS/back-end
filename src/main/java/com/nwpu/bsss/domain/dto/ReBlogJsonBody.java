@@ -23,7 +23,7 @@ public class ReBlogJsonBody {
     int likeNum;
     int commentNum;
 
-    public static ReBlogJsonBody parseJson(BlogEntity blog,String nickname,String avatar){
+    public static ReBlogJsonBody parseJson(BlogEntity blog, String nickname, String avatar) {
 
         ReBlogJsonBody res = new ReBlogJsonBody();
         final int maxWord = 100;
@@ -35,7 +35,7 @@ public class ReBlogJsonBody {
         res.tagA = blog.getTagA();
         res.tagB = blog.getTagB();
         res.tagC = blog.getTagC();
-        res.preview = content.substring(0,Integer.min(content.length()-1,maxWord));
+        res.preview = content.substring(0, Integer.min(content.length(), maxWord));
         res.avatar = avatar;
         res.nickname = nickname;
         res.lastModifiedTime = blog.getLastModifiedTime();
