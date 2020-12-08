@@ -23,12 +23,9 @@ public class HomeController {
 	@Resource
 	AnnounService announService;
 	
-	@GetMapping("recommend")
+	@GetMapping("announcement")
 	public MyResponseEntity<Object> getAnnouncement(@RequestHeader("accessToken") String accessToken) {
-		Long userId = UserController.token2Id.get(accessToken);
-		if (userId == null) {
-			return new MyResponseEntity<>(Code.BAD_OPERATION, "token无效", null);
-		}
+
 		Optional<AnnouncementsEntity> anno = this.announService.getFisrtAnnoun();
 		
 		if (anno.isPresent()) {
