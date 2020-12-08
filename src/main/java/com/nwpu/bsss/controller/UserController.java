@@ -175,5 +175,32 @@ public class UserController {
         }
     }
 
+    @GetMapping("/user/info")
+    public MyResponseEntity<UserInfoResponse> getUserInfo(@RequestParam("userId") Long userId){
+        //TODO:university and academy set as default values
+        if(userId==null){
+            return new MyResponseEntity<>(Code.BAD_REQUEST,"用户id为空值",null);
+        }
+        UserEntity userEntity=userService.findByUserID(userId);
+        UserInfoEntity userInfoEntity=userService.findUserInfoByUserId(userId);
 
+        UserInfoResponse userInfoResponse=new UserInfoResponse();
+        userInfoResponse.setUsername(userEntity.getUserName());
+        userInfoResponse.setNickname(userInfoEntity.getNickName());
+        userInfoResponse.setIntroduction(userInfoEntity.getIntroduction());
+        userInfoResponse.setRealName(userInfoEntity.getRealName());
+        userInfoResponse.setGender(userInfoEntity.getGender());
+        userInfoResponse.setUniversity("西北工业大学");
+        userInfoResponse.setAcademy("软件学院");
+        userInfoResponse.setClassName(userInfoEntity.getClassName());
+        userInfoEntity.getStudentNo();
+        long enrollTime=userInfoEntity.getStudentNo()/1000000L;
+        userInfoResponse.setGraduateTime(String.valueOf(enrollTime+4));
+        long codeAgeTime=new Date().getTime()-userEntity.getTime().getTime();
+        userInfoResponse.setCodeAge(codeAgeTime/31536000000L);
+        userInfoResponse.setLevel(userInfoEntity.getLevel());
+        userInfoResponse.setAvatar(userInfoEntity.getAvatarUrl());
+
+        return new MyResponseEntity<UserInfoResponse>(Code.OK,"ok",userInfoResponse);
+    }
 }
