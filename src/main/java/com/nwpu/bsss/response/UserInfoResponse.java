@@ -5,6 +5,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.sql.Timestamp;
+
 @Getter
 @Setter
 @AllArgsConstructor
@@ -18,8 +20,8 @@ public class UserInfoResponse {
     private String university;
     private String academy;
     private String className;
-    private String graduateTime;
-    private String codeAge;
+    private Timestamp graduateTime;
+    private long codeAge;
     private int level;
     private String avatar;
 }
