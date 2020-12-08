@@ -181,27 +181,28 @@ public class UserController {
     }
 
     @PostMapping(path = "/user/subscribe")
-    public MyResponseEntity<Object> subscribeBlogger(@RequestHeader("accessToken") String token, @RequestParam("userId") long userId,
+    public MyResponseEntity<Object> subscribeBlogger(@RequestHeader("accessToken") String token, @RequestParam("userId") String userId,
                                                      @RequestBody SubscribeBloggerBody subscribeBloggerBody){
+            long uId = Long.parseLong(userId);
             FollowEntity followEntity;
             boolean subscribe = subscribeBloggerBody.isSubscribe();
             long bloggerId = subscribeBloggerBody.getBloggerId();
             if(userService.findByUserID(bloggerId) == null)
                 return new MyResponseEntity<>(Code.BAD_OPERATION, "博主不存在", null);
-            if(bloggerId == userId)
+            if(bloggerId == uId)
                 return new MyResponseEntity<>(Code.BAD_OPERATION, "不能关注自己", null);
             if(subscribe){
-                if(followService.isFollowed(bloggerId, userId)){
+                if(followService.isFollowed(bloggerId, uId)){
                     return new MyResponseEntity<>(Code.BAD_OPERATION, "已经关注该博主", null);
                 }
                 else{
-                    followService.addFollow(bloggerId, userId);
+                    followService.addFollow(bloggerId, uId);
                     return new MyResponseEntity<>(Code.OK, "ok", null);
                 }
             }
             else {
-                if(followService.isFollowed(bloggerId, userId)){
-                    followService.deleteFollow(bloggerId, userId);
+                if(followService.isFollowed(bloggerId, uId)){
+                    followService.deleteFollow(bloggerId, uId);
                     return new MyResponseEntity<>(Code.OK, "ok", null);
                 }
                 else {
