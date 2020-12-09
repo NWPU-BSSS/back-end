@@ -1,29 +1,15 @@
 package com.nwpu.bsss.controller;
 
-import com.nwpu.bsss.domain.FollowEntity;
 import com.nwpu.bsss.domain.UserEntity;
 import com.nwpu.bsss.domain.UserInfoEntity;
 import com.nwpu.bsss.domain.dto.SubscribeBloggerBody;
-import com.nwpu.bsss.domain.dto.Tag;
-import com.nwpu.bsss.domain.dto.LoginUserBody;
-import com.nwpu.bsss.domain.dto.RegisterBody;
-import com.nwpu.bsss.exceptions.ValidationException;
 import com.nwpu.bsss.response.*;
 import com.nwpu.bsss.service.FollowService;
 import com.nwpu.bsss.service.UserService;
-import com.nwpu.bsss.utils.UserInfoValidator;
-import com.nwpu.bsss.utils.VerifyClient;
-import org.apache.http.impl.client.cache.memcached.SHA256KeyHashingScheme;
-import org.springframework.dao.DataIntegrityViolationException;
-import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
-import java.sql.Timestamp;
-import java.util.ArrayList;
 import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
 
 /**
  * @author JerryChan
@@ -110,6 +96,9 @@ public class UserController {
     }
 
 
+    /**
+     * 周亚旗
+     */
     @GetMapping("/user/info")
     public MyResponseEntity<UserInfoResponse> getUserInfo(@RequestParam("userId") Long userId){
         //TODO:university and academy set as default values
