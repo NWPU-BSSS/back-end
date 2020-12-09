@@ -1,13 +1,11 @@
 package com.nwpu.bsss.controller;
 
-import com.dtflys.forest.utils.StringUtils;
 import com.nwpu.bsss.domain.UserEntity;
 import com.nwpu.bsss.domain.UserInfoEntity;
 import com.nwpu.bsss.domain.dto.SubscribeBloggerBody;
 import com.nwpu.bsss.response.*;
 import com.nwpu.bsss.service.FollowService;
 import com.nwpu.bsss.service.UserService;
-import org.apache.commons.lang3.StringEscapeUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.web.bind.annotation.*;
 
