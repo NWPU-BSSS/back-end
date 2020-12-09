@@ -1,5 +1,7 @@
 package com.nwpu.bsss.service;
 
+import com.nwpu.bsss.domain.dto.FavBlogJsonBody;
+import com.nwpu.bsss.domain.dto.KeywordBlogJsonBody;
 import com.nwpu.bsss.domain.dto.ReBlogJsonBody;
 
 import javax.annotation.Resource;
@@ -13,6 +15,9 @@ import java.util.List;
 @Resource
 public interface BlogListService {
 	
-	List<ReBlogJsonBody> getREblog();
-	
+	List<ReBlogJsonBody> getRecomBlog(int page);
+
+	List<KeywordBlogJsonBody> getKeywordBlog(String word);
+
+	List<FavBlogJsonBody> getFavsBlog(long userId);
 }

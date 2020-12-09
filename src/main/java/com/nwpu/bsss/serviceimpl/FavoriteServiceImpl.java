@@ -31,4 +31,9 @@ public class FavoriteServiceImpl implements FavoriteService {
 			this.favoriteRepository.deleteByUserIdAndBlogId(userId, blogId);
 		}
 	}
+
+	@Override
+	public long getFavoriteNum(long blogId) {
+		return favoriteRepository.getBlogFavoritesNum(blogId);
+	}
 }

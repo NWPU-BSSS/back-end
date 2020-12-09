@@ -11,9 +11,5 @@ class BlogServiceImplTest {
 	
 	@Resource
 	BlogListService blogService;
-	
-	@Test
-	void getREblog() {
-		this.blogService.getREblog();
-	}
+
 }
