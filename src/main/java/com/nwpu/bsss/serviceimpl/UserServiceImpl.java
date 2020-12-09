@@ -65,7 +65,7 @@ public class UserServiceImpl implements UserService {
     public UserSubscribeStatusResponse findUserSubscribeStatusResponse(Long userId,Long bloggerId){
         FollowEntity follow = new FollowEntity();
         UserSubscribeStatusResponse userSubscribeStatusResponse = new UserSubscribeStatusResponse();
-//        follow = followRepository.getFollow(userId,bloggerId);
+        follow = followRepository.getFollow(userId,bloggerId);
         if(follow==null){
             userSubscribeStatusResponse.setStatus(false);
         }

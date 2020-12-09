@@ -7,6 +7,8 @@ import com.nwpu.bsss.domain.dto.SubscribeBloggerBody;
 import com.nwpu.bsss.response.*;
 import com.nwpu.bsss.service.FollowService;
 import com.nwpu.bsss.service.UserService;
+import org.apache.commons.lang3.StringEscapeUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
@@ -51,8 +53,11 @@ public class UserController {
     public MyResponseEntity<UserSubscribeStatusResponse> getUserSubscribe(@RequestParam("userId") String userId,
                                                                           @RequestParam("bloggerId") String bloggerId) {
         try {
-            if (bloggerId == null) {
-                return new MyResponseEntity<>(Code.BAD_OPERATION, "bloggerId为空", null);
+            if (StringUtils.isBlank(bloggerId)) {
+                return new MyResponseEntity<>(Code.BAD_REQUEST, "bloggerId为空", null);
+            }
+            if(bloggerId.equals(userId)){
+                return new MyResponseEntity<>(Code.BAD_OPERATION,"无效关注",null);
             }
             Long uId = Long.parseLong(userId);
             Long bId = Long.parseLong(bloggerId);
@@ -60,8 +65,8 @@ public class UserController {
             userSubscribeStatusResponse = userService.findUserSubscribeStatusResponse(uId, bId);
             return new MyResponseEntity<>(Code.OK, "OK", userSubscribeStatusResponse);
         }
-        catch(Exception e){
-            return new MyResponseEntity<>(Code.BAD_OPERATION, "未知错误", null);
+        catch(NumberFormatException e){
+            return new MyResponseEntity<>(Code.BAD_REQUEST, "参数类型错误", null);
         }
 
     }
