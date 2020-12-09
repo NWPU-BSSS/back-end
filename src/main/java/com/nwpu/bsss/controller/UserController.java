@@ -40,5 +40,23 @@ public class UserController {
         }
     }
 
+    @GetMapping(path = "/user/subscribe")
+    public MyResponseEntity<UserSubscribeStatusResponse> getUserSubscribe(@RequestParam("userId") String userId,
+                                                                          @RequestParam("bloggerId") String bloggerId) {
+        try {
+            if (bloggerId == null) {
+                return new MyResponseEntity<>(Code.BAD_OPERATION, "bloggerId为空", null);
+            }
+            Long uId = Long.parseLong(userId);
+            Long bId = Long.parseLong(bloggerId);
+            UserSubscribeStatusResponse userSubscribeStatusResponse = new UserSubscribeStatusResponse();
+            userSubscribeStatusResponse = userService.findUserSubscribeStatusResponse(uId, bId);
+            return new MyResponseEntity<>(Code.OK, "OK", userSubscribeStatusResponse);
+        }
+        catch(Exception e){
+            return new MyResponseEntity<>(Code.BAD_OPERATION, "未知错误", null);
+        }
+
+    }
 
 }
