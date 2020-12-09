@@ -1,5 +1,6 @@
 package com.nwpu.bsss.controller;
 
+import com.dtflys.forest.utils.StringUtils;
 import com.nwpu.bsss.domain.UserEntity;
 import com.nwpu.bsss.domain.UserInfoEntity;
 import com.nwpu.bsss.domain.dto.SubscribeBloggerBody;
@@ -105,16 +106,17 @@ public class UserController {
      * 周亚旗
      */
     @GetMapping("/user/info")
-    public MyResponseEntity<UserInfoResponse> getUserInfo(@RequestParam("userId") Long userId){
+    public MyResponseEntity<UserInfoResponse> getUserInfo(@RequestParam("userId") String userId){
         //TODO:university and academy set as default values
-        if(userId==null){
+        if(StringUtils.isBlank(userId)){
             return new MyResponseEntity<>(Code.BAD_REQUEST,"用户id为空值",null);
         }
-        UserEntity userEntity=userService.findByUserID(userId);
-        UserInfoEntity userInfoEntity=userService.findUserInfoByUserId(userId);
+        Long userIdLong=Long.valueOf(userId);
+        UserEntity userEntity=userService.findByUserID(userIdLong);
+        UserInfoEntity userInfoEntity=userService.findUserInfoByUserId(userIdLong);
 
         if(userEntity==null || userInfoEntity==null){
-            return new MyResponseEntity<>(Code.BAD_REQUEST,"未查询到该id对应的用户",null);
+            return new MyResponseEntity<>(Code.BAD_OPERATION,"用户不存在",null);
         }
 
         UserInfoResponse userInfoResponse=new UserInfoResponse();
