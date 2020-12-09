@@ -36,8 +36,14 @@ public class BlogController {
     private FavoriteService favoriteService;
 
     @GetMapping("/blog/comments")
-    public MyResponseEntity<List<CommentElement>> getComments(@RequestParam("blogId") long blogId) {
-        List<CommentElement> commentList = this.commentService.getCommentList(blogId);
+    public MyResponseEntity<List<CommentElement>> getComments(@RequestParam("blogId") String blogId) {
+        long bId;
+        try {
+            bId = Long.parseLong(blogId);
+        }catch (Exception e){
+            return new MyResponseEntity<>(Code.BAD_REQUEST, "参数类型错误",null);
+        }
+        List<CommentElement> commentList = this.commentService.getCommentList(bId);
         return new MyResponseEntity<>(Code.OK, "ok", commentList);
     }
 
@@ -81,11 +87,20 @@ public class BlogController {
 
     @PostMapping("/blog/comment")
     public MyResponseEntity<Object> postComment(@RequestHeader("accessToken") String accessToken,
-                                                @RequestParam("blogId") long blogId,
+                                                @RequestParam("blogId") String blogId,
                                                 @RequestParam("userId") String userId,
                                                 @RequestBody PostCommentBody body) {
 
-        CommentEntity commentEntity = new CommentEntity(Long.parseLong(userId), blogId, body.getCommentId(), body.getContent());
+        long bId,uId;
+        Long cId;
+        try {
+            bId = Long.parseLong(blogId);
+            uId = Long.parseLong(userId);
+            cId = body.getCommentId()==0 ? null: body.getCommentId();
+        }catch (Exception e){
+            return new MyResponseEntity<>(Code.BAD_REQUEST, "参数类型错误", null);
+        }
+        CommentEntity commentEntity = new CommentEntity(uId, bId, cId, body.getContent());
 
         this.commentService.saveComment(commentEntity);
         return new MyResponseEntity<>(Code.OK, "评论发布成功", null);

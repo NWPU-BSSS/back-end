@@ -13,7 +13,7 @@ public class CommentEntity implements Comparable<CommentEntity> {
 	private long id;
 	private long userId;
 	private long blogId;
-	private long parentId;
+	private Long parentId;
 	private Set<CommentEntity> children;
 	private String content;
 	private Timestamp time;
@@ -22,7 +22,7 @@ public class CommentEntity implements Comparable<CommentEntity> {
 		this.children = new HashSet<>();
 	}
 	
-	public CommentEntity(long userId, long blogId, long parentId, String content) {
+	public CommentEntity(long userId, long blogId, Long parentId, String content) {
 		this.userId = userId;
 		this.blogId = blogId;
 		this.parentId = parentId;
@@ -68,12 +68,12 @@ public class CommentEntity implements Comparable<CommentEntity> {
 	 */
 	@Basic
 	@Column(name = "CommentId")
-	public long getParentId() {
+	public Long getParentId() {
 		return this.parentId;
 	}
 	
 	public void setParentId(Long parentId) {
-		this.parentId = Objects.requireNonNullElse(parentId, -1L);
+		this.parentId = parentId;
 	}
 	
 	
@@ -126,7 +126,7 @@ public class CommentEntity implements Comparable<CommentEntity> {
 		return this.id == that.id &&
 				this.userId == that.userId &&
 				this.blogId == that.blogId &&
-				this.parentId == that.parentId &&
+				this.parentId.equals(that.parentId) &&
 				this.children.equals(that.children) &&
 				this.content.equals(that.content) &&
 				this.time.equals(that.time);
