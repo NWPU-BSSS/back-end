@@ -1,7 +1,6 @@
 package com.nwpu.bsss.domain;
 
 import javax.persistence.*;
-import java.util.Objects;
 
 @Entity
 @Table(name = "Follow", schema = "BSSS")
@@ -9,6 +8,14 @@ public class FollowEntity {
     private long id;
     private long bloggerId;
     private long userId;
+
+    public FollowEntity(){
+
+    }
+    public FollowEntity(long bloggerId, long userId){
+        this.bloggerId = bloggerId;
+        this.userId = userId;
+    }
 
     @Id
     @Column(name = "Id")
@@ -52,6 +59,9 @@ public class FollowEntity {
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, bloggerId, userId);
+        int result = (int) (id ^ (id >>> 32));
+        result = 31 * result + (int) (bloggerId ^ (bloggerId >>> 32));
+        result = 31 * result + (int) (userId ^ (userId >>> 32));
+        return result;
     }
 }

@@ -1,7 +1,10 @@
 package com.nwpu.bsss.controller;
 
+import com.nwpu.bsss.domain.FollowEntity;
 import com.nwpu.bsss.domain.UserInfoEntity;
+import com.nwpu.bsss.domain.dto.SubscribeBloggerBody;
 import com.nwpu.bsss.response.*;
+import com.nwpu.bsss.service.FollowService;
 import com.nwpu.bsss.service.UserService;
 import org.springframework.web.bind.annotation.*;
 
@@ -16,6 +19,8 @@ public class UserController {
 
     @Resource
     private UserService userService;
+    @Resource
+    private FollowService followService;
 
     @GetMapping("/baseInfo")
     public MyResponseEntity<UserBaseInfoResponse> getUserBaseInfo(@RequestHeader("accessToken") String accessToken,
@@ -57,6 +62,36 @@ public class UserController {
             return new MyResponseEntity<>(Code.BAD_OPERATION, "未知错误", null);
         }
 
+    }
+
+    @PostMapping(path = "/user/subscribe")
+    public MyResponseEntity<Object> subscribeBlogger(@RequestHeader("accessToken") String accessToken, @RequestParam("userId") String userId,
+                                                     @RequestBody SubscribeBloggerBody subscribeBloggerBody){
+        long uId = Long.parseLong(userId);
+        boolean subscribe = subscribeBloggerBody.isSubscribe();
+        long bloggerId = subscribeBloggerBody.getBloggerId();
+        if(userService.findByUserID(bloggerId) == null)
+            return new MyResponseEntity<>(Code.BAD_OPERATION, "博主不存在", null);
+        if(bloggerId == uId)
+            return new MyResponseEntity<>(Code.BAD_OPERATION, "不能关注自己", null);
+        if(subscribe){
+            if(followService.isFollowed(bloggerId, uId)){
+                return new MyResponseEntity<>(Code.BAD_OPERATION, "已经关注该博主", null);
+            }
+            else{
+                followService.addFollow(bloggerId, uId);
+                return new MyResponseEntity<>(Code.OK, "ok", null);
+            }
+        }
+        else {
+            if(followService.isFollowed(bloggerId, uId)){
+                followService.deleteFollow(bloggerId, uId);
+                return new MyResponseEntity<>(Code.OK, "ok", null);
+            }
+            else {
+                return new MyResponseEntity<>(Code.BAD_OPERATION, "已经取关该博主", null);
+            }
+        }
     }
 
 }
