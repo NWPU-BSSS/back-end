@@ -24,12 +24,7 @@ public class BlogListController {
 	
 	@Resource
 	BlogListService blogListService;
-	
-	
-	@GetMapping("/home/blog/recommend")
-	public MyResponseEntity<Object> getRecommendBlog(@RequestHeader("accessToken") String accessToken) {
-		List<ReBlogJsonBody> blogList = this.blogListService.getREblog();
-		return new MyResponseEntity<>(Code.OK, "每日推荐博文15条", blogList);
+
 	@GetMapping("/blog/list/recommend")
 	public MyResponseEntity<Object> getRecommendBlog(@RequestParam("page") String page) {
 		int p;
