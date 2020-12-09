@@ -6,6 +6,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
 import java.util.Set;
 
 @Repository
@@ -18,4 +19,7 @@ public interface BlogRepository extends JpaRepository<BlogEntity, Long> {
 
 	@Query(value = "select * from Blogs where Content like %:Keyword% or Title like %:Keyword%",nativeQuery=true)
 	Set<BlogEntity> findByKeyword(@Param("Keyword") String Keyword);
+
+	@Query(nativeQuery = true, value = "select * from Blogs,Favorites where Favorites.UserId=?1 and Blogs.Id=Favorites.BlogId ")
+	List<BlogEntity> findFavoritesByUserId(long userId);
 }

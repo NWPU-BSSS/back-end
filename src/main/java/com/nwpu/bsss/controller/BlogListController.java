@@ -1,5 +1,6 @@
 package com.nwpu.bsss.controller;
 
+import com.nwpu.bsss.domain.dto.FavBlogJsonBody;
 import com.nwpu.bsss.domain.dto.KeywordBlogJsonBody;
 import com.nwpu.bsss.domain.dto.ReBlogJsonBody;
 import com.nwpu.bsss.response.Code;
@@ -39,5 +40,18 @@ public class BlogListController {
 			return new MyResponseEntity(Code.BAD_OPERATION,"查询无结果",null);
 		}
 		return new MyResponseEntity(Code.OK,"ok",blogList);
+	}
+
+	@GetMapping("/blog/list/favs")
+	public MyResponseEntity<Object> getFavoriteBlogs(@RequestParam("userId") String userId) {
+
+		try {
+			long user_id = Long.parseLong(userId);
+			List<FavBlogJsonBody> favBlogList = blogListService.getFavsBlog(user_id);
+			return new MyResponseEntity<>(Code.OK, "ok", favBlogList);
+		}catch (NumberFormatException e){
+			return new MyResponseEntity<>(Code.BAD_REQUEST,"userId格式错误",null);
+		}
+
 	}
 }
