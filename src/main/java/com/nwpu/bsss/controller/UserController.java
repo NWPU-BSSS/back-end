@@ -111,7 +111,7 @@ public class UserController {
         UserInfoEntity userInfoEntity=userService.findUserInfoByUserId(userIdLong);
 
         if(userEntity==null || userInfoEntity==null){
-            return new MyResponseEntity<>(Code.BAD_OPERATION,"未查询到该id对应的用户",null);
+            return new MyResponseEntity<>(Code.BAD_OPERATION,"用户不存在",null);
         }
 
         UserInfoResponse userInfoResponse=new UserInfoResponse();
