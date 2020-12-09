@@ -24,8 +24,7 @@ public class BlogListController {
 	
 	@Resource
 	BlogListService blogListService;
-	
-	
+
 	@GetMapping("/blog/list/recommend")
 	public MyResponseEntity<Object> getRecommendBlog(@RequestParam("page") String page) {
 		int p;

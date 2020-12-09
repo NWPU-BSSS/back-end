@@ -8,7 +8,9 @@ import com.nwpu.bsss.response.MyResponseEntity;
 import com.nwpu.bsss.response.UserListElement;
 import com.nwpu.bsss.service.AdminService;
 import com.nwpu.bsss.service.UserService;
+import com.nwpu.bsss.utils.Tools;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
@@ -73,16 +75,19 @@ public class AdminController {
 			start = new Timestamp(new SimpleDateFormat("yyyy-MM-dd HH:mm").parse(startTime).getTime());
 			end = new Timestamp(new SimpleDateFormat("yyyy-MM-dd HH:mm").parse(endTime).getTime());
 			
-			if (start.after(end)) {
+			if (start.after(end) || StringUtils.isBlank(content)) {
 				throw new ParseException("", 0);
+			}
+			else if(StringUtils.isBlank(title)){
+				title = "无标题";
 			}
 			
 			annId = this.adminService.makeAnnounce(new AnnouncementsEntity(title, publisher, start, end,
-					new Timestamp(System.currentTimeMillis()), content));
+					Tools.timestamp(), content));
 			
 		} catch (ParseException e) {
-			log.error("时间格式错误");
-			return new MyResponseEntity<>(Code.BAD_OPERATION, "时间格式错误", null);
+			log.error("时间格式或内容缺失错误");
+			return new MyResponseEntity<>(Code.BAD_OPERATION, "时间格式或内容缺失错误", null);
 		} catch (Exception e) {
 			e.printStackTrace();
 			return new MyResponseEntity<>(Code.BAD_OPERATION, InternalError, null);
