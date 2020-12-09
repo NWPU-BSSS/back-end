@@ -3,6 +3,7 @@ package com.nwpu.bsss.serviceimpl;
 import com.nwpu.bsss.domain.BlogEntity;
 import com.nwpu.bsss.domain.FavoriteEntity;
 import com.nwpu.bsss.domain.UserInfoEntity;
+import com.nwpu.bsss.domain.dto.FavBlogJsonBody;
 import com.nwpu.bsss.domain.dto.KeywordBlogJsonBody;
 import com.nwpu.bsss.domain.dto.ReBlogJsonBody;
 import com.nwpu.bsss.repository.*;
@@ -60,6 +61,19 @@ public class BlogListServiceImpl implements BlogListService {
 			long likeNum=this.likeRepository.getBlogLikesNum(currentBlog.getId());
 			long commentNum=this.commentRepository.getBlogCommentsNum(currentBlog.getId());
 			res.add(KeywordBlogJsonBody.parseJson(currentBlog,userInfo.getNickName(),userInfo.getAvatarUrl(),favoriteNum,likeNum,commentNum));
+		}
+		return res;
+	}
+
+	@Override
+	public List<FavBlogJsonBody> getFavsBlog(long userId) {
+		List<BlogEntity> blogList = blogRepository.findFavoritesByUserId(userId);
+
+		List<FavBlogJsonBody> res = new ArrayList<>();
+
+		for (BlogEntity blog : blogList) {
+			UserInfoEntity userInfo = userInfoRepository.findUserInfoById(blog.getAuthorId());
+			res.add(FavBlogJsonBody.parseJson(blog, userInfo.getNickName()));
 		}
 		return res;
 	}

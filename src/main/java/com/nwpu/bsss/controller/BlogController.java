@@ -32,6 +32,8 @@ public class BlogController {
     private CommentService commentService;
     @Resource
     private LikeService likeService;
+    @Resource
+    private FavoriteService favoriteService;
 
     @GetMapping("/blog/comments")
     public MyResponseEntity<List<CommentElement>> getComments(@RequestParam("blogId") long blogId) {
@@ -40,22 +42,28 @@ public class BlogController {
     }
 
     @GetMapping("/blog")
-    public MyResponseEntity<GetBlogResponse> getBlogInfo(@RequestParam("blogId") int blogId) {
+    public MyResponseEntity<GetBlogResponse> getBlogInfo(@RequestParam("blogId") String blogId) {
 
-        BlogEntity blogEntity = this.blogService.findByBlogId(blogId);
-        if (blogEntity == null) {
-            return new MyResponseEntity<>(Code.BAD_OPERATION, "没有找到博客", null);
+        try {
+            long blog_id = Long.parseLong(blogId);
+            BlogEntity blogEntity = this.blogService.findByBlogId(blog_id);
+            if (blogEntity == null) {
+                return new MyResponseEntity<>(Code.BAD_OPERATION, "没有找到博客", null);
+            }
+
+            GetBlogResponse getBlogResponse = new GetBlogResponse();
+            getBlogResponse.setTitle(blogEntity.getTitle());
+            getBlogResponse.setContent(blogEntity.getContent());
+            getBlogResponse.setLikeNum(this.likeService.getLikesNum(blog_id));
+            getBlogResponse.setCommentNum(this.commentService.getCommentsNum(blog_id));
+            getBlogResponse.setShareNum(77L);//TODO：硬编码
+            getBlogResponse.setFavoriteNum(this.favoriteService.getFavoriteNum(blog_id));
+
+            return new MyResponseEntity<>(Code.OK, "ok", getBlogResponse);
+        } catch (NumberFormatException e) {
+            return new MyResponseEntity<>(Code.BAD_REQUEST, "blogId格式错误", null);
         }
 
-        GetBlogResponse getBlogResponse = new GetBlogResponse();
-        getBlogResponse.setTitle(blogEntity.getTitle());
-        getBlogResponse.setContent(blogEntity.getContent());
-        getBlogResponse.setLikeNum(this.likeService.getLikesNum(blogId));
-        getBlogResponse.setCommentNum(this.commentService.getCommentsNum(blogId));
-        getBlogResponse.setShareNum(77L);//TODO：硬编码
-        getBlogResponse.setFavoriteNum(88L);
-
-        return new MyResponseEntity<>(Code.OK, "ok", getBlogResponse);
     }
 
     @PostMapping("/blog")
@@ -91,7 +99,10 @@ public class BlogController {
                                              @RequestParam("like") boolean like) {
 
         try {
-            likeService.likeBlog(blogId, Long.parseLong(userId), like);
+            long user_id = Long.parseLong(userId);
+            likeService.likeBlog(blogId, user_id, like);
+        } catch (NumberFormatException e) {
+            return new MyResponseEntity<>(Code.BAD_REQUEST, "userId或其它参数格式错误", null);
         } catch (DataIntegrityViolationException e) {//点赞的博客不存在，导致插入时导致违反数据完整性
             return new MyResponseEntity<>(Code.BAD_OPERATION, "点赞的博客不存在！", null);
         }
@@ -102,12 +113,13 @@ public class BlogController {
     public MyResponseEntity<LikeStatusResponse> getLikeStatus(@RequestHeader("accessToken") String accessToken,
                                                               @RequestParam("userId") String userId,
                                                               @RequestParam("blogId") long blogId) {
+
+        long user_id = Long.parseLong(userId);
         LikeStatusResponse likeStatusResponse = new LikeStatusResponse();
         likeStatusResponse.setStatus(false);
 
-        boolean status = likeService.getLikeStatus(blogId, Long.parseLong(userId));
+        boolean status = likeService.getLikeStatus(blogId, user_id);
         likeStatusResponse.setStatus(status);
-
         return new MyResponseEntity<>(Code.OK, "ok", likeStatusResponse);
 
     }

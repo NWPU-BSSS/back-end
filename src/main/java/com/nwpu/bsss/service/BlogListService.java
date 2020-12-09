@@ -1,5 +1,6 @@
 package com.nwpu.bsss.service;
 
+import com.nwpu.bsss.domain.dto.FavBlogJsonBody;
 import com.nwpu.bsss.domain.dto.KeywordBlogJsonBody;
 import com.nwpu.bsss.domain.dto.ReBlogJsonBody;
 
@@ -17,4 +18,6 @@ public interface BlogListService {
 	List<ReBlogJsonBody> getREblog();
 
 	List<KeywordBlogJsonBody> getKeywordBlog(String word);
+
+	List<FavBlogJsonBody> getFavsBlog(long userId);
 }
