@@ -12,23 +12,23 @@ public class CommentElement {
 	private long id;
 	private long userId;
 	private String nickname;
-	private String avatarUrl;
+	private String avatar;
 	private String content;
 	private Date time;
 	private int level;
-	private long reply2UserId;
-	private String reply2Nickname;
+	private long reply2userId;
+	private String reply2nickname;
 	
-	public CommentElement(CommentEntity entity, String nickname, String avatarUrl, int level, long reply2UserId, String reply2Nickname) {
+	public CommentElement(CommentEntity entity, String nickname, String avatarUrl, int level, long reply2userId, String reply2nickname) {
 		this.id = entity.getId();
 		this.userId = entity.getUserId();
 		this.nickname = nickname;
-		this.avatarUrl = avatarUrl;
+		this.avatar = avatarUrl;
 		this.content = entity.getContent();
 		this.time = entity.getTime();
 		this.level = level;
-		this.reply2UserId = reply2UserId;
-		this.reply2Nickname = reply2Nickname;
+		this.reply2userId = reply2userId;
+		this.reply2nickname = reply2nickname;
 	}
 	
 	public long getId() {
@@ -55,12 +55,12 @@ public class CommentElement {
 		this.nickname = nickname;
 	}
 	
-	public String getAvatarUrl() {
-		return this.avatarUrl;
+	public String getAvatar() {
+		return this.avatar;
 	}
 	
-	public void setAvatarUrl(String avatarUrl) {
-		this.avatarUrl = avatarUrl;
+	public void setAvatar(String avatarUrl) {
+		this.avatar = avatarUrl;
 	}
 	
 	public String getContent() {
@@ -87,20 +87,20 @@ public class CommentElement {
 		this.level = level;
 	}
 	
-	public String getReply2Nickname() {
-		return this.reply2Nickname;
+	public String getReply2nickname() {
+		return this.reply2nickname;
 	}
 	
-	public void setReply2Nickname(String reply2Nickname) {
-		this.reply2Nickname = reply2Nickname;
+	public void setReply2nickname(String reply2nickname) {
+		this.reply2nickname = reply2nickname;
 	}
 	
-	public long getReply2UserId() {
-		return this.reply2UserId;
+	public long getReply2userId() {
+		return this.reply2userId;
 	}
 	
-	public void setReply2UserId(long reply2UserId) {
-		this.reply2UserId = reply2UserId;
+	public void setReply2userId(long reply2userId) {
+		this.reply2userId = reply2userId;
 	}
 	
 	@Override
@@ -108,12 +108,12 @@ public class CommentElement {
 		return "CommentElement{" +
 				"\n\tuserId=" + this.userId +
 				",\n\t nickname='" + this.nickname + '\'' +
-				",\n\t avatarUrl='" + this.avatarUrl + '\'' +
+				",\n\t avatar='" + this.avatar + '\'' +
 				",\n\t content='" + this.content + '\'' +
 				",\n\t time=" + this.time +
 				",\n\t level=" + this.level +
-				",\n\t reply2UserId='" + this.reply2UserId + '\'' +
-				",\n\t reply2Nickname='" + this.reply2Nickname + '\'' +
+				",\n\t reply2userId='" + this.reply2userId + '\'' +
+				",\n\t reply2nickname='" + this.reply2nickname + '\'' +
 				"\n}\n";
 	}
 }
