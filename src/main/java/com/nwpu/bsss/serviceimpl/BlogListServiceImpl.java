@@ -33,18 +33,16 @@ public class BlogListServiceImpl implements BlogListService {
 	private LikeRepository likeRepository;
 
 	@Override
-	public List<ReBlogJsonBody> getREblog() {
-		
+	public List<ReBlogJsonBody> getRecomBlog(int page) {
+		//page从0开始
 		List<BlogEntity> blogList = this.blogRepository.findAll();
-		long count = blogList.size();
-		List<Integer> seq = this.GenerateSEQ(count);
 		
 		List<ReBlogJsonBody> res = new ArrayList<>();
-		
-		for (Integer no : seq) {
-			BlogEntity blog = blogList.get(no);
+		int fromNum = Integer.min( page*15, blogList.size());//一页开始时的博客序号
+		int toNum = Integer.min(fromNum+15, blogList.size());//结束的博客序号
+		for (int i=fromNum; i<toNum; i++) {
+			BlogEntity blog = blogList.get(i);
 			UserInfoEntity userInfo = this.userInfoRepository.findUserInfoById(blog.getAuthorId());
-			
 			res.add(ReBlogJsonBody.parseJson(blog, userInfo.getNickName(), userInfo.getAvatarUrl()));
 		}
 		return res;
