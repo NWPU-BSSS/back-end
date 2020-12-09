@@ -26,11 +26,17 @@ public class BlogListController {
 	BlogListService blogListService;
 	
 	
-	@GetMapping("/home/blog/recommend")
-	public MyResponseEntity<Object> getRecommendBlog(@RequestHeader("accessToken") String accessToken,
-													 @RequestParam("userId") String userId) {
-		List<ReBlogJsonBody> blogList = this.blogListService.getREblog();
-		return new MyResponseEntity<>(Code.OK, "每日推荐博文15条", blogList);
+	@GetMapping("/blog/list/recommend")
+	public MyResponseEntity<Object> getRecommendBlog(@RequestParam("page") String page) {
+		int p;
+		try {
+			p = Integer.parseInt(page);
+			if (p<0) throw new ArrayIndexOutOfBoundsException();
+		}catch (Exception e){
+			return new MyResponseEntity<>(Code.BAD_REQUEST,"页数无效",null);
+		}
+		List<ReBlogJsonBody> blogList = this.blogListService.getRecomBlog(p);
+		return new MyResponseEntity<>(Code.OK, "推荐博文15条", blogList);
 	}
 
 	@GetMapping("/search")

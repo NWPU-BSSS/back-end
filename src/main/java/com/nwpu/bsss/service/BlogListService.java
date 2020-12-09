@@ -15,7 +15,7 @@ import java.util.List;
 @Resource
 public interface BlogListService {
 	
-	List<ReBlogJsonBody> getREblog();
+	List<ReBlogJsonBody> getRecomBlog(int page);
 
 	List<KeywordBlogJsonBody> getKeywordBlog(String word);
 
