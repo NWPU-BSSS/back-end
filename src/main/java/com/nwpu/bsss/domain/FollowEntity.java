@@ -29,11 +29,11 @@ public class FollowEntity {
 
     @Basic
     @Column(name = "BloggerId")
-    public long getBlogerId() {
+    public long getBloggerId() {
         return bloggerId;
     }
 
-    public void setBlogerId(long blogerId) {
+    public void setBloggerId(long blogerId) {
         this.bloggerId = blogerId;
     }
 

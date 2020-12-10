@@ -7,13 +7,15 @@ import com.nwpu.bsss.repository.FollowRepository;
 import com.nwpu.bsss.repository.UserInfoRepository;
 import com.nwpu.bsss.repository.UserRepository;
 import com.nwpu.bsss.response.UserSubscribeStatusResponse;
+import com.nwpu.bsss.response.UserSubscribesAndFansResponse;
 import com.nwpu.bsss.service.UserService;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
-import java.util.Optional;
+import java.util.ArrayList;
+import java.util.List;
 
 @Service    //注入spring容器
 public class UserServiceImpl implements UserService {
@@ -75,4 +77,84 @@ public class UserServiceImpl implements UserService {
         return userSubscribeStatusResponse;
     }
 
+    @Override
+    public UserSubscribesAndFansResponse findUsersubscrivesByUserId(Long userId){
+        List<FollowEntity> followList = this.followRepository.findAllByUserId(userId);
+        UserSubscribesAndFansResponse userSubscribesAndFansResponse = new UserSubscribesAndFansResponse();
+        ArrayList<UserSubscribesAndFansResponse.SubscribeAndFansBody> subscribeBodies = new ArrayList<UserSubscribesAndFansResponse.SubscribeAndFansBody>();
+        int count = followList.size();
+        for(int i = 0;i < followList.size();i++){
+            UserSubscribesAndFansResponse.SubscribeAndFansBody subscribeAndFansBody = new UserSubscribesAndFansResponse.SubscribeAndFansBody();
+            FollowEntity follow = followList.get(i);
+            Long bloggerId = follow.getBloggerId();
+            UserInfoEntity userInfo = userInfoRepository.findUserInfoById(bloggerId);
+            subscribeAndFansBody.setNickname(userInfo.getNickName());
+            subscribeAndFansBody.setAvatar(userInfo.getAvatarUrl());
+            subscribeAndFansBody.setBloggerId(bloggerId);
+            subscribeAndFansBody.setIntroduction(userInfo.getIntroduction());
+            subscribeAndFansBody.setIsSubscribed(true);
+            subscribeBodies.add(subscribeAndFansBody);
+        }
+        userSubscribesAndFansResponse.setUserSubscribes(subscribeBodies);
+        return userSubscribesAndFansResponse;
+    }
+
+    @Override
+    public UserSubscribesAndFansResponse findBloggersubscrivesByUserId(Long userId, Long bloggerId){
+        List<FollowEntity> followList = this.followRepository.findAllByUserId(bloggerId);
+        UserSubscribesAndFansResponse userSubscribesAndFansResponse = new UserSubscribesAndFansResponse();
+        ArrayList<UserSubscribesAndFansResponse.SubscribeAndFansBody> subscribeBodies = new ArrayList<UserSubscribesAndFansResponse.SubscribeAndFansBody>();
+        int count = followList.size();
+        for(int i = 0;i < followList.size();i++){
+            UserSubscribesAndFansResponse.SubscribeAndFansBody subscribeAndFansBody = new UserSubscribesAndFansResponse.SubscribeAndFansBody();
+            FollowEntity follow = followList.get(i);
+            Long bId = follow.getBloggerId();
+            UserInfoEntity userInfo = userInfoRepository.findUserInfoById(bId);
+            subscribeAndFansBody.setNickname(userInfo.getNickName());
+            subscribeAndFansBody.setAvatar(userInfo.getAvatarUrl());
+            subscribeAndFansBody.setBloggerId(bId);
+            subscribeAndFansBody.setIntroduction(userInfo.getIntroduction());
+            if(bId == userId){
+                subscribeAndFansBody.setIsSubscribed(false);
+            }
+            else if(followRepository.findByBloggerIdAndUserId(bId,userId)==null){
+                subscribeAndFansBody.setIsSubscribed(false);
+            }
+            else {
+                subscribeAndFansBody.setIsSubscribed(true);
+            }
+            subscribeBodies.add(subscribeAndFansBody);
+        }
+        userSubscribesAndFansResponse.setUserSubscribes(subscribeBodies);
+        return userSubscribesAndFansResponse;
+    }
+    @Override
+    public UserSubscribesAndFansResponse findBloggerFansByUserId(Long userId, Long bloggerId){
+        List<FollowEntity> followList = this.followRepository.findAllByBloggerId(bloggerId);
+        UserSubscribesAndFansResponse userSubscribesAndFansResponse = new UserSubscribesAndFansResponse();
+        ArrayList<UserSubscribesAndFansResponse.SubscribeAndFansBody> subscribeBodies = new ArrayList<UserSubscribesAndFansResponse.SubscribeAndFansBody>();
+        int count = followList.size();
+        for(int i = 0;i < followList.size();i++){
+            UserSubscribesAndFansResponse.SubscribeAndFansBody subscribeAndFansBody = new UserSubscribesAndFansResponse.SubscribeAndFansBody();
+            FollowEntity follow = followList.get(i);
+            Long uId = follow.getUserId();
+            UserInfoEntity userInfo = userInfoRepository.findUserInfoById(uId);
+            subscribeAndFansBody.setNickname(userInfo.getNickName());
+            subscribeAndFansBody.setAvatar(userInfo.getAvatarUrl());
+            subscribeAndFansBody.setBloggerId(uId);
+            subscribeAndFansBody.setIntroduction(userInfo.getIntroduction());
+            if(uId == userId){
+                subscribeAndFansBody.setIsSubscribed(false);
+            }
+            else if(followRepository.findByBloggerIdAndUserId(uId,userId)==null){
+                subscribeAndFansBody.setIsSubscribed(false);
+            }
+            else {
+                subscribeAndFansBody.setIsSubscribed(true);
+            }
+            subscribeBodies.add(subscribeAndFansBody);
+        }
+        userSubscribesAndFansResponse.setUserSubscribes(subscribeBodies);
+        return userSubscribesAndFansResponse;
+    }
 }
