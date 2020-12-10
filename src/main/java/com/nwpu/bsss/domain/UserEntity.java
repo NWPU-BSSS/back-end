@@ -9,7 +9,7 @@ import java.util.Date;
 import java.util.Objects;
 
 @Entity
-@Table(name = "Users")
+@Table(name = "Users", schema = "BSSS")
 public class UserEntity {
 	private long id;
 	private String userName;
@@ -24,11 +24,11 @@ public class UserEntity {
 	private Collection<LikeEntity> likesById;
 	private Collection<UnreadMessagesEntity> unreadMessagesById;
 	private UserInfoEntity userInfosById;
-
+	
 	public UserEntity() {
-
+	
 	}
-
+	
 	public UserEntity(RegisterBody registerBody) {
 		this.userName = registerBody.getUsername();
 		this.email = registerBody.getEmail();
@@ -36,7 +36,7 @@ public class UserEntity {
 		this.time = new Timestamp(new Date().getTime());
 		this.phone = registerBody.getPhone();
 	}
-
+	
 	@Id
 	@Column(name = "id")
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -73,46 +73,46 @@ public class UserEntity {
 	public String getPassword() {
 		return this.password;
 	}
-	
+
 	public void setPassword(String password) {
 		this.password = password;
 	}
-	
+
 	@Basic
 	@Column(name = "CreateTime")
 	public Timestamp getTime() {
 		return this.time;
 	}
-	
+
 	public void setTime(Timestamp time) {
 		this.time = time;
 	}
-	
+
 	@Basic
 	@Column(name = "Phone")
 	public long getPhone() {
 		return this.phone;
 	}
-	
+
 	public void setPhone(long phone) {
 		this.phone = phone;
 	}
-	
+
 	@Override
 	public boolean equals(Object o) {
 		if (this == o) {
-            return true;
-        }
+			return true;
+		}
 		if (o == null || this.getClass() != o.getClass()) {
-            return false;
-        }
+			return false;
+		}
 		UserEntity that = (UserEntity) o;
 		return this.id == that.id &&
-                this.phone == that.phone &&
-                this.userName.equals(that.userName) &&
-                this.email.equals(that.email) &&
-                this.password.equals(that.password) &&
-                this.time.equals(that.time);
+				this.phone == that.phone &&
+				this.userName.equals(that.userName) &&
+				this.email.equals(that.email) &&
+				this.password.equals(that.password) &&
+				this.time.equals(that.time);
 	}
 
 	@Override
