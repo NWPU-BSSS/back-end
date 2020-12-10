@@ -66,6 +66,7 @@ public class BlogController {
 			getBlogResponse.setCommentNum(this.commentService.getCommentsNum(blog_id));
 			getBlogResponse.setShareNum(77L);//TODO：硬编码
 			getBlogResponse.setFavoriteNum(this.favoriteService.getFavoriteNum(blog_id));
+			getBlogResponse.setBloggerId(blogEntity.getAuthorId());
 			
 			return new MyResponseEntity<>(Code.OK, "ok", getBlogResponse);
 		} catch (NumberFormatException e) {
