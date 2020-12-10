@@ -72,7 +72,7 @@ public class BlogListController {
 			long uId = Long.parseLong(userId);
 			int pageNum = Integer.parseInt(page);
 			if (pageNum < 0)
-				return new MyResponseEntity<>(Code.BAD_REQUEST, "page为负数", null);
+				return new MyResponseEntity<>(Code.BAD_OPERATION, "page为负数", null);
 			if (userService.findByUserID(uId) == null)
 				return new MyResponseEntity<>(Code.BAD_OPERATION, "用户不存在", null);
 			List<KeywordBlogJsonBody> blogList = blogListService.getFollowedBlog(uId);
