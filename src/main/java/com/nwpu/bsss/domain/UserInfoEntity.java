@@ -7,9 +7,9 @@ import javax.persistence.*;
 
 @Data
 @Entity
-@Table(name = "UserInfos")
+@Table(name = "UserInfo")
 public class UserInfoEntity {
-
+	
 	public UserInfoEntity() {
 		this.nickName = "yourNickName";
 		this.gender = 0;
@@ -22,7 +22,7 @@ public class UserInfoEntity {
 		this.level = 1;
 		this.avatarUrl = "/avatar/default";
 	}
-
+	
 	private long id;
 	private String nickName;
 	private int gender;
@@ -89,11 +89,13 @@ public class UserInfoEntity {
 	public String getRealName() {
 		return this.realName;
 	}
-
+	
 	@Basic(optional = false)
 	@Column(name = "level")
-	public int getLevel(){return this.level;}
-
+	public int getLevel() {
+		return this.level;
+	}
+	
 	@Basic(optional = false)
 	@Column(name = "Avatar")
 	public String getAvatarUrl() {
@@ -111,7 +113,7 @@ public class UserInfoEntity {
 	public void setGender(int gender) {
 		this.gender = gender;
 	}
-
+	
 	public void setStudentNo(long studentNo) {
 		this.studentNo = studentNo;
 	}
@@ -135,9 +137,11 @@ public class UserInfoEntity {
 	public void setRealName(String realName) {
 		this.realName = realName;
 	}
-
-	public void setLevel(int level) {this.level = level; }
-
+	
+	public void setLevel(int level) {
+		this.level = level;
+	}
+	
 	public void setAvatarUrl(String avatarUrl) {
 		this.avatarUrl = avatarUrl;
 	}
