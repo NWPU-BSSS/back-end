@@ -83,8 +83,7 @@ public class AdminController {
 			
 			if (start.after(end) || StringUtils.isBlank(annBody.getContent())) {
 				throw new ParseException("", 0);
-			}
-			else if(StringUtils.isBlank(annBody.getTitle())){
+			} else if (StringUtils.isBlank(annBody.getTitle())) {
 				annBody.setTitle("无标题");
 			}
 			
@@ -95,7 +94,6 @@ public class AdminController {
 			log.error("时间格式或内容缺失错误");
 			return new MyResponseEntity<>(Code.BAD_OPERATION, "时间格式或内容缺失错误", null);
 		} catch (Exception e) {
-			e.printStackTrace();
 			return new MyResponseEntity<>(Code.BAD_OPERATION, InternalError, null);
 		}
 		
