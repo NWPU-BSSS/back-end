@@ -12,6 +12,10 @@ public interface UserService {
 
     long createUserInfo(UserInfoEntity userInfoEntity);
 
+    void updateUserEntity(UserEntity userEntity);
+
+    void updateUserInfoEntity(UserInfoEntity userInfoEntity);
+
     UserEntity findByUserID(long id);
 
     UserEntity findByUserEmail(String email);

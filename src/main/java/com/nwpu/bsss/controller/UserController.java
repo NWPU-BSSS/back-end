@@ -3,13 +3,17 @@ package com.nwpu.bsss.controller;
 import com.nwpu.bsss.domain.UserEntity;
 import com.nwpu.bsss.domain.UserInfoEntity;
 import com.nwpu.bsss.domain.dto.SubscribeBloggerBody;
+import com.nwpu.bsss.domain.dto.UpdateUserInfoBody;
 import com.nwpu.bsss.response.*;
 import com.nwpu.bsss.service.FollowService;
 import com.nwpu.bsss.service.UserService;
+import javassist.bytecode.analysis.MultiArrayType;
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.security.core.userdetails.User;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
+import javax.transaction.Transactional;
 import java.util.Date;
 
 /**
@@ -134,5 +138,58 @@ public class UserController {
         userInfoResponse.setAvatar(userInfoEntity.getAvatarUrl());
 
         return new MyResponseEntity<UserInfoResponse>(Code.OK,"ok",userInfoResponse);
+    }
+
+    /**
+     *
+     * @author JiangZhe
+     */
+    @PostMapping("/user/info")
+    public MyResponseEntity updateUserInfo(@RequestHeader("accessToken") String accessToken,
+                                           @RequestParam("userId") String userId,
+                                           @RequestBody UpdateUserInfoBody updateUserInfoBody){
+
+        Long id = Long.parseLong(userId);
+
+        UserEntity userEntity = userService.findByUserID(id);
+        UserInfoEntity userInfoEntity = userService.findUserInfoByUserId(id);
+
+        if (userEntity == null || userInfoEntity == null){
+            return new MyResponseEntity(Code.BAD_OPERATION, "用户不存在", null);
+        }
+
+        String newUserName = updateUserInfoBody.getUserName();
+
+        if (StringUtils.isBlank(newUserName)){
+            return new MyResponseEntity(Code.BAD_REQUEST, "用户名不能为空", null);
+        }
+        if (userService.findByUsername(newUserName) != null){
+            UserEntity AnotherUser = userService.findByUsername(newUserName);
+            if (!userEntity.equals(AnotherUser)){
+                return new MyResponseEntity(Code.BAD_REQUEST, "用户名已存在", null);
+            }
+        }
+
+        String introduction = updateUserInfoBody.getIntroduction();
+        if (StringUtils.isBlank(introduction)){
+            return new MyResponseEntity(Code.BAD_REQUEST, "简介信息不能为空", null);
+        }
+
+        String gender = updateUserInfoBody.getGender();
+        if (!gender.equals("1") && !gender.equals("0") && !gender.equals("2")){
+            return new MyResponseEntity(Code.BAD_REQUEST, "性别有误：0为男，1为女，2为未知", null);
+        }
+
+        userEntity.setUserName(updateUserInfoBody.getUserName());
+        userService.updateUserEntity(userEntity);
+
+        userInfoEntity.setNickName(updateUserInfoBody.getNickName());
+        userInfoEntity.setIntroduction(updateUserInfoBody.getIntroduction());
+        userInfoEntity.setRealName(updateUserInfoBody.getRealName());
+        userInfoEntity.setGender(Integer.parseInt(updateUserInfoBody.getGender()));
+        userInfoEntity.setClassName(updateUserInfoBody.getClassName());
+        userService.updateUserInfoEntity(userInfoEntity);
+
+        return new MyResponseEntity(Code.OK, "OK", null);
     }
 }

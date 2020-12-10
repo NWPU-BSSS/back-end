@@ -2,6 +2,8 @@ package com.nwpu.bsss.repository;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import com.nwpu.bsss.domain.UserEntity;
+import org.springframework.data.jpa.repository.Modifying;
+import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
 /**
