@@ -7,6 +7,7 @@ import com.nwpu.bsss.response.UserSubscribeStatusResponse;
 import com.nwpu.bsss.service.UserService;
 
 import com.nwpu.bsss.utils.FileComponent;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -118,7 +119,7 @@ public class UserServiceImpl implements UserService {
             throw new NoUserFoundException("no User");
         }
         UserInfoEntity userEntity = user.get();
-        if(defalut.equals(userEntity.getAvatarUrl())){
+        if(defalut.equals(userEntity.getAvatarUrl())|| StringUtils.isBlank(userEntity.getAvatarUrl())){
             //上传用户头像
             url = fileComponent.uploadFile(file,userId,avatarPath);
 
