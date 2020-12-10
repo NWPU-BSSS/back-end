@@ -3,6 +3,7 @@ package com.nwpu.bsss.controller;
 
 import com.nwpu.bsss.domain.AnnouncementsEntity;
 import com.nwpu.bsss.domain.UserInfoEntity;
+import com.nwpu.bsss.domain.dto.AdminValidationBody;
 import com.nwpu.bsss.response.Code;
 import com.nwpu.bsss.response.MyResponseEntity;
 import com.nwpu.bsss.response.UserListElement;
@@ -38,8 +39,12 @@ public class AdminController {
 	private static final String InternalError = "内部错误";
 	
 	@GetMapping("/users")
-	public MyResponseEntity<List<UserListElement>> getUserList(@RequestParam("admin") String admin,
-	                                                           @RequestParam("password") String password) {
+	public MyResponseEntity<List<UserListElement>> getUserList(@RequestBody AdminValidationBody validation) {
+		
+		if (this.adminService.check(validation.getAdmin(), validation.getPassword()) == -1) {
+			log.error("管理员密码错误");
+			return new MyResponseEntity<>(Code.BAD_OPERATION, "管理员账号或密码错误", null);
+		}
 		
 		List<UserInfoEntity> entities = this.adminService.findAllUsers();
 		List<UserListElement> list = entities.stream()
