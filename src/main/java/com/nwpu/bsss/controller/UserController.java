@@ -160,11 +160,19 @@ public class UserController {
 
         String newUserName = updateUserInfoBody.getUserName();
 
+        if (StringUtils.isBlank(newUserName)){
+            return new MyResponseEntity(Code.BAD_REQUEST, "用户名不能为空", null);
+        }
         if (userService.findByUsername(newUserName) != null){
             UserEntity AnotherUser = userService.findByUsername(newUserName);
             if (!userEntity.equals(AnotherUser)){
                 return new MyResponseEntity(Code.BAD_REQUEST, "用户名已存在", null);
             }
+        }
+
+        String introduction = updateUserInfoBody.getIntroduction();
+        if (StringUtils.isBlank(introduction)){
+            return new MyResponseEntity(Code.BAD_REQUEST, "简介信息不能为空", null);
         }
 
         String gender = updateUserInfoBody.getGender();
