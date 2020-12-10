@@ -9,6 +9,7 @@ import com.nwpu.bsss.service.FollowService;
 import com.nwpu.bsss.service.UserService;
 import javassist.bytecode.analysis.MultiArrayType;
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.security.core.userdetails.User;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
@@ -158,12 +159,12 @@ public class UserController {
         }
 
         String newUserName = updateUserInfoBody.getUserName();
-        String currUserName = userEntity.getUserName();
-        if (newUserName.equals(currUserName)){
-            return new MyResponseEntity(Code.BAD_REQUEST, "用户名与之前相同", null);
-        }
+
         if (userService.findByUsername(newUserName) != null){
-            return new MyResponseEntity(Code.BAD_REQUEST, "用户名已存在", null);
+            UserEntity AnotherUser = userService.findByUsername(newUserName);
+            if (!userEntity.equals(AnotherUser)){
+                return new MyResponseEntity(Code.BAD_REQUEST, "用户名已存在", null);
+            }
         }
 
         String gender = updateUserInfoBody.getGender();
