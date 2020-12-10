@@ -7,6 +7,7 @@ import com.nwpu.bsss.response.BloggerInfoResponse;
 import com.nwpu.bsss.response.BloggerTagResponse;
 import com.nwpu.bsss.response.Code;
 import com.nwpu.bsss.response.MyResponseEntity;
+import com.nwpu.bsss.service.LikeService;
 import com.nwpu.bsss.service.UserService;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -43,6 +44,7 @@ public class BloggerInfoController {
 			bloggerInfoResponse.setFanNum(this.userService.getUserFanNumByUserId(id));//all fans num
 			bloggerInfoResponse.setCommentNum(this.userService.getUserCommentNumByUserId(id));//all comment num
 			bloggerInfoResponse.setFavoriteNum(this.userService.getFavoriteNumByUserId(id));//all favs num
+			bloggerInfoResponse.setLikeNum(this.userService.getLikeNumByUserId(id));//all like num
 
 			long codeAgeTime=new Date().getTime()-userEntity.getTime().getTime();
 			bloggerInfoResponse.setCodeAge(codeAgeTime/31536000000L);

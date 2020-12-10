@@ -2,6 +2,7 @@ package com.nwpu.bsss.domain;
 
 
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 
@@ -23,79 +24,61 @@ public class UserInfoEntity {
 	private String avatarUrl;
 	private UserEntity usersById;
 
-	public UserInfoEntity() {
-		this.nickName = "yourNickName";
-		this.gender = 0;
-		this.studentNo = 2000000000;
-		this.className = "14000000";
-		this.isVerified = false;
-		this.resume = "I'm a NPUer";
-		this.introduction = "I love NPU";
-		this.realName = "";
-		this.level = 1;
-		this.avatarUrl = "/avatar/default";
+	public UserInfoEntity(){
+		gender = 3;//unknown
+		level = 1;
+		isVerified = false;
 	}
-	
+
 	@Id
 	@Column(name = "Id")
-	//@GeneratedValue(strategy = GenerationType.IDENTITY)
 	public long getId() {
 		return this.id;
 	}
 
-	@Basic(optional = false)
 	@Column(name = "Nickname")
 	public String getNickName() {
 		return this.nickName;
 	}
 
-	@Basic(optional = false)
 	@Column(name = "Gender")
 	public int getGender() {
 		return this.gender;
 	}
 
-	@Basic(optional = false)
 	@Column(name = "Sno")
 	public long getStudentNo() {
 		return this.studentNo;
 	}
 
-	@Basic(optional = false)
 	@Column(name = "Class")
 	public String getClassName() {
 		return this.className;
 	}
-	
-	@Basic(optional = false)
+
 	@Column(name = "VerifyStatus")
 	public boolean isVerified() {
 		return this.isVerified;
 	}
 
-	@Basic(optional = false)
 	@Column(name = "Resume")
 	public String getResume() {
 		return this.resume;
 	}
-	
-	@Basic(optional = false)
+
 	@Column(name = "Introduction")
 	public String getIntroduction() {
 		return this.introduction;
 	}
 
-	@Basic(optional = false)
 	@Column(name = "RealName")
 	public String getRealName() {
 		return this.realName;
 	}
 
-	@Basic(optional = false)
 	@Column(name = "level")
 	public int getLevel(){return this.level;}
 
-	@Basic(optional = false)
 	@Column(name = "Avatar")
 	public String getAvatarUrl() {
 		return this.avatarUrl;

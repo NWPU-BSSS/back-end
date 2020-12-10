@@ -38,6 +38,9 @@ public class UserServiceImpl implements UserService {
     @Resource
     private FavoriteRepository favoriteRepository;
 
+    @Resource
+    private LikeRepository likeRepository;
+
     @Override
     @Transactional
     public long createUser(UserEntity userEntity) {
@@ -119,6 +122,16 @@ public class UserServiceImpl implements UserService {
         long num = 0L;
         for (BlogEntity entity : blogs){
             num += favoriteRepository.findAllByBlogId(entity.getId()).size();
+        }
+        return num;
+    }
+
+    @Override
+    public long getLikeNumByUserId(long id) {
+        Set<BlogEntity> blogs = blogRepository.findAllByAuthorId(id);
+        long num = 0L;
+        for (BlogEntity entity : blogs){
+            num += likeRepository.getBlogLikesNum(entity.getId());
         }
         return num;
     }
