@@ -7,7 +7,7 @@ import javax.persistence.*;
 
 @Data
 @Entity
-@Table(name = "UserInfo")
+@Table(name = "UserInfos")
 public class UserInfoEntity {
 	
 	public UserInfoEntity() {
