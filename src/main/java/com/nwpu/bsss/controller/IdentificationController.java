@@ -97,6 +97,7 @@ public class IdentificationController {
                 userInfo.setId(userId);
                 try {
                     //创建用户扩展信息
+                    userInfo.setNickName(user.getUserName());//默认nickname为用户名,其他均为空
                     userService.createUserInfo(userInfo);
                     return new MyResponseEntity<>(Code.OK, "注册成功", null);
                 } catch (Exception e) {
