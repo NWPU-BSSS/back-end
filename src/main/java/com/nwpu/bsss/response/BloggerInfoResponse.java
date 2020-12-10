@@ -19,6 +19,7 @@ public class BloggerInfoResponse {
     private long fanNum;
     private long commentNum;
     private long favoriteNum;
+    private String nickname;
 
 }
 
