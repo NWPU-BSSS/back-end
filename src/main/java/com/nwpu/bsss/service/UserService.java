@@ -3,6 +3,7 @@ package com.nwpu.bsss.service;
 import com.nwpu.bsss.domain.UserEntity;
 import com.nwpu.bsss.domain.UserInfoEntity;
 import com.nwpu.bsss.response.UserSubscribeStatusResponse;
+import com.nwpu.bsss.response.UserSubscribesAndFansResponse;
 
 public interface UserService {
 
@@ -26,6 +27,11 @@ public interface UserService {
 
     UserSubscribeStatusResponse findUserSubscribeStatusResponse(Long userId,Long bloggerId);
 
+    UserSubscribesAndFansResponse findUsersubscrivesByUserId(Long userId);
+
+    UserSubscribesAndFansResponse findBloggersubscrivesByUserId(Long userId, Long bloggerId);
+
+    UserSubscribesAndFansResponse findBloggerFansByUserId(Long userId, Long bloggerId);
     /**
      * get all the blogs num belonging to the blogger
      * @param id bloggerId

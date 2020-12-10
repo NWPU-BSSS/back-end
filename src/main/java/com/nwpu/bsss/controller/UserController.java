@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
 import javax.transaction.Transactional;
+import java.util.ArrayList;
 import java.util.Date;
 
 /**
@@ -192,4 +193,62 @@ public class UserController {
 
         return new MyResponseEntity(Code.OK, "OK", null);
     }
+
+    @GetMapping(path = "user/subscribes" )
+    public MyResponseEntity<ArrayList<UserSubscribesAndFansResponse.SubscribeAndFansBody>> getUserSubscribes(@RequestParam("userId") String userId,
+                                                                             @RequestParam("bloggerId") String bloggerId){
+
+        if (StringUtils.isBlank(bloggerId)) {
+            return new MyResponseEntity<>(Code.BAD_REQUEST, "博主id为空", null);
+        }
+        try{
+            long uId = Long.parseLong(userId);
+            long bId = Long.parseLong(bloggerId);
+
+            if (userService.findByUserID(uId)==null){
+                return new MyResponseEntity<>(Code.BAD_REQUEST,"用户id不存在",null);
+            }
+            if (userService.findByUserID(bId)==null){
+                return new MyResponseEntity<>(Code.BAD_REQUEST,"博主id不存在",null);
+            }
+            if(uId == bId){
+                UserSubscribesAndFansResponse userSubscribesAndFansResponse = new UserSubscribesAndFansResponse();
+                userSubscribesAndFansResponse = userService.findUsersubscrivesByUserId(uId);
+                return new MyResponseEntity<>(Code.OK, "ok", userSubscribesAndFansResponse.getUserSubscribesAndFans());
+            }
+            else{
+                UserSubscribesAndFansResponse userSubscribesAndFansResponse = new UserSubscribesAndFansResponse();
+                userSubscribesAndFansResponse = userService.findBloggersubscrivesByUserId(uId,bId);
+                return new MyResponseEntity<>(Code.OK,"ok", userSubscribesAndFansResponse.getUserSubscribesAndFans());
+            }
+            }
+        catch(NumberFormatException e){
+            return new MyResponseEntity<>(Code.BAD_REQUEST,"参数类型不正确",null);
+        }
+    }
+        @GetMapping(path = "user/fans" )
+        public MyResponseEntity<ArrayList<UserSubscribesAndFansResponse.SubscribeAndFansBody>> getBloggerfans(@RequestParam("userId") String userId,
+                                                                                                              @RequestParam("bloggerId") String bloggerId) {
+
+            if (StringUtils.isBlank(bloggerId)) {
+                return new MyResponseEntity<>(Code.BAD_REQUEST, "博主id为空", null);
+            }
+            try {
+                long uId = Long.parseLong(userId);
+                long bId = Long.parseLong(bloggerId);
+
+                if (userService.findByUserID(uId) == null) {
+                    return new MyResponseEntity<>(Code.BAD_REQUEST, "用户id不存在", null);
+                }
+                if (userService.findByUserID(bId) == null) {
+                    return new MyResponseEntity<>(Code.BAD_REQUEST, "博主id不存在", null);
+                }
+                    UserSubscribesAndFansResponse userSubscribesAndFansResponse = new UserSubscribesAndFansResponse();
+                    userSubscribesAndFansResponse = userService.findBloggerFansByUserId(uId,bId);
+                    return new MyResponseEntity<>(Code.OK, "ok", userSubscribesAndFansResponse.getUserSubscribesAndFans());
+
+            } catch (NumberFormatException e) {
+                return new MyResponseEntity<>(Code.BAD_REQUEST, "参数类型不正确", null);
+            }
+        }
 }
