@@ -70,6 +70,9 @@ public class BlogListController {
 			return new MyResponseEntity<>(Code.BAD_REQUEST, "page为空", null);
 		try {
 			long uId = Long.parseLong(userId);
+			int pageNum = Integer.parseInt(page);
+			if (pageNum < 0)
+				return new MyResponseEntity<>(Code.BAD_REQUEST, "page为负数", null);
 			if (userService.findByUserID(uId) == null)
 				return new MyResponseEntity<>(Code.BAD_OPERATION, "用户不存在", null);
 			List<KeywordBlogJsonBody> blogList = blogListService.getFollowedBlog(uId);
@@ -90,6 +93,8 @@ public class BlogListController {
 		try {
 			long uId = Long.parseLong(userId);
 			int pageNum = Integer.parseInt(page);
+			if (pageNum < 0)
+				return new MyResponseEntity<>(Code.BAD_REQUEST, "page为负数", null);
 			if (userService.findByUserID(uId) == null)
 				return new MyResponseEntity<>(Code.BAD_OPERATION, "用户不存在", null);
 			List<KeywordBlogJsonBody> blogList = blogListService.getBlogsPageByUserId(uId, pageNum, pageSize);
