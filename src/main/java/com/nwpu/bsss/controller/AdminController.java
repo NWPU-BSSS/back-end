@@ -4,6 +4,7 @@ package com.nwpu.bsss.controller;
 import com.nwpu.bsss.domain.AnnouncementsEntity;
 import com.nwpu.bsss.domain.UserInfoEntity;
 import com.nwpu.bsss.domain.dto.AdminValidationBody;
+import com.nwpu.bsss.domain.dto.DeleteBlogBody;
 import com.nwpu.bsss.response.Code;
 import com.nwpu.bsss.response.MyResponseEntity;
 import com.nwpu.bsss.response.UserListElement;
@@ -102,17 +103,26 @@ public class AdminController {
 	}
 	
 	@DeleteMapping("blog")
-	public MyResponseEntity<Object> deleteBlog(@RequestParam("admin") String admin,
-	                                           @RequestParam("password") String password,
-	                                           @Param("blogId") long blogId) {
-		log.info(String.valueOf(blogId));
-		
+	public MyResponseEntity<Object> deleteBlog(@RequestBody DeleteBlogBody blogBody) {
+		long admin_ = this.adminService.check(blogBody.getAdmin(), blogBody.getPassword());
+		if (admin_ == -1) {
+			log.error("管理员密码错误");
+			return new MyResponseEntity<>(Code.BAD_OPERATION,
+					"Invalid Admin username or password", null);
+		}
+		long blogId;
+		try {
+			blogId = Long.parseLong(blogBody.getBlogId());
+		}catch (Exception e){
+			log.error(blogBody.getBlogId());
+			return new MyResponseEntity<>(Code.BAD_REQUEST, "Invalid blogId", null);
+		}
+
 		if (this.adminService.deleteBlog(blogId)) {
 			return MyResponseEntity.sendOK(null);
 		} else {
-			return new MyResponseEntity<>(Code.BAD_OPERATION, "博客不存在", null);
+			return new MyResponseEntity<>(Code.BAD_OPERATION, "Blog not exist", null);
 		}
-		
 	}
 	
 	@DeleteMapping("user")
