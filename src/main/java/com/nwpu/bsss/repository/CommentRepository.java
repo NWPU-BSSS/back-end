@@ -16,5 +16,7 @@ public interface CommentRepository extends JpaRepository<CommentEntity, Long> {
 	@Query(nativeQuery = true, value = "select count(Id) from Comments where BlogId=?1 and CommentId IS NULL")
 	long getBlogCommentsNum(long blogId);
 
+	Set<CommentEntity> findAllByUserId(long userId);
+
 
 }
