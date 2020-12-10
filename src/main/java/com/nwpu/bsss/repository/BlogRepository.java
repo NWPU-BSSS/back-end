@@ -23,6 +23,6 @@ public interface BlogRepository extends JpaRepository<BlogEntity, Long> {
 	@Query(nativeQuery = true, value = "select * from Blogs,Favorites where Favorites.UserId=?1 and Blogs.Id=Favorites.BlogId ")
 	List<BlogEntity> findFavoritesByUserId(long userId);
 
-	@Query(value = "select * from Blogs ORDER BY LastModifiedTime LIMIT ?1,5", nativeQuery = true)
+	@Query(value = "select * from Blogs ORDER BY LastModifiedTime DESC, Id DESC LIMIT ?1,15", nativeQuery = true)
 	List<BlogEntity> findRecentBlogs(long begin);
 }

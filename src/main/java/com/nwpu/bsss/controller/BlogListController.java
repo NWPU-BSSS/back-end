@@ -63,7 +63,7 @@ public class BlogListController {
 		try{
 			pageNum=Long.valueOf(page);
 		}catch (NumberFormatException numberFormatException){
-			return null;
+			return new MyResponseEntity(Code.BAD_REQUEST,"page格式错误",null);
 		}
 		List<KeywordBlogJsonBody> blogList=this.blogListService.getRecentBlog(pageNum);
 		return new MyResponseEntity(Code.OK,"ok",blogList);
