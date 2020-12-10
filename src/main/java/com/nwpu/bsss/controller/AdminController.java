@@ -5,6 +5,7 @@ import com.nwpu.bsss.domain.AnnouncementsEntity;
 import com.nwpu.bsss.domain.UserInfoEntity;
 import com.nwpu.bsss.domain.dto.AdminValidationBody;
 import com.nwpu.bsss.domain.dto.DeleteBlogBody;
+import com.nwpu.bsss.domain.dto.DeleteUserBody;
 import com.nwpu.bsss.response.Code;
 import com.nwpu.bsss.response.MyResponseEntity;
 import com.nwpu.bsss.response.UserListElement;
@@ -126,19 +127,26 @@ public class AdminController {
 	}
 	
 	@DeleteMapping("user")
-	public MyResponseEntity<Object> deleteUser(@RequestParam("admin") String admin,
-	                                           @RequestParam("password") String password,
-	                                           @Param("userId") long userId) {
-		long admin_ = this.adminService.check(admin, password);
+	public MyResponseEntity<Object> deleteUser(@RequestBody DeleteUserBody userBody) {
+
+		long admin_ = this.adminService.check(userBody.getAdmin(), userBody.getPassword());
 		if (admin_ == -1) {
 			log.error("管理员密码错误");
-			return new MyResponseEntity<>(Code.BAD_OPERATION, "管理员账号或密码错误", null);
+			return new MyResponseEntity<>(Code.BAD_OPERATION,
+					"Invalid Admin username or password", null);
 		}
-		
+		long userId;
+		try {
+			userId = Long.parseLong(userBody.getUserId());
+		}catch (Exception e){
+			log.error(userBody.getUserId());
+			return new MyResponseEntity<>(Code.BAD_REQUEST, "Invalid userId", null);
+		}
+
 		if (this.adminService.deleteUser(userId)) {
 			return MyResponseEntity.sendOK(null);
 		} else {
-			return new MyResponseEntity<>(Code.BAD_OPERATION, "用户不存在", null);
+			return new MyResponseEntity<>(Code.BAD_OPERATION, "User not exist", null);
 		}
 	}
 	
