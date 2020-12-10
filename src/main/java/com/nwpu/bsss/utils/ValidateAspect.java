@@ -52,6 +52,7 @@ public class ValidateAspect {
         }
 
         if(accessToken != null) {
+            log.info("用户的accessToken：" + accessToken);
             if(userId == null) {
                 return new MyResponseEntity<>(Code.BAD_REQUEST, "缺少userId", null);
             }
@@ -64,7 +65,7 @@ public class ValidateAspect {
         }
 
         Object result = joinPoint.proceed();
-        log.info(accessToken);
+
 
         return (MyResponseEntity<Object>) result;
     }

@@ -2,12 +2,13 @@ package com.nwpu.bsss.domain;
 
 import javax.persistence.*;
 import java.sql.Timestamp;
+import java.util.Collection;
 import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
 
 @Entity
-@Table(name = "Comments")
+@Table(name = "Comments", schema = "BSSS")
 public class CommentEntity implements Comparable<CommentEntity> {
 	
 	private long id;
@@ -17,6 +18,9 @@ public class CommentEntity implements Comparable<CommentEntity> {
 	private Set<CommentEntity> children;
 	private String content;
 	private Timestamp time;
+	private UserEntity usersByUserId;
+	private CommentEntity commentsByCommentId;
+	private Collection<CommentEntity> commentsById;
 	
 	public CommentEntity() {
 		this.children = new HashSet<>();
@@ -30,7 +34,6 @@ public class CommentEntity implements Comparable<CommentEntity> {
 		this.children = new HashSet<>();
 		this.time = new Timestamp(System.currentTimeMillis());
 	}
-	
 	
 	@Id
 	@Column(name = "id")
@@ -76,7 +79,6 @@ public class CommentEntity implements Comparable<CommentEntity> {
 		this.parentId = parentId;
 	}
 	
-	
 	@OneToMany(cascade = CascadeType.ALL,
 			fetch = FetchType.EAGER,
 			orphanRemoval = true)
@@ -113,7 +115,7 @@ public class CommentEntity implements Comparable<CommentEntity> {
 	public int compareTo(CommentEntity o) {
 		return -this.time.compareTo(o.time);
 	}
-	
+
 	@Override
 	public boolean equals(Object o) {
 		if (this == o) {
@@ -131,12 +133,12 @@ public class CommentEntity implements Comparable<CommentEntity> {
 				this.content.equals(that.content) &&
 				this.time.equals(that.time);
 	}
-	
+
 	@Override
 	public int hashCode() {
 		return Objects.hash(this.id, this.userId, this.blogId, this.parentId, this.content, this.time);
 	}
-	
+
 	@Override
 	public String toString() {
 		return "CommentEntity{\n" +
@@ -148,5 +150,34 @@ public class CommentEntity implements Comparable<CommentEntity> {
 				"\tchildren=" + this.getChildren() + ",\n" +
 				"time=" + this.time + "\n" +
 				"\t}\n";
+	}
+
+	@ManyToOne
+	@JoinColumn(name = "UserId", referencedColumnName = "Id",insertable = false, updatable = false)
+	public UserEntity getUsersByUserId() {
+		return usersByUserId;
+	}
+
+	public void setUsersByUserId(UserEntity usersByUserId) {
+		this.usersByUserId = usersByUserId;
+	}
+
+	@ManyToOne
+	@JoinColumn(name = "CommentId", referencedColumnName = "Id",insertable = false, updatable = false)
+	public CommentEntity getCommentsByCommentId() {
+		return commentsByCommentId;
+	}
+
+	public void setCommentsByCommentId(CommentEntity commentsByCommentId) {
+		this.commentsByCommentId = commentsByCommentId;
+	}
+
+	@OneToMany(cascade={CascadeType.REMOVE},mappedBy = "commentsByCommentId")
+	public Collection<CommentEntity> getCommentsById() {
+		return commentsById;
+	}
+
+	public void setCommentsById(Collection<CommentEntity> commentsById) {
+		this.commentsById = commentsById;
 	}
 }

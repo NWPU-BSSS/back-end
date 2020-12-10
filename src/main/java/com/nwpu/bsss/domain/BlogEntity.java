@@ -4,11 +4,12 @@ import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 import java.sql.Timestamp;
+import java.util.Collection;
 import java.util.Objects;
 
 @NoArgsConstructor
 @Entity
-@Table(name = "Blogs")
+@Table(name = "Blogs", schema = "BSSS", catalog = "")
 public class BlogEntity {
 	private long id;
 	private String title;
@@ -19,7 +20,9 @@ public class BlogEntity {
 	private Timestamp releaseTime;
 	private Timestamp lastModifiedTime;
 	private String content;
-
+	private UserEntity userByAuthorId;
+	private Collection<LikeEntity> likesById;
+	
 	public BlogEntity(String title, String tagA, String tagB, String tagC,
 					  long authorId, Timestamp releaseTime, Timestamp lastModifiedTime, String content) {
 		this.title = title;
@@ -31,7 +34,7 @@ public class BlogEntity {
 		this.lastModifiedTime = lastModifiedTime;
 		this.content = content;
 	}
-
+	
 	@Id
 	@Column(name = "id")
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -142,12 +145,12 @@ public class BlogEntity {
 				this.lastModifiedTime.equals(that.lastModifiedTime) &&
 				this.content.equals(that.content);
 	}
-	
+
 	@Override
 	public int hashCode() {
 		return Objects.hash(this.id, this.title, this.tagA, this.tagB, this.tagC, this.authorId, this.releaseTime, this.lastModifiedTime, this.content);
 	}
-	
+
 	@Override
 	public String toString() {
 		return "BlogEntity{" +
@@ -161,5 +164,24 @@ public class BlogEntity {
 				", lastModifiedTime=" + this.lastModifiedTime +
 				", content='" + this.content + '\'' +
 				"\n}\n";
+	}
+
+	@ManyToOne
+	@JoinColumn(name = "AuthorId", referencedColumnName = "Id",insertable = false, updatable = false)
+	public UserEntity getUserByAuthorId() {
+		return userByAuthorId;
+	}
+
+	public void setUserByAuthorId(UserEntity userByAuthorId) {
+		this.userByAuthorId = userByAuthorId;
+	}
+
+	@OneToMany(cascade={CascadeType.REMOVE},mappedBy = "blogsByBlogId")
+	public Collection<LikeEntity> getLikesById() {
+		return likesById;
+	}
+
+	public void setLikesById(Collection<LikeEntity> likesById) {
+		this.likesById = likesById;
 	}
 }

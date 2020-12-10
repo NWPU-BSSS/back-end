@@ -11,6 +11,7 @@ import com.nwpu.bsss.service.UserService;
 import com.nwpu.bsss.utils.Tools;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.data.repository.query.Param;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
@@ -36,6 +37,7 @@ public class AdminController {
 	UserService userService;
 	
 	private static final String InternalError = "内部错误";
+
 	
 	@GetMapping("/users")
 	public MyResponseEntity<List<UserListElement>> getUserList() {
@@ -93,14 +95,14 @@ public class AdminController {
 			return new MyResponseEntity<>(Code.BAD_OPERATION, InternalError, null);
 		}
 		
-		return new MyResponseEntity<>(Code.OK, "公告已发布", null);
+		return MyResponseEntity.sendOK(null);
 		
 	}
 	
-	@DeleteMapping("blog/{blogId}")
+	@DeleteMapping("blog")
 	public MyResponseEntity<Object> deleteBlog(@RequestParam("admin") String admin,
 	                                           @RequestParam("password") String password,
-	                                           @PathVariable("blogId") long blogId) {
+	                                           @Param("blogId") long blogId) {
 		log.info(String.valueOf(blogId));
 		long admin_ = this.adminService.check(admin, password);
 		if (admin_ == -1) {
@@ -108,17 +110,17 @@ public class AdminController {
 			return new MyResponseEntity<>(Code.BAD_OPERATION, "管理员账号或密码错误", null);
 		}
 		if (this.adminService.deleteBlog(blogId)) {
-			return new MyResponseEntity<>(Code.OK, "成功了", null);
+			return MyResponseEntity.sendOK(null);
 		} else {
 			return new MyResponseEntity<>(Code.BAD_OPERATION, "博客不存在", null);
 		}
 		
 	}
 	
-	@DeleteMapping("user/{userId}")
+	@DeleteMapping("user")
 	public MyResponseEntity<Object> deleteUser(@RequestParam("admin") String admin,
 	                                           @RequestParam("password") String password,
-	                                           @PathVariable("userId") long userId) {
+	                                           @Param("userId") long userId) {
 		long admin_ = this.adminService.check(admin, password);
 		if (admin_ == -1) {
 			log.error("管理员密码错误");
@@ -126,7 +128,7 @@ public class AdminController {
 		}
 		
 		if (this.adminService.deleteUser(userId)) {
-			return new MyResponseEntity<>(Code.OK, "成功了", null);
+			return MyResponseEntity.sendOK(null);
 		} else {
 			return new MyResponseEntity<>(Code.BAD_OPERATION, "用户不存在", null);
 		}
