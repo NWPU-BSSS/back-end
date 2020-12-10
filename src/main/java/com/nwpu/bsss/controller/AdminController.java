@@ -3,6 +3,7 @@ package com.nwpu.bsss.controller;
 
 import com.nwpu.bsss.domain.AnnouncementsEntity;
 import com.nwpu.bsss.domain.UserInfoEntity;
+import com.nwpu.bsss.domain.dto.AdminValidationBody;
 import com.nwpu.bsss.response.Code;
 import com.nwpu.bsss.response.MyResponseEntity;
 import com.nwpu.bsss.response.UserListElement;
@@ -27,7 +28,7 @@ import java.util.stream.Collectors;
  * @date 2020-12-07 10:28:25
  */
 @Slf4j
-@RequestMapping("admin")
+@RequestMapping("/admin")
 @RestController
 public class AdminController {
 	
@@ -40,7 +41,13 @@ public class AdminController {
 
 	
 	@GetMapping("/users")
-	public MyResponseEntity<List<UserListElement>> getUserList() {
+	public MyResponseEntity<List<UserListElement>> getUserList(@RequestBody AdminValidationBody validation) {
+		
+		if (this.adminService.check(validation.getAdmin(), validation.getPassword()) == -1) {
+			log.error("管理员密码错误");
+			return new MyResponseEntity<>(Code.BAD_OPERATION, "管理员账号或密码错误", null);
+		}
+		
 		List<UserInfoEntity> entities = this.adminService.findAllUsers();
 		List<UserListElement> list = entities.stream()
 				.map(e -> new UserListElement(
@@ -69,18 +76,13 @@ public class AdminController {
 		Timestamp end;
 		long annId;
 		
-		if (publisher == -1) {
-			log.error("管理员密码错误");
-			return new MyResponseEntity<>(Code.BAD_OPERATION, "管理员账号或密码错误", null);
-		}
 		try {
 			start = new Timestamp(new SimpleDateFormat("yyyy-MM-dd HH:mm").parse(startTime).getTime());
 			end = new Timestamp(new SimpleDateFormat("yyyy-MM-dd HH:mm").parse(endTime).getTime());
 			
 			if (start.after(end) || StringUtils.isBlank(content)) {
 				throw new ParseException("", 0);
-			}
-			else if(StringUtils.isBlank(title)){
+			} else if (StringUtils.isBlank(title)) {
 				title = "无标题";
 			}
 			
@@ -104,11 +106,7 @@ public class AdminController {
 	                                           @RequestParam("password") String password,
 	                                           @Param("blogId") long blogId) {
 		log.info(String.valueOf(blogId));
-		long admin_ = this.adminService.check(admin, password);
-		if (admin_ == -1) {
-			log.error("管理员密码错误");
-			return new MyResponseEntity<>(Code.BAD_OPERATION, "管理员账号或密码错误", null);
-		}
+		
 		if (this.adminService.deleteBlog(blogId)) {
 			return MyResponseEntity.sendOK(null);
 		} else {

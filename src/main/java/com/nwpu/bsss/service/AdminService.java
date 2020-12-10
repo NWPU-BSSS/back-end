@@ -42,5 +42,8 @@ public interface AdminService {
 	 */
 	List<UserInfoEntity> findAllUsers();
 	
+	/**
+	 * @return ID of the admin, -1 if invalid
+	 */
 	long check(String admin, String password);
 }

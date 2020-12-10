@@ -26,15 +26,15 @@ public class UserEntity {
 	private UserInfoEntity userInfosById;
 	
 	public UserEntity() {
-
+	
 	}
 	
 	public UserEntity(RegisterBody registerBody) {
-		userName = registerBody.getUsername();
-		email = registerBody.getEmail();
-		password = registerBody.getPassword();
-		time = new Timestamp(new Date().getTime());
-		phone = registerBody.getPhone();
+		this.userName = registerBody.getUsername();
+		this.email = registerBody.getEmail();
+		this.password = registerBody.getPassword();
+		this.time = new Timestamp(new Date().getTime());
+		this.phone = registerBody.getPhone();
 	}
 	
 	@Id
@@ -101,18 +101,18 @@ public class UserEntity {
 	@Override
 	public boolean equals(Object o) {
 		if (this == o) {
-            return true;
-        }
+			return true;
+		}
 		if (o == null || this.getClass() != o.getClass()) {
-            return false;
-        }
+			return false;
+		}
 		UserEntity that = (UserEntity) o;
 		return this.id == that.id &&
-                this.phone == that.phone &&
-                this.userName.equals(that.userName) &&
-                this.email.equals(that.email) &&
-                this.password.equals(that.password) &&
-                this.time.equals(that.time);
+				this.phone == that.phone &&
+				this.userName.equals(that.userName) &&
+				this.email.equals(that.email) &&
+				this.password.equals(that.password) &&
+				this.time.equals(that.time);
 	}
 
 	@Override
