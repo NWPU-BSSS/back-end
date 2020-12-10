@@ -36,10 +36,12 @@ public class ValidateAspect {
 	}
 	
 	@Pointcut("execution(* com.nwpu.bsss.controller.AdminController.*(..))")
+	@Deprecated
 	public void checkAdminPointCut() {
 	}
 	
-	@Around("checkAdminPointCut()")
+	//	@Around("checkAdminPointCut()") Deprecated!!!!!!!
+	@Deprecated
 	public MyResponseEntity<Object> checkAdmin(ProceedingJoinPoint joinPoint) throws Throwable {
 		Object[] args = joinPoint.getArgs();
 		List<String> argNames = new ArrayList<String>(Arrays.asList(((MethodSignature) joinPoint.getSignature()).getParameterNames()));
