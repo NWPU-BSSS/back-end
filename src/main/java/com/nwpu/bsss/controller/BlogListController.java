@@ -56,4 +56,16 @@ public class BlogListController {
 		}
 
 	}
+
+	@GetMapping("/blog/list/recent")
+	public MyResponseEntity<Object> getRecentBlogs(@RequestParam("page") String page){
+		Long pageNum;
+		try{
+			pageNum=Long.valueOf(page);
+		}catch (NumberFormatException numberFormatException){
+			return MyResponseEntity.send;
+		}
+		List<KeywordBlogJsonBody> blogList=this.blogListService.getRecentBlog(pageNum);
+		return null;
+	}
 }
