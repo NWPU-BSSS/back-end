@@ -105,7 +105,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public long getUserFanNumByUserId(long id) {
-        return followRepository.findAllByBloggerId(id).size();
+        return followRepository.findAllFollowByBloggerId(id).size();
     }
 
     @Override
