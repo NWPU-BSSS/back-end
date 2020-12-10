@@ -5,6 +5,8 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
+import java.util.Set;
+
 @Repository
 public interface FollowRepository extends JpaRepository<FollowEntity, Long> {
     @Query(nativeQuery = true, value = "select * from Follow where UserId=?1 and BloggerId=?2")
@@ -12,4 +14,6 @@ public interface FollowRepository extends JpaRepository<FollowEntity, Long> {
 
     @Query(nativeQuery = true, value = "select * from Follow where BloggerId = ?1 and UserId = ?2")
     FollowEntity findByBloggerIdAndUserId(long bloggerId, long userId);
+
+    Set<FollowEntity> findAllByBlogerId(long bloggerId);
 }

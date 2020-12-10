@@ -1,11 +1,10 @@
 package com.nwpu.bsss.serviceimpl;
 
+import com.nwpu.bsss.domain.BlogEntity;
 import com.nwpu.bsss.domain.FollowEntity;
 import com.nwpu.bsss.domain.UserEntity;
 import com.nwpu.bsss.domain.UserInfoEntity;
-import com.nwpu.bsss.repository.FollowRepository;
-import com.nwpu.bsss.repository.UserInfoRepository;
-import com.nwpu.bsss.repository.UserRepository;
+import com.nwpu.bsss.repository.*;
 import com.nwpu.bsss.response.UserSubscribeStatusResponse;
 import com.nwpu.bsss.service.UserService;
 
@@ -13,7 +12,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
+import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 @Service    //注入spring容器
 public class UserServiceImpl implements UserService {
@@ -26,6 +27,15 @@ public class UserServiceImpl implements UserService {
 
     @Resource
     private FollowRepository followRepository;
+
+    @Resource
+    private BlogRepository blogRepository;
+
+    @Resource
+    private CommentRepository commentRepository;
+
+    @Resource
+    private FavoriteRepository favoriteRepository;
 
     @Override
     @Transactional
@@ -73,6 +83,31 @@ public class UserServiceImpl implements UserService {
             userSubscribeStatusResponse.setStatus(true);
         }
         return userSubscribeStatusResponse;
+    }
+
+    @Override
+    public long getUserBlogNumByUserId(long id) {
+        return blogRepository.findAllByAuthorId(id).size();
+    }
+
+    @Override
+    public long getUserFanNumByUserId(long id) {
+        return followRepository.findAllByBlogerId(id).size();
+    }
+
+    @Override
+    public long getUserCommentNumByUserId(long id) {
+        return commentRepository.findAllByUserId(id).size();
+    }
+
+    @Override
+    public long getFavoriteNumByUserId(long id) {
+        Set<BlogEntity> blogs = blogRepository.findAllByAuthorId(id);
+        long num = 0L;
+        for (BlogEntity entity : blogs){
+            num += favoriteRepository.findAllByBlogId(entity.getId()).size();
+        }
+        return num;
     }
 
 }
