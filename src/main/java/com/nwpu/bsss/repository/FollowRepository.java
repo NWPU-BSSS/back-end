@@ -21,7 +21,7 @@ public interface FollowRepository extends JpaRepository<FollowEntity, Long> {
     List<FollowEntity> findAllByUserId(Long userId);
 
     @Query(nativeQuery = true, value = "select * from Follow where BloggerId =?1")
-    List<FollowEntity> findAllByBloggerId(Long bloggerId);
+    List<FollowEntity> findAllFollowByBloggerId(Long bloggerId);
 
-    Set<FollowEntity> findAllByBlogerId(long bloggerId);
+    Set<FollowEntity> findAllByBloggerId(long bloggerId);
 }

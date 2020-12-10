@@ -14,10 +14,8 @@ import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
 import java.util.List;
-import java.util.Optional;
 import java.util.Set;
 import java.util.ArrayList;
-import java.util.List;
 
 @Service    //注入spring容器
 public class UserServiceImpl implements UserService {
@@ -107,7 +105,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public long getUserFanNumByUserId(long id) {
-        return followRepository.findAllByBlogerId(id).size();
+        return followRepository.findAllByBloggerId(id).size();
     }
 
     @Override
@@ -178,7 +176,7 @@ public class UserServiceImpl implements UserService {
     }
     @Override
     public UserSubscribesAndFansResponse findBloggerFansByUserId(Long userId, Long bloggerId){
-        List<FollowEntity> followList = this.followRepository.findAllByBloggerId(bloggerId);
+        List<FollowEntity> followList = this.followRepository.findAllFollowByBloggerId(bloggerId);
         UserSubscribesAndFansResponse userSubscribesAndFansResponse = new UserSubscribesAndFansResponse();
         ArrayList<UserSubscribesAndFansResponse.SubscribeAndFansBody> subscribeBodies = new ArrayList<UserSubscribesAndFansResponse.SubscribeAndFansBody>();
         int count = followList.size();
