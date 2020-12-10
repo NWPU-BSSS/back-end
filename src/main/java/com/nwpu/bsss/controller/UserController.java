@@ -1,19 +1,23 @@
 package com.nwpu.bsss.controller;
 
+import com.nwpu.bsss.domain.BlogEntity;
+import com.nwpu.bsss.domain.BrowseEntity;
 import com.nwpu.bsss.domain.UserEntity;
 import com.nwpu.bsss.domain.UserInfoEntity;
+import com.nwpu.bsss.domain.dto.BrowseBlogsBody;
 import com.nwpu.bsss.domain.dto.SubscribeBloggerBody;
 import com.nwpu.bsss.domain.dto.UpdateUserInfoBody;
 import com.nwpu.bsss.response.*;
 import com.nwpu.bsss.service.FollowService;
 import com.nwpu.bsss.service.UserService;
-import javassist.bytecode.analysis.MultiArrayType;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
-import javax.transaction.Transactional;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.Iterator;
+import java.util.List;
 
 /**
  * @author JerryChan
@@ -172,5 +176,31 @@ public class UserController {
         userService.updateUserInfoEntity(userInfoEntity);
 
         return new MyResponseEntity(Code.OK, "OK", null);
+    }
+
+    /**
+     * @author JiangZhe
+     */
+    @PostMapping("/user/browse/blogs")
+    public MyResponseEntity<BrowseBlogsBody> getUserBrowseBlogs(@RequestHeader("accessToken") String accessToken,
+                                                                @RequestParam("userId") String userId){
+        Long id = Long.parseLong(userId);
+
+        UserEntity userEntity = userService.findByUserID(id);
+
+        List<BrowseBlogsBody> blogList = new ArrayList<>();
+
+        List<BrowseEntity> browseList = userService.findBrowseBlogsByUserId(id);
+
+        Iterator iterator = browseList.iterator();
+        while(iterator.hasNext()){
+            BrowseEntity browseEntity = (BrowseEntity) iterator.next();
+            long blogId = browseEntity.getBlogId();
+            BlogEntity blogEntity = userService.findByBlogId(blogId);
+
+            blogList.add(new BrowseBlogsBody(blogEntity.getId(),blogEntity.getTitle()));
+        }
+
+        return new MyResponseEntity(Code.OK, "OK", blogList);
     }
 }
