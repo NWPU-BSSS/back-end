@@ -45,4 +45,6 @@ public interface UserService {
 
     long getFavoriteNumByUserId(long id);
 
+    long getLikeNumByUserId(long id);
+
 }
