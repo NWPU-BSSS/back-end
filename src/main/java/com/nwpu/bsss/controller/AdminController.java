@@ -4,6 +4,7 @@ package com.nwpu.bsss.controller;
 import com.nwpu.bsss.domain.AnnouncementsEntity;
 import com.nwpu.bsss.domain.UserInfoEntity;
 import com.nwpu.bsss.domain.dto.AdminValidationBody;
+import com.nwpu.bsss.domain.dto.PostAnnouncementBody;
 import com.nwpu.bsss.response.Code;
 import com.nwpu.bsss.response.MyResponseEntity;
 import com.nwpu.bsss.response.UserListElement;
@@ -62,36 +63,30 @@ public class AdminController {
 	}
 	
 	@PostMapping("announcement")
-	public MyResponseEntity<Object> makeAnnouncement(@RequestParam("admin") String admin,
-	                                                 @RequestParam("password") String password,
-	                                                 @RequestParam("content") String content,
-	                                                 @RequestParam("title") String title,
-	                                                 @RequestParam("endTime") String endTime,
-	                                                 @RequestParam("startTime") String startTime) {
+	public MyResponseEntity<Object> makeAnnouncement(@RequestBody PostAnnouncementBody annBody) {
 		
-		long publisher = this.adminService.check(admin, password);
+		long publisher = this.adminService.check(annBody.getAdmin(), annBody.getPassword());
 		Timestamp start;
 		Timestamp end;
 		long annId;
 		
 		try {
-			start = new Timestamp(new SimpleDateFormat("yyyy-MM-dd HH:mm").parse(startTime).getTime());
-			end = new Timestamp(new SimpleDateFormat("yyyy-MM-dd HH:mm").parse(endTime).getTime());
+			start = new Timestamp(new SimpleDateFormat("yyyy-MM-dd HH:mm").parse(annBody.getStartTime()).getTime());
+			end = new Timestamp(new SimpleDateFormat("yyyy-MM-dd HH:mm").parse(annBody.getEndTime()).getTime());
 			
-			if (start.after(end) || StringUtils.isBlank(content)) {
+			if (start.after(end) || StringUtils.isBlank(annBody.getContent())) {
 				throw new ParseException("", 0);
-			} else if (StringUtils.isBlank(title)) {
-				title = "无标题";
+			} else if (StringUtils.isBlank(annBody.getTitle())) {
+				annBody.setTitle("无标题");
 			}
 			
-			annId = this.adminService.makeAnnounce(new AnnouncementsEntity(title, publisher, start, end,
-					Tools.timestamp(), content));
+			annId = this.adminService.makeAnnounce(new AnnouncementsEntity(annBody.getTitle(), publisher, start, end,
+					Tools.timestamp(), annBody.getContent()));
 			
 		} catch (ParseException e) {
 			log.error("时间格式或内容缺失错误");
 			return new MyResponseEntity<>(Code.BAD_OPERATION, "时间格式或内容缺失错误", null);
 		} catch (Exception e) {
-			e.printStackTrace();
 			return new MyResponseEntity<>(Code.BAD_OPERATION, InternalError, null);
 		}
 		
