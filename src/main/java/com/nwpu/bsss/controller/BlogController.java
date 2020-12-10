@@ -17,6 +17,7 @@ import com.nwpu.bsss.service.BlogService;
 import com.nwpu.bsss.service.CommentService;
 import com.nwpu.bsss.service.FavoriteService;
 import com.nwpu.bsss.service.LikeService;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.web.bind.annotation.*;
@@ -80,7 +81,11 @@ public class BlogController {
 	public MyResponseEntity<Object> postBlog(@RequestHeader("accessToken") String accessToken,
 	                                         @RequestParam("userId") String userId,
 	                                         @RequestBody PostBlogBody body) {
-		
+
+		if (StringUtils.isBlank(body.getTitle())){
+			return new MyResponseEntity<>(Code.BAD_OPERATION,"缺少博客标题",null);
+		}
+
 		BlogEntity blogEntity = new BlogEntity(body.getTitle(), body.getTagA(), body.getTagB(), body.getTagC(), Long.parseLong(userId),
 				new Timestamp(new Date().getTime()), new Timestamp(new Date().getTime()), body.getContent());
 		
