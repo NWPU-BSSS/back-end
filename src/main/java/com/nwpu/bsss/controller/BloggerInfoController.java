@@ -36,6 +36,7 @@ public class BloggerInfoController {
 			bloggerInfoResponse.setAvatar(userInfoEntity.getAvatarUrl());//Avatar
 			bloggerInfoResponse.setClassName(userInfoEntity.getClassName());//class
 			bloggerInfoResponse.setLevel(userInfoEntity.getLevel());//level
+			bloggerInfoResponse.setNickname(userInfoEntity.getNickName());//nickname
 
 			bloggerInfoResponse.setVerified(userInfoEntity.isVerified());//verified or not
 			bloggerInfoResponse.setBlogNum(this.userService.getUserBlogNumByUserId(id));//all blogs num
