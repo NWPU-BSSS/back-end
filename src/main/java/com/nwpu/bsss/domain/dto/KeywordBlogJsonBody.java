@@ -31,7 +31,7 @@ public class KeywordBlogJsonBody {
     public static KeywordBlogJsonBody parseJson(BlogEntity blog, String nickname, String avatar, long favoriteNum, long likeNum, long commentNum){
 
         KeywordBlogJsonBody res = new KeywordBlogJsonBody();
-        final int maxWord = 100;
+        final int maxWord = 200;
         String content = blog.getContent();
 
         res.blogId = blog.getId();
