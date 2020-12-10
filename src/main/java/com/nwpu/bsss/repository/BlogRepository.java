@@ -31,5 +31,5 @@ public interface BlogRepository extends JpaRepository<BlogEntity, Long> {
 	List<BlogEntity> findRecentBlogs(long begin);
 
 	@Query(nativeQuery = true, value = "select * from Blogs where AuthorId = ?1 limit ?2,?3")
-	List<BlogEntity> findBlogsPageByUserId(long userId, int page, int pageSize);
+	List<BlogEntity> findBlogsPageByUserId(long userId, int num, int pageSize);
 }

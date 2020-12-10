@@ -109,8 +109,8 @@ public class BlogListServiceImpl implements BlogListService {
 
 	@Override
 	public List<KeywordBlogJsonBody> getBlogsPageByUserId(long userId, int page, int pageSize) {
-		int pageNum = page * pageSize;
-		List<BlogEntity> blogList = blogRepository.findBlogsPageByUserId(userId, pageNum, pageSize);
+		int num = page * pageSize;
+		List<BlogEntity> blogList = blogRepository.findBlogsPageByUserId(userId, num, pageSize);
 		List<KeywordBlogJsonBody> res = new ArrayList<>();
 		UserInfoEntity userInfo = userInfoRepository.findUserInfoById(userId);
 		for(BlogEntity blogEntity:blogList){
