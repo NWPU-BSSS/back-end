@@ -7,8 +7,21 @@ import javax.persistence.*;
 
 @Data
 @Entity
-@Table(name = "UserInfos", schema = "BSSS", catalog = "")
+@Table(name = "UserInfos")
 public class UserInfoEntity {
+
+	public UserInfoEntity() {
+		this.nickName = "yourNickName";
+		this.gender = 0;
+		this.studentNo = 2000000000;
+		this.className = "14000000";
+		this.isVerified = false;
+		this.resume = "I'm a NPUer";
+		this.introduction = "I love NPU";
+		this.realName = "";
+		this.level = 1;
+		this.avatarUrl = "/avatar/default";
+	}
 
 	private long id;
 	private String nickName;
@@ -22,29 +35,12 @@ public class UserInfoEntity {
 	private int level;
 	private String avatarUrl;
 	private UserEntity usersById;
-	
-	public UserInfoEntity() {
-		this.nickName = "yourNickName";
-		this.gender = 0;
-		this.studentNo = 2000000000;
-		this.className = "14000000";
-		this.isVerified = false;
-		this.resume = "I'm a NPUer";
-		this.introduction = "I love NPU";
-		this.realName = "";
-		this.level = 1;
-		this.avatarUrl = "/avatar/default";
-	}
-	
+
 	@Id
 	@Column(name = "Id")
 	//@GeneratedValue(strategy = GenerationType.IDENTITY)
 	public long getId() {
 		return this.id;
-	}
-	
-	public void setId(long id) {
-		this.id = id;
 	}
 	
 	@Basic(optional = false)
@@ -53,18 +49,10 @@ public class UserInfoEntity {
 		return this.nickName;
 	}
 	
-	public void setNickName(String nickName) {
-		this.nickName = nickName;
-	}
-	
 	@Basic(optional = false)
 	@Column(name = "Gender")
 	public int getGender() {
 		return this.gender;
-	}
-	
-	public void setGender(int gender) {
-		this.gender = gender;
 	}
 	
 	@Basic(optional = false)
@@ -73,18 +61,10 @@ public class UserInfoEntity {
 		return this.studentNo;
 	}
 	
-	public void setStudentNo(long studentNo) {
-		this.studentNo = studentNo;
-	}
-
 	@Basic(optional = false)
 	@Column(name = "Class")
 	public String getClassName() {
 		return this.className;
-	}
-
-	public void setClassName(String className) {
-		this.className = className;
 	}
 	
 	@Basic(optional = false)
@@ -93,18 +73,10 @@ public class UserInfoEntity {
 		return this.isVerified;
 	}
 	
-	public void setVerified(boolean verified) {
-		this.isVerified = verified;
-	}
-	
 	@Basic(optional = false)
 	@Column(name = "Resume")
 	public String getResume() {
 		return this.resume;
-	}
-
-	public void setResume(String resume) {
-		this.resume = resume;
 	}
 	
 	@Basic(optional = false)
@@ -113,31 +85,59 @@ public class UserInfoEntity {
 		return this.introduction;
 	}
 	
-	public void setIntroduction(String introduction) {
-		this.introduction = introduction;
-	}
-	
 	@Basic(optional = false)
 	@Column(name = "RealName")
 	public String getRealName() {
 		return this.realName;
 	}
-	
-	public void setRealName(String realName) {
-		this.realName = realName;
-	}
-	
+
 	@Basic(optional = false)
 	@Column(name = "level")
 	public int getLevel(){return this.level;}
-
-	public void setLevel(int level) {this.level = level; }
 
 	@Basic(optional = false)
 	@Column(name = "Avatar")
 	public String getAvatarUrl() {
 		return this.avatarUrl;
 	}
+	
+	public void setId(long id) {
+		this.id = id;
+	}
+	
+	public void setNickName(String nickName) {
+		this.nickName = nickName;
+	}
+	
+	public void setGender(int gender) {
+		this.gender = gender;
+	}
+
+	public void setStudentNo(long studentNo) {
+		this.studentNo = studentNo;
+	}
+	
+	public void setClassName(String className) {
+		this.className = className;
+	}
+	
+	public void setVerified(boolean verified) {
+		this.isVerified = verified;
+	}
+	
+	public void setResume(String resume) {
+		this.resume = resume;
+	}
+	
+	public void setIntroduction(String introduction) {
+		this.introduction = introduction;
+	}
+	
+	public void setRealName(String realName) {
+		this.realName = realName;
+	}
+
+	public void setLevel(int level) {this.level = level; }
 
 	public void setAvatarUrl(String avatarUrl) {
 		this.avatarUrl = avatarUrl;

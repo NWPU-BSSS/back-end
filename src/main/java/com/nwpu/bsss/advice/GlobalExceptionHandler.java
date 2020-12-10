@@ -22,14 +22,14 @@ public class GlobalExceptionHandler {
 		log.error(e.getMessage());
 		return new MyResponseEntity<>(Code.BAD_OPERATION, e.getMessage(), null);
 	}
-
+	
 	@ExceptionHandler(MissingServletRequestParameterException.class)
 	@ResponseStatus(HttpStatus.OK)
 	public MyResponseEntity<Object> handleMissingParamExceptions(MissingServletRequestParameterException e) {
 		log.error(e.getMessage());
 		return new MyResponseEntity<>(Code.BAD_REQUEST, "缺少参数", null);
 	}
-
+	
 	@ExceptionHandler(MethodArgumentTypeMismatchException.class)
 	@ResponseStatus(HttpStatus.OK)
 	public MyResponseEntity<Object> handleMisParamTypeExceptions(MethodArgumentTypeMismatchException e) {

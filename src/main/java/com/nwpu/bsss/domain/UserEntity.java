@@ -9,7 +9,7 @@ import java.util.Date;
 import java.util.Objects;
 
 @Entity
-@Table(name = "Users", schema = "BSSS", catalog = "")
+@Table(name = "Users")
 public class UserEntity {
 	private long id;
 	private String userName;
@@ -24,19 +24,19 @@ public class UserEntity {
 	private Collection<LikeEntity> likesById;
 	private Collection<UnreadMessagesEntity> unreadMessagesById;
 	private UserInfoEntity userInfosById;
-	
+
 	public UserEntity() {
 
 	}
-	
+
 	public UserEntity(RegisterBody registerBody) {
-		userName = registerBody.getUsername();
-		email = registerBody.getEmail();
-		password = registerBody.getPassword();
-		time = new Timestamp(new Date().getTime());
-		phone = registerBody.getPhone();
+		this.userName = registerBody.getUsername();
+		this.email = registerBody.getEmail();
+		this.password = registerBody.getPassword();
+		this.time = new Timestamp(new Date().getTime());
+		this.phone = registerBody.getPhone();
 	}
-	
+
 	@Id
 	@Column(name = "id")
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -73,31 +73,31 @@ public class UserEntity {
 	public String getPassword() {
 		return this.password;
 	}
-
+	
 	public void setPassword(String password) {
 		this.password = password;
 	}
-
+	
 	@Basic
 	@Column(name = "CreateTime")
 	public Timestamp getTime() {
 		return this.time;
 	}
-
+	
 	public void setTime(Timestamp time) {
 		this.time = time;
 	}
-
+	
 	@Basic
 	@Column(name = "Phone")
 	public long getPhone() {
 		return this.phone;
 	}
-
+	
 	public void setPhone(long phone) {
 		this.phone = phone;
 	}
-
+	
 	@Override
 	public boolean equals(Object o) {
 		if (this == o) {
