@@ -45,6 +45,18 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    @Transactional
+    public void updateUserEntity(UserEntity userEntity){
+        userRepository.save(userEntity);
+    }
+
+    @Override
+    @Transactional
+    public void updateUserInfoEntity(UserInfoEntity userInfoEntity){
+        userInfoRepository.save(userInfoEntity);
+    }
+
+    @Override
     public UserEntity findByUserID(long id) {
         return userRepository.findUserById(id);
     }
