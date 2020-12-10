@@ -9,5 +9,3 @@ spring:
     url: jdbc:mysql://localhost:3306/BSSS?serverTimezone=Asia/Shanghai&useSSL=FALSE&useUnicode=true&characterEncoding=UTF-8
     username: root
     password: Bsss1234!
-
-avatarPath:/root/avatar
