@@ -1,18 +1,18 @@
 package com.nwpu.bsss.domain.dto;
 //Todo:
 public class Tag {
-    private String tagName;
+    private String tag;
     private long count;
 
     public Tag() {
     }
 
-    public String getTagName() {
-        return tagName;
+    public String getTag() {
+        return tag;
     }
 
-    public void setTagName(String tagName) {
-        this.tagName = tagName;
+    public void setTag(String tagName) {
+        this.tag = tagName;
     }
 
     public long getCount() {
