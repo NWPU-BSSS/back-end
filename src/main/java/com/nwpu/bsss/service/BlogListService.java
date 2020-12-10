@@ -20,4 +20,6 @@ public interface BlogListService {
 	List<KeywordBlogJsonBody> getKeywordBlog(String word);
 
 	List<FavBlogJsonBody> getFavsBlog(long userId);
+
+	List<KeywordBlogJsonBody> getFollowedBlog(long userId);
 }

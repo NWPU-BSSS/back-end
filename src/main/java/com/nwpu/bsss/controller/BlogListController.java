@@ -3,13 +3,17 @@ package com.nwpu.bsss.controller;
 import com.nwpu.bsss.domain.dto.FavBlogJsonBody;
 import com.nwpu.bsss.domain.dto.KeywordBlogJsonBody;
 import com.nwpu.bsss.domain.dto.ReBlogJsonBody;
+import com.nwpu.bsss.repository.UserRepository;
 import com.nwpu.bsss.response.Code;
 import com.nwpu.bsss.response.MyResponseEntity;
 import com.nwpu.bsss.service.BlogListService;
+import com.nwpu.bsss.service.UserService;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+
 
 import javax.annotation.Resource;
 import java.util.List;
@@ -24,6 +28,9 @@ public class BlogListController {
 	
 	@Resource
 	BlogListService blogListService;
+
+	@Resource
+	UserService userService;
 
 	@GetMapping("/blog/list/recommend")
 	public MyResponseEntity<Object> getRecommendBlog(@RequestParam("page") String page) {
@@ -55,5 +62,23 @@ public class BlogListController {
 			return new MyResponseEntity<>(Code.BAD_REQUEST,"userId格式错误",null);
 		}
 
+	}
+
+	@GetMapping("/blog/list/followed")
+	public MyResponseEntity<Object> getFollowedBloggersBlogs(@RequestParam("page") String page,
+															 @RequestParam("userId") String userId){
+		if (StringUtils.isBlank(userId))
+			return new MyResponseEntity<>(Code.BAD_REQUEST, "userId为空", null);
+		if (StringUtils.isBlank(page))
+			return new MyResponseEntity<>(Code.BAD_REQUEST, "page为空", null);
+		try {
+			long uId = Long.parseLong(userId);
+			List<KeywordBlogJsonBody> blogList = blogListService.getFollowedBlog(uId);
+			if (userService.findByUserID(uId) == null)
+				return new MyResponseEntity<>(Code.BAD_OPERATION, "用户不存在", null);
+			return new MyResponseEntity<>(Code.OK, "ok", blogList);
+		}catch (NumberFormatException e){
+			return new MyResponseEntity<>(Code.BAD_REQUEST, "userId格式错误", null);
+		}
 	}
 }
