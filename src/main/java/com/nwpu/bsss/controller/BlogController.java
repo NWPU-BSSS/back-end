@@ -6,6 +6,7 @@ import com.nwpu.bsss.domain.dto.LikeBlogBody;
 import com.nwpu.bsss.domain.dto.PostBlogBody;
 import com.nwpu.bsss.domain.dto.PostCommentBody;
 import com.nwpu.bsss.domain.dto.PostFavBody;
+import com.nwpu.bsss.exceptions.FavoriteStatusException;
 import com.nwpu.bsss.response.Code;
 import com.nwpu.bsss.response.GetBlogResponse;
 import com.nwpu.bsss.response.LikeStatusResponse;
@@ -147,28 +148,39 @@ public class BlogController {
 	@PostMapping("/blog/fav")
 	public MyResponseEntity<Object> addFavorite(@RequestHeader("accessToken") String accessToken,
 	                                            @RequestParam("userId") String userId,
-	                                            @RequestBody PostFavBody favBody) {
-		long user_id;
+	                                            @RequestBody PostFavBody favBody) throws FavoriteStatusException {
+		long lUserId;
+		long lBlogId;
+		boolean bIsFavorite;
 		try {
-			user_id = Long.parseLong(userId);
+			lUserId = Long.parseLong(userId);
+			lBlogId = favBody.getBlogId();
+			bIsFavorite = favBody.isFavorite();
 		} catch (NumberFormatException e) {
-			return new MyResponseEntity<>(Code.BAD_REQUEST, "userId格式错误", null);
+			return new MyResponseEntity<>(Code.BAD_REQUEST, "userId或其他参数格式错误", null);
 		}
-		this.favoriteService.setFavorite(user_id, favBody.getBlogId(), favBody.isFavorite());
+		if (this.blogService.findByBlogId(lBlogId) == null) {
+			return new MyResponseEntity<>(Code.BAD_REQUEST, "博客不存在", null);
+		}
+		this.favoriteService.setFavorite(lUserId, lBlogId, bIsFavorite);
 		return new MyResponseEntity<>(Code.OK, "ok", null);
 	}
 	
 	@GetMapping("/blog/fav")
 	public MyResponseEntity<IsFavoriteResponse> isFavorite(@RequestHeader("accessToken") String accessToken,
 	                                                       @RequestParam("userId") String userId,
-	                                                       @RequestParam("blogId") long blogId) {
-		long user_id;
+	                                                       @RequestParam("blogId") String blogId) {
+		long lUserId, lBlogId;
 		try {
-			user_id = Long.parseLong(userId);
+			lUserId = Long.parseLong(userId);
+			lBlogId = Long.parseLong(blogId);
 		} catch (NumberFormatException e) {
-			return new MyResponseEntity<>(Code.BAD_REQUEST, "userId格式错误", null);
+			return new MyResponseEntity<>(Code.BAD_REQUEST, "userId或其他参数格式错误", null);
 		}
-		boolean status = this.favoriteService.isFavorite(user_id, blogId);
+		if (this.blogService.findByBlogId(lBlogId) == null) {
+			return new MyResponseEntity<>(Code.BAD_REQUEST, "博客不存在", null);
+		}
+		boolean status = this.favoriteService.isFavorite(lUserId, lBlogId);
 		return new MyResponseEntity<>(Code.OK, "ok", new IsFavoriteResponse(status));
 	}
 	
