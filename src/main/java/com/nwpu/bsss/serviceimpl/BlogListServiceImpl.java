@@ -107,6 +107,21 @@ public class BlogListServiceImpl implements BlogListService {
 		return res;
 	}
 
+	@Override
+	public List<KeywordBlogJsonBody> getBlogsPageByUserId(long userId, int page, int pageSize) {
+		int pageNum = page * pageSize;
+		List<BlogEntity> blogList = blogRepository.findBlogsPageByUserId(userId, pageNum, pageSize);
+		List<KeywordBlogJsonBody> res = new ArrayList<>();
+		UserInfoEntity userInfo = userInfoRepository.findUserInfoById(userId);
+		for(BlogEntity blogEntity:blogList){
+			long favoriteNum = favoriteRepository.getBlogFavoritesNum(blogEntity.getId());
+			long likeNum = likeRepository.getBlogLikesNum(blogEntity.getId());
+			long commentNum = commentRepository.getBlogCommentsNum(blogEntity.getId());
+			res.add(KeywordBlogJsonBody.parseJson(blogEntity, userInfo.getNickName(), userInfo.getAvatarUrl(), favoriteNum, likeNum, commentNum));
+		}
+		return res;
+	}
+
 	private List<Integer> GenerateSEQ(long count) {
 		List<Integer> seq = new ArrayList<>();
 		Random rand = new Random();
