@@ -1,16 +1,20 @@
 package com.nwpu.bsss.domain.dto;
 
-import lombok.Data;
-
 /**
  * Created: 2020-12-07 14:17:24
  *
  * @author Zejia Lin
  */
-@Data
 public class PostFavBody {
 	
-	private int blogId;
-	private boolean favorite;
+	private String blogId;
+	private String favorite;
 	
+	public long getBlogId() {
+		return Long.parseLong(this.blogId);
+	}
+	
+	public boolean isFavorite() {
+		return Boolean.parseBoolean(this.favorite);
+	}
 }
