@@ -59,12 +59,13 @@ public class UserController {
             if (StringUtils.isBlank(bloggerId)) {
                 return new MyResponseEntity<>(Code.BAD_REQUEST, "bloggerId为空", null);
             }
-            if(bloggerId.equals(userId)){
-                return new MyResponseEntity<>(Code.BAD_OPERATION,"无效关注",null);
-            }
             Long uId = Long.parseLong(userId);
             Long bId = Long.parseLong(bloggerId);
             UserSubscribeStatusResponse userSubscribeStatusResponse = new UserSubscribeStatusResponse();
+            if(bloggerId == userId){
+                userSubscribeStatusResponse.setStatus(false);
+                return new MyResponseEntity<>(Code.OK,"ok",userSubscribeStatusResponse);
+            }
             userSubscribeStatusResponse = userService.findUserSubscribeStatusResponse(uId, bId);
             return new MyResponseEntity<>(Code.OK, "OK", userSubscribeStatusResponse);
         }
