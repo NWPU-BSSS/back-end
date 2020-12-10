@@ -26,7 +26,7 @@ import java.util.stream.Collectors;
  * @date 2020-12-07 10:28:25
  */
 @Slf4j
-@RequestMapping("admin")
+@RequestMapping("/admin")
 @RestController
 public class AdminController {
 	
@@ -38,7 +38,9 @@ public class AdminController {
 	private static final String InternalError = "内部错误";
 	
 	@GetMapping("/users")
-	public MyResponseEntity<List<UserListElement>> getUserList() {
+	public MyResponseEntity<List<UserListElement>> getUserList(@RequestParam("admin") String admin,
+	                                                           @RequestParam("password") String password) {
+		
 		List<UserInfoEntity> entities = this.adminService.findAllUsers();
 		List<UserListElement> list = entities.stream()
 				.map(e -> new UserListElement(
@@ -67,18 +69,13 @@ public class AdminController {
 		Timestamp end;
 		long annId;
 		
-		if (publisher == -1) {
-			log.error("管理员密码错误");
-			return new MyResponseEntity<>(Code.BAD_OPERATION, "管理员账号或密码错误", null);
-		}
 		try {
 			start = new Timestamp(new SimpleDateFormat("yyyy-MM-dd HH:mm").parse(startTime).getTime());
 			end = new Timestamp(new SimpleDateFormat("yyyy-MM-dd HH:mm").parse(endTime).getTime());
 			
 			if (start.after(end) || StringUtils.isBlank(content)) {
 				throw new ParseException("", 0);
-			}
-			else if(StringUtils.isBlank(title)){
+			} else if (StringUtils.isBlank(title)) {
 				title = "无标题";
 			}
 			
@@ -102,11 +99,7 @@ public class AdminController {
 	                                           @RequestParam("password") String password,
 	                                           @PathVariable("blogId") long blogId) {
 		log.info(String.valueOf(blogId));
-		long admin_ = this.adminService.check(admin, password);
-		if (admin_ == -1) {
-			log.error("管理员密码错误");
-			return new MyResponseEntity<>(Code.BAD_OPERATION, "管理员账号或密码错误", null);
-		}
+		
 		if (this.adminService.deleteBlog(blogId)) {
 			return new MyResponseEntity<>(Code.OK, "成功了", null);
 		} else {
@@ -119,11 +112,6 @@ public class AdminController {
 	public MyResponseEntity<Object> deleteUser(@RequestParam("admin") String admin,
 	                                           @RequestParam("password") String password,
 	                                           @PathVariable("userId") long userId) {
-		long admin_ = this.adminService.check(admin, password);
-		if (admin_ == -1) {
-			log.error("管理员密码错误");
-			return new MyResponseEntity<>(Code.BAD_OPERATION, "管理员账号或密码错误", null);
-		}
 		
 		if (this.adminService.deleteUser(userId)) {
 			return new MyResponseEntity<>(Code.OK, "成功了", null);
