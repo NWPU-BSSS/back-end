@@ -3,6 +3,8 @@ package com.nwpu.bsss.serviceimpl;
 import com.nwpu.bsss.domain.*;
 import com.nwpu.bsss.repository.*;
 import com.nwpu.bsss.service.AdminService;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.dao.InvalidDataAccessApiUsageException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.transaction.interceptor.TransactionAspectSupport;
@@ -16,6 +18,7 @@ import java.util.Optional;
  * @desc 管理员模块
  * @date 2020-12-07 10:49:29
  */
+@Slf4j
 @Service
 public class AdminServiceImpl implements AdminService {
 	
@@ -43,7 +46,11 @@ public class AdminServiceImpl implements AdminService {
 		try {
 			BlogEntity blogEntity = this.blogRepository.findByBlogId(blogId);
             this.blogRepository.delete(blogEntity);
-		} catch (Exception e) {
+		} catch (InvalidDataAccessApiUsageException e){
+			log.warn("博客:" + blogId +"不存在");
+			TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
+			return false;
+		} catch(Exception e) {
 			e.printStackTrace();
 			TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
 			return false;
@@ -58,6 +65,10 @@ public class AdminServiceImpl implements AdminService {
 		try {
 			UserEntity userEntity = this.userRepository.findUserById(userId);
             this.userRepository.delete(userEntity);
+		} catch (InvalidDataAccessApiUsageException e){
+			log.warn("用户:" + userId +"不存在");
+			TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
+			return false;
 		} catch (Exception e) {
 			e.printStackTrace();
 			TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();

@@ -38,7 +38,7 @@ public class FollowEntity {
     }
 
     @Basic
-    @Column(name = "UserId")
+    @Column(name = "UserId",insertable = false, updatable = false)
     public long getUserId() {
         return userId;
     }

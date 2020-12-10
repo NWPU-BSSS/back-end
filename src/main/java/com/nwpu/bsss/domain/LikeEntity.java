@@ -10,17 +10,19 @@ import java.sql.Timestamp;
  */
 
 @Entity
-@Table(name = "Likes")
+@Table(name = "Likes", schema = "BSSS", catalog = "")
 public class LikeEntity {
 
     private long id;
     private long blogId;
     private long userId;
     private Timestamp timestamp;
-
+    private BlogEntity blogsByBlogId;
+    private UserEntity usersByUserId;
 
     public LikeEntity() {
     }
+
 
     public LikeEntity(long blogId, long userId, Timestamp timestamp) {
 
@@ -35,7 +37,6 @@ public class LikeEntity {
     public long getId() {
         return id;
     }
-
 
     public void setId(long id) {
         this.id = id;
@@ -69,5 +70,25 @@ public class LikeEntity {
 
     public void setTime(Timestamp timestamp) {
         this.timestamp = timestamp;
+    }
+
+    @ManyToOne
+    @JoinColumn(name = "BlogId", referencedColumnName = "Id",insertable = false, updatable = false)
+    public BlogEntity getBlogsByBlogId() {
+        return blogsByBlogId;
+    }
+
+    public void setBlogsByBlogId(BlogEntity blogsByBlogId) {
+        this.blogsByBlogId = blogsByBlogId;
+    }
+
+    @ManyToOne
+    @JoinColumn(name = "UserId", referencedColumnName = "Id", insertable = false, updatable = false)
+    public UserEntity getUsersByUserId() {
+        return usersByUserId;
+    }
+
+    public void setUsersByUserId(UserEntity usersByUserId) {
+        this.usersByUserId = usersByUserId;
     }
 }

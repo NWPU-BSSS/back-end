@@ -45,4 +45,8 @@ public class MyResponseEntity<T> {
 	public void setData(T data) {
 		this.data = data;
 	}
+
+	public static <T> MyResponseEntity<T> sendOK(T data){
+		return new MyResponseEntity<>(Code.OK,"ok",data);
+	}
 }
