@@ -3,6 +3,9 @@ package com.nwpu.bsss.service;
 import com.nwpu.bsss.domain.UserEntity;
 import com.nwpu.bsss.domain.UserInfoEntity;
 import com.nwpu.bsss.response.UserSubscribeStatusResponse;
+import org.springframework.web.multipart.MultipartFile;
+
+import java.io.IOException;
 
 public interface UserService {
 
@@ -25,6 +28,8 @@ public interface UserService {
     UserEntity findByUsername(String username);
 
     UserSubscribeStatusResponse findUserSubscribeStatusResponse(Long userId,Long bloggerId);
+
+    String setUserAvatar(MultipartFile file, long userId) throws IOException;
 
     /**
      * get all the blogs num belonging to the blogger
