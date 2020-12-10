@@ -44,7 +44,7 @@ public class BloggerInfoController {
 			BloggerTagResponse bloggerTagResponse = new BloggerTagResponse();
 			return new MyResponseEntity<>(Code.OK, "ok", bloggerTagResponse.getTagList());
 		} catch (NumberFormatException e) {
-			return new MyResponseEntity<>(Code.BAD_OPERATION, "用户ID格式错误", null);
+			return new MyResponseEntity<>(Code.BAD_REQUEST, "用户ID格式错误", null);
 		} catch (NullPointerException e) {
 			return new MyResponseEntity<>(Code.BAD_OPERATION, "用户不存在", null);
 		}
