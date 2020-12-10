@@ -152,6 +152,7 @@ public class UserController {
 
         UserEntity userEntity = userService.findByUserID(id);
         UserInfoEntity userInfoEntity = userService.findUserInfoByUserId(id);
+
         if (userEntity == null || userInfoEntity == null){
             return new MyResponseEntity(Code.BAD_OPERATION, "用户不存在", null);
         }
@@ -159,6 +160,15 @@ public class UserController {
         String gender = updateUserInfoBody.getGender();
         if (!gender.equals("1") && !gender.equals("0") && !gender.equals("2")){
             return new MyResponseEntity(Code.BAD_REQUEST, "性别有误：0为男，1为女，2为未知", null);
+        }
+
+        String newUserName = updateUserInfoBody.getUserName();
+        String currUserName = userEntity.getUserName();
+        if (newUserName.equals(currUserName)){
+            return new MyResponseEntity(Code.BAD_REQUEST, "用户名与之前相同", null);
+        }
+        if (userService.findByUsername(newUserName) != null){
+            return new MyResponseEntity(Code.BAD_REQUEST, "用户名已存在", null);
         }
 
         userEntity.setUserName(updateUserInfoBody.getUserName());
