@@ -82,7 +82,7 @@ public class BlogListController {
 	@GetMapping("/blog/list/user")
 	public MyResponseEntity<Object> getUserBlogs(@RequestParam("page") String page,
 												 @RequestParam("userId") String userId){
-		int pageSize = 3;
+		int pageSize = 15;
 		if (StringUtils.isBlank(userId))
 			return new MyResponseEntity<>(Code.BAD_REQUEST, "userId为空", null);
 		if (StringUtils.isBlank(page))
