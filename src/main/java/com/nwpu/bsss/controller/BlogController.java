@@ -2,6 +2,7 @@ package com.nwpu.bsss.controller;
 
 import com.nwpu.bsss.domain.BlogEntity;
 import com.nwpu.bsss.domain.CommentEntity;
+import com.nwpu.bsss.domain.dto.LikeBlogBody;
 import com.nwpu.bsss.domain.dto.PostBlogBody;
 import com.nwpu.bsss.domain.dto.PostCommentBody;
 import com.nwpu.bsss.domain.dto.PostFavBody;
@@ -16,6 +17,7 @@ import com.nwpu.bsss.service.CommentService;
 import com.nwpu.bsss.service.FavoriteService;
 import com.nwpu.bsss.service.LikeService;
 import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
@@ -109,15 +111,16 @@ public class BlogController {
 
     @PostMapping("/blog/like")
     public MyResponseEntity<Object> likeBlog(@RequestHeader("accessToken") String accessToken,
-                                             @RequestParam("blogId") long blogId,
                                              @RequestParam("userId") String userId,
-                                             @RequestParam("like") boolean like) {
+                                             @RequestBody LikeBlogBody body) {
 
         try {
             long user_id = Long.parseLong(userId);
-            likeService.likeBlog(blogId, user_id, like);
+            likeService.likeBlog(body.getBlogId(), user_id, body.isLike());
         } catch (NumberFormatException e) {
             return new MyResponseEntity<>(Code.BAD_REQUEST, "userId或其它参数格式错误", null);
+        } catch (HttpMessageNotReadableException e){
+            return new MyResponseEntity<>(Code.BAD_REQUEST, "Json请求参数格式错误", null);
         } catch (DataIntegrityViolationException e) {//点赞的博客不存在，导致插入时导致违反数据完整性
             return new MyResponseEntity<>(Code.BAD_OPERATION, "点赞的博客不存在！", null);
         }
@@ -128,14 +131,18 @@ public class BlogController {
     public MyResponseEntity<LikeStatusResponse> getLikeStatus(@RequestHeader("accessToken") String accessToken,
                                                               @RequestParam("userId") String userId,
                                                               @RequestParam("blogId") long blogId) {
+        try{
+            long user_id = Long.parseLong(userId);
+            LikeStatusResponse likeStatusResponse = new LikeStatusResponse();
+            likeStatusResponse.setStatus(false);
 
-        long user_id = Long.parseLong(userId);
-        LikeStatusResponse likeStatusResponse = new LikeStatusResponse();
-        likeStatusResponse.setStatus(false);
+            boolean status = likeService.getLikeStatus(blogId, user_id);
+            likeStatusResponse.setStatus(status);
+            return new MyResponseEntity<>(Code.OK, "ok", likeStatusResponse);
+        }catch (NumberFormatException e){
+            return new MyResponseEntity<>(Code.BAD_REQUEST,"userId格式错误",null);
+        }
 
-        boolean status = likeService.getLikeStatus(blogId, user_id);
-        likeStatusResponse.setStatus(status);
-        return new MyResponseEntity<>(Code.OK, "ok", likeStatusResponse);
 
     }
 }
