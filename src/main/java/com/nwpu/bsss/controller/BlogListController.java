@@ -14,7 +14,6 @@ import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-
 import javax.annotation.Resource;
 import java.util.List;
 
@@ -80,5 +79,17 @@ public class BlogListController {
 		}catch (NumberFormatException e){
 			return new MyResponseEntity<>(Code.BAD_REQUEST, "userId格式错误", null);
 		}
+	}
+
+	@GetMapping("/blog/list/recent")
+	public MyResponseEntity<Object> getRecentBlogs(@RequestParam("page") String page){
+		Long pageNum;
+		try{
+			pageNum=Long.valueOf(page);
+		}catch (NumberFormatException numberFormatException){
+			return new MyResponseEntity(Code.BAD_REQUEST,"page格式错误",null);
+		}
+		List<KeywordBlogJsonBody> blogList=this.blogListService.getRecentBlog(pageNum);
+		return new MyResponseEntity(Code.OK,"ok",blogList);
 	}
 }

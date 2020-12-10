@@ -22,4 +22,6 @@ public interface BlogListService {
 	List<FavBlogJsonBody> getFavsBlog(long userId);
 
 	List<KeywordBlogJsonBody> getFollowedBlog(long userId);
+
+    List<KeywordBlogJsonBody> getRecentBlog(long page);
 }
