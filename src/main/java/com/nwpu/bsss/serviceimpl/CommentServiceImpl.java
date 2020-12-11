@@ -6,6 +6,7 @@ import com.nwpu.bsss.repository.CommentRepository;
 import com.nwpu.bsss.repository.UserInfoRepository;
 import com.nwpu.bsss.response.blog.CommentElement;
 import com.nwpu.bsss.service.CommentService;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -22,6 +23,9 @@ public class CommentServiceImpl implements CommentService {
 
 	@Resource
 	private UserInfoRepository userInfoRepository;
+
+	@Value("${serverURL}")
+	private String serverURL;
 
 	@Override
 	@Transactional
@@ -62,7 +66,7 @@ public class CommentServiceImpl implements CommentService {
 			if (parentUserInfo != null) {
 				userId = parentUserInfo.getId();
 				nickname = parentUserInfo.getNickName();
-				avatarUrl = parentUserInfo.getAvatarUrl();
+				avatarUrl = serverURL+parentUserInfo.getAvatarUrl();
 			}
 			ret.add(new CommentElement(entity, nickname, avatarUrl, level, parentUserId, parentNickname));
 			this.dfsChildren(level + 1, ret, entity, userId, nickname);

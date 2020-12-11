@@ -8,6 +8,7 @@ import com.nwpu.bsss.domain.dto.KeywordBlogJsonBody;
 import com.nwpu.bsss.domain.dto.ReBlogJsonBody;
 import com.nwpu.bsss.repository.*;
 import com.nwpu.bsss.service.BlogListService;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
@@ -31,6 +32,8 @@ public class BlogListServiceImpl implements BlogListService {
 	private FavoriteRepository favoriteRepository;
 	@Resource
 	private LikeRepository likeRepository;
+	@Value("${serverURL}")
+	private String serverURL;
 
 	@Override
 	public List<ReBlogJsonBody> getRecomBlog(int page) {
@@ -43,7 +46,7 @@ public class BlogListServiceImpl implements BlogListService {
 		for (int i=fromNum; i<toNum; i++) {
 			BlogEntity blog = blogList.get(i);
 			UserInfoEntity userInfo = this.userInfoRepository.findUserInfoById(blog.getAuthorId());
-			res.add(ReBlogJsonBody.parseJson(blog, userInfo.getNickName(), userInfo.getAvatarUrl()));
+			res.add(ReBlogJsonBody.parseJson(blog, userInfo.getNickName(),serverURL+userInfo.getAvatarUrl()));
 		}
 		return res;
 	}
@@ -87,7 +90,7 @@ public class BlogListServiceImpl implements BlogListService {
 			long favoriteNum = favoriteRepository.getBlogFavoritesNum(blogEntity.getId());
 			long likeNum = likeRepository.getBlogLikesNum(blogEntity.getId());
 			long commentNum = commentRepository.getBlogCommentsNum(blogEntity.getId());
-			res.add(KeywordBlogJsonBody.parseJson(blogEntity,userInfo.getNickName(),userInfo.getAvatarUrl(),favoriteNum,likeNum,commentNum));
+			res.add(KeywordBlogJsonBody.parseJson(blogEntity,userInfo.getNickName(),serverURL+userInfo.getAvatarUrl(),favoriteNum,likeNum,commentNum));
 		}
 		return res;
 	}
@@ -102,7 +105,7 @@ public class BlogListServiceImpl implements BlogListService {
 			long favoriteNum=this.favoriteRepository.getBlogFavoritesNum(currentBlog.getId());
 			long likeNum=this.likeRepository.getBlogLikesNum(currentBlog.getId());
 			long commentNum=this.commentRepository.getBlogCommentsNum(currentBlog.getId());
-			res.add(KeywordBlogJsonBody.parseJson(currentBlog,userInfo.getNickName(),userInfo.getAvatarUrl(),favoriteNum,likeNum,commentNum));
+			res.add(KeywordBlogJsonBody.parseJson(currentBlog,userInfo.getNickName(),serverURL+userInfo.getAvatarUrl(),favoriteNum,likeNum,commentNum));
 		}
 		return res;
 	}
@@ -117,7 +120,7 @@ public class BlogListServiceImpl implements BlogListService {
 			long favoriteNum = favoriteRepository.getBlogFavoritesNum(blogEntity.getId());
 			long likeNum = likeRepository.getBlogLikesNum(blogEntity.getId());
 			long commentNum = commentRepository.getBlogCommentsNum(blogEntity.getId());
-			res.add(KeywordBlogJsonBody.parseJson(blogEntity, userInfo.getNickName(), userInfo.getAvatarUrl(), favoriteNum, likeNum, commentNum));
+			res.add(KeywordBlogJsonBody.parseJson(blogEntity, userInfo.getNickName(),serverURL+userInfo.getAvatarUrl(), favoriteNum, likeNum, commentNum));
 		}
 		return res;
 	}
