@@ -21,6 +21,15 @@ public class UnreadMessagesEntity {
     private Integer comment;
     private UserEntity usersByUserId;
 
+    public UnreadMessagesEntity(){
+        this.announcement = 0;
+        this.follow = 0;
+        this.message = 0;
+        this.reply = 0;
+        this.notice = 0;
+        this.like = 0;
+        this.comment = 0;
+    }
     @Id
     @Column(name = "Id")
     public long getId() {

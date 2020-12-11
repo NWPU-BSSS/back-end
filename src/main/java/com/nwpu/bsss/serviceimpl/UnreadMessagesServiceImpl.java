@@ -18,4 +18,14 @@ public class UnreadMessagesServiceImpl implements UnreadMessagesService {
         return unreadMessagesRepository.findByUserId(userId);
     }
 
+    @Override
+    public long createUnreadMessages(UnreadMessagesEntity unreadMessagesEntity) {
+        return unreadMessagesRepository.save(unreadMessagesEntity).getId();
+    }
+
+    @Override
+    public void deleteUnreadMessageById(long id) {
+        unreadMessagesRepository.delete(unreadMessagesRepository.findById(id));
+    }
+
 }

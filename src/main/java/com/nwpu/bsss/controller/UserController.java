@@ -7,6 +7,7 @@ import com.nwpu.bsss.domain.dto.SubscribeBloggerBody;
 import com.nwpu.bsss.domain.dto.UpdateUserInfoBody;
 import com.nwpu.bsss.response.*;
 import com.nwpu.bsss.service.FollowService;
+import com.nwpu.bsss.service.UnreadMessagesService;
 import com.nwpu.bsss.service.UserService;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
@@ -31,6 +32,8 @@ public class UserController {
     private UserService userService;
     @Resource
     private FollowService followService;
+    @Resource
+    private UnreadMessagesService unreadMessagesService;
 
     @GetMapping("/baseInfo")
     public MyResponseEntity<UserBaseInfoResponse> getUserBaseInfo(@RequestHeader("accessToken") String accessToken,

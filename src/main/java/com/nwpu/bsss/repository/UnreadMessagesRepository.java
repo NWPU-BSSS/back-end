@@ -14,4 +14,6 @@ public interface UnreadMessagesRepository extends JpaRepository<UnreadMessagesEn
     @Query(nativeQuery = true, value = "select * from UnreadMessages where UserId = ?1")
     UnreadMessagesEntity findByUserId(long userId);
 
+    @Query(nativeQuery = true, value = "select * from UnreadMessages where Id = ?1")
+    UnreadMessagesEntity findById(long id);
 }
