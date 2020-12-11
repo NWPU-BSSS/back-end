@@ -66,7 +66,7 @@ public class BloggerInfoController {
 	}
 	
 	@GetMapping(path = "/blogger/tags")
-	public MyResponseEntity<ArrayList<Tag>> getBloggerTag(@RequestParam("bloggerId") String bloggerId) {
+	public MyResponseEntity<List<Tag>> getBloggerTag(@RequestParam("bloggerId") String bloggerId) {
 		try {
 			if(StringUtils.isBlank(bloggerId)){
 				return new MyResponseEntity<>(Code.BAD_REQUEST,"用户id为空",null);
@@ -74,7 +74,7 @@ public class BloggerInfoController {
 			long id = Long.parseLong(bloggerId);
 			BloggerTagResponse bloggerTagResponse = new BloggerTagResponse();
 			bloggerTagResponse = blogService.getTags(id);
-			ArrayList<Tag> tagList = new ArrayList<Tag>(bloggerTagResponse.getTagList().values());
+			List<Tag> tagList = new ArrayList<>(bloggerTagResponse.getTagList().values());
 			return new MyResponseEntity<>(Code.OK, "ok", tagList);
 		} catch (NumberFormatException e) {
 			return new MyResponseEntity<>(Code.BAD_REQUEST, "用户ID格式错误", null);

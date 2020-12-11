@@ -115,7 +115,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public String setUserAvatar(MultipartFile file, long userId) throws IOException {
-        final String defalut = "/avatar/default";
+        final String defaultPath = "/avatar/default";
         String url;
 
         Optional<UserInfoEntity> user = userInfoRepository.findById(userId);
@@ -124,7 +124,7 @@ public class UserServiceImpl implements UserService {
             throw new NoUserFoundException("no User");
         }
         UserInfoEntity userEntity = user.get();
-        if(defalut.equals(userEntity.getAvatarUrl())|| StringUtils.isBlank(userEntity.getAvatarUrl())){
+        if(defaultPath.equals(userEntity.getAvatarUrl())|| StringUtils.isBlank(userEntity.getAvatarUrl())){
             //上传用户头像
             url = fileComponent.uploadFile(file,userId,avatarPath);
 
