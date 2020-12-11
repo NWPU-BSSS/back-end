@@ -11,6 +11,6 @@ spring:
     password: Bsss1234!
 #路径最后的/得加上，因为代码的路径是我字符串上加的
   resources:
-    static-locations: classpath:/resource,file:/root/BSSS/
+    static-locations: classpath:/resource/, file:/root/BSSS/
 
 avatarPath: /root/BSSS/avatar/
