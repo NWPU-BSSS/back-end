@@ -211,25 +211,19 @@ public class UserController {
             return new MyResponseEntity<>(Code.BAD_OPERATION, "用户不存在", null);
         }
 
-        List<BrowseBlogsBody> blogList = new ArrayList<>();
-
         List<BrowseEntity> browseList = userService.findBrowseBlogsByUserId(id);
 
-        if (browseList == null){
-            return new MyResponseEntity<>(Code.OK, "OK", null);
-        }else{
+        List<BrowseBlogsBody> blogList = new ArrayList<>();
 
-            Iterator iterator = browseList.iterator();
-            while(iterator.hasNext()){
-                BrowseEntity browseEntity = (BrowseEntity) iterator.next();
-                long blogId = browseEntity.getBlogId();
-                BlogEntity blogEntity = userService.findByBlogId(blogId);
+        Iterator iterator = browseList.iterator();
+        while(iterator.hasNext()){
+            BrowseEntity browseEntity = (BrowseEntity) iterator.next();
+            long blogId = browseEntity.getBlogId();
+            BlogEntity blogEntity = userService.findByBlogId(blogId);
 
-                blogList.add(new BrowseBlogsBody(blogEntity.getId(),blogEntity.getTitle()));
-            }
-
-            return new MyResponseEntity(Code.OK, "OK", blogList);
+            blogList.add(new BrowseBlogsBody(blogEntity.getId(),blogEntity.getTitle()));
         }
+        return new MyResponseEntity(Code.OK, "OK", blogList);
 
     }
 }
