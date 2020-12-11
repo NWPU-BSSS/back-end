@@ -9,7 +9,7 @@ import java.util.Date;
 import java.util.Objects;
 
 @Entity
-@Table(name = "Users", schema = "BSSS")
+@Table(name = "Users", schema = "BSSS", catalog = "")
 public class UserEntity {
 	private long id;
 	private String userName;
@@ -24,9 +24,11 @@ public class UserEntity {
 	private Collection<LikeEntity> likesById;
 	private Collection<UnreadMessagesEntity> unreadMessagesById;
 	private UserInfoEntity userInfosById;
+    private Collection<FollowEntity> followsById;
+    private Collection<FollowEntity> followsById_0;
 	
 	public UserEntity() {
-	
+
 	}
 	
 	public UserEntity(RegisterBody registerBody) {
@@ -63,11 +65,11 @@ public class UserEntity {
 	public String getEmail() {
 		return this.email;
 	}
-	
+
 	public void setEmail(String email) {
 		this.email = email;
 	}
-	
+
 	@Basic
 	@Column(name = "Password")
 	public String getPassword() {
@@ -182,4 +184,22 @@ public class UserEntity {
 	public void setUserInfosById(UserInfoEntity userInfosById) {
 		this.userInfosById = userInfosById;
 	}
+
+    @OneToMany(cascade={CascadeType.REMOVE},mappedBy = "usersByBloggerId")
+    public Collection<FollowEntity> getFollowsById() {
+        return followsById;
+    }
+
+    public void setFollowsById(Collection<FollowEntity> followsById) {
+        this.followsById = followsById;
+    }
+
+    @OneToMany(cascade={CascadeType.REMOVE},mappedBy = "usersByUserId")
+    public Collection<FollowEntity> getFollowsById_0() {
+        return followsById_0;
+    }
+
+    public void setFollowsById_0(Collection<FollowEntity> followsById_0) {
+        this.followsById_0 = followsById_0;
+    }
 }
