@@ -18,7 +18,6 @@ import com.nwpu.bsss.service.CommentService;
 import com.nwpu.bsss.service.FavoriteService;
 import com.nwpu.bsss.service.LikeService;
 import org.apache.commons.lang3.StringUtils;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.web.bind.annotation.*;
