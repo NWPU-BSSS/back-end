@@ -7,6 +7,7 @@ import com.nwpu.bsss.service.PPTShareService;
 import com.nwpu.bsss.utils.FileComponent;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -25,6 +26,9 @@ public class PPTShareServiceImpl implements PPTShareService {
 
     @Autowired
     private FileComponent fileComponent;
+
+    @Value("${filepath}")
+    private String filepath;
 
     @Resource
     private FileRepository fileRepository;
@@ -53,7 +57,7 @@ public class PPTShareServiceImpl implements PPTShareService {
             log.info("文件ID:" + fileId +" 已更新");
         }
 
-        fileComponent.uploadFile(file,userId);
+        fileComponent.uploadFile(file,userId,filepath);
 
         return fileId;
     }
@@ -64,7 +68,7 @@ public class PPTShareServiceImpl implements PPTShareService {
         if(file.isPresent()){
             String filename = file.get().getUserId() + "_" + file.get().getFileName();
             log.info("filename: " + filename);
-            fileComponent.downloadFile(response,filename);
+            fileComponent.downloadFile(response,filename,filepath);
         }
         else{
             throw new NoFileFoundException("NO File FOUND");

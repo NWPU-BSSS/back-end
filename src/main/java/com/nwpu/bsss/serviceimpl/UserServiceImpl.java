@@ -1,19 +1,25 @@
 package com.nwpu.bsss.serviceimpl;
 
-import com.nwpu.bsss.domain.BlogEntity;
-import com.nwpu.bsss.domain.FollowEntity;
-import com.nwpu.bsss.domain.UserEntity;
-import com.nwpu.bsss.domain.UserInfoEntity;
+import com.nwpu.bsss.domain.*;
+import com.nwpu.bsss.exceptions.NoUserFoundException;
 import com.nwpu.bsss.repository.*;
 import com.nwpu.bsss.response.UserSubscribeStatusResponse;
 import com.nwpu.bsss.response.UserSubscribesAndFansResponse;
 import com.nwpu.bsss.service.UserService;
 
+import com.nwpu.bsss.utils.FileComponent;
+import org.apache.commons.lang3.StringUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.annotation.Resource;
+import java.io.IOException;
+import java.sql.Timestamp;
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 import java.util.ArrayList;
 
@@ -40,6 +46,12 @@ public class UserServiceImpl implements UserService {
 
     @Resource
     private LikeRepository likeRepository;
+
+    @Autowired
+    private FileComponent fileComponent;
+
+    @Value("${avatarPath}")
+    private String avatarPath;
 
     @Override
     @Transactional
@@ -99,6 +111,31 @@ public class UserServiceImpl implements UserService {
             userSubscribeStatusResponse.setStatus(true);
         }
         return userSubscribeStatusResponse;
+    }
+
+    @Override
+    public String setUserAvatar(MultipartFile file, long userId) throws IOException {
+        final String defalut = "/avatar/default";
+        String url;
+
+        Optional<UserInfoEntity> user = userInfoRepository.findById(userId);
+
+        if(user.isEmpty()){
+            throw new NoUserFoundException("no User");
+        }
+        UserInfoEntity userEntity = user.get();
+        if(defalut.equals(userEntity.getAvatarUrl())|| StringUtils.isBlank(userEntity.getAvatarUrl())){
+            //上传用户头像
+            url = fileComponent.uploadFile(file,userId,avatarPath);
+
+        }else{
+            //更新用户头像
+            String oldURL = userEntity.getAvatarUrl();
+            url = fileComponent.updateFile(file,userId,oldURL,avatarPath);
+        }
+        userEntity.setAvatarUrl(url);
+        userInfoRepository.save(userEntity);
+        return url;
     }
 
     @Override

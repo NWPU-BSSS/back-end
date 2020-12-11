@@ -17,15 +17,28 @@ import java.nio.charset.StandardCharsets;
 @Component
 public class FileComponent {
 
-    @Value("${filepath}")
-    private String filepath;
 
-    public boolean checkExist(String filename,long userId){
+    public boolean checkExist(String filename,long userId,String filepath){
         File file = new File(filepath + userId + "_" + filename);
         return file.exists();
     }
 
-    public void uploadFile(MultipartFile file, long userId) throws IOException {
+    public String updateFile(MultipartFile file, long userId,String oldFilePath,String avatarPath) throws IOException {
+        //判断存放的文件夹是否存在
+        File targetFile = new File(avatarPath);
+        if (!targetFile.exists()) {
+            targetFile.mkdirs();
+        }
+        targetFile = new File(oldFilePath);
+        if(targetFile.exists()){
+            log.info("旧文件：" + oldFilePath +"已被删除.");
+            targetFile.delete();
+        }
+        return uploadFile(file,userId,avatarPath);
+
+
+    }
+    public String uploadFile(MultipartFile file, long userId,String filepath) throws IOException {
 
         File targetFile = new File(filepath);
         if (!targetFile.exists()) {
@@ -39,9 +52,11 @@ public class FileComponent {
 
         out.close();
 
+        return filepath + filename;
+
     }
 
-    public void downloadFile(HttpServletResponse response,String filename) throws IOException {
+    public void downloadFile(HttpServletResponse response,String filename,String filepath) throws IOException {
 
         File file = new File(filepath + "/" + filename);
 

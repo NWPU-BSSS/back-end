@@ -2,18 +2,25 @@ package com.nwpu.bsss.controller;
 
 import com.nwpu.bsss.domain.UserEntity;
 import com.nwpu.bsss.domain.UserInfoEntity;
+import com.nwpu.bsss.domain.dto.JsonAvatarResponse;
 import com.nwpu.bsss.domain.dto.SubscribeBloggerBody;
 import com.nwpu.bsss.domain.dto.UpdateUserInfoBody;
 import com.nwpu.bsss.response.*;
 import com.nwpu.bsss.service.FollowService;
+import com.nwpu.bsss.service.PPTShareService;
 import com.nwpu.bsss.service.UserService;
 import javassist.bytecode.analysis.MultiArrayType;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.data.repository.query.Param;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.annotation.Resource;
 import javax.transaction.Transactional;
+import java.io.IOException;
+import java.util.*;
 import java.util.ArrayList;
 import java.util.Date;
 
@@ -21,6 +28,7 @@ import java.util.Date;
  * @author JerryChan
  * @date 2020-12-08 16:55:09
  */
+@Slf4j
 @RestController
 public class UserController {
 
@@ -192,6 +200,35 @@ public class UserController {
         userService.updateUserInfoEntity(userInfoEntity);
 
         return new MyResponseEntity(Code.OK, "OK", null);
+    }
+    /**
+     * @author alecHe
+     *
+     */
+    @PostMapping("user/avatar")
+    public MyResponseEntity<Object> setUserAvatar(@Param("userId") String userId,
+//                                            @RequestHeader("accessToken")String accessToken,
+                                            @RequestParam("file") MultipartFile file){
+        List<String> format = Arrays.asList(".jpg",".jpeg",".png");
+        String prefix;
+        String url;
+        try {
+
+            int lastIndexOf = Objects.requireNonNull(file.getOriginalFilename()).lastIndexOf(".");
+
+            String suffix = file.getOriginalFilename().substring(lastIndexOf);
+            log.info(suffix);
+            if (!format.contains(suffix)){
+                return new MyResponseEntity<>(Code.BAD_OPERATION,"文件格式不支持",null);
+            }
+            url = userService.setUserAvatar(file,Long.parseLong(userId));
+        }catch (Exception e){
+            log.error("上传失败");
+            return new MyResponseEntity<>(Code.BAD_OPERATION,"文件上传失败或文件格式不支持",null);
+        }
+        log.info("上传成功");
+        return MyResponseEntity.sendOK(new JsonAvatarResponse(url));
+
     }
 
     @GetMapping(path = "user/subscribes" )

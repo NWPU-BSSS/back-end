@@ -36,7 +36,7 @@ public class FileController {
             return new MyResponseEntity<>(Code.BAD_OPERATION,"文件上传失败",null);
         }
         log.info("上传成功");
-        return new MyResponseEntity<>(Code.BAD_OPERATION,"文件上传成功",id);
+        return MyResponseEntity.sendOK(null);
 
     }
 
