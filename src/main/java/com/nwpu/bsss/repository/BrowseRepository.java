@@ -13,6 +13,6 @@ import java.util.List;
 @Repository
 public interface BrowseRepository extends JpaRepository<BrowseEntity, Long> {
 
-    @Query(nativeQuery = true, value = "SELECT * FROM Browses WHERE UserId = ?1")
+    @Query(nativeQuery = true, value = "SELECT * FROM Browses WHERE UserId = ?1 Order BY Time")
     List<BrowseEntity> findAllByUserId(long userId);
 }
