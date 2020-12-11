@@ -6,6 +6,7 @@ import com.nwpu.bsss.domain.dto.AdminValidationBody;
 import com.nwpu.bsss.domain.dto.DeleteBlogBody;
 import com.nwpu.bsss.domain.dto.DeleteUserBody;
 import com.nwpu.bsss.domain.dto.PostAnnouncementBody;
+import com.nwpu.bsss.response.AdminBlogElement;
 import com.nwpu.bsss.response.Code;
 import com.nwpu.bsss.response.MyResponseEntity;
 import com.nwpu.bsss.response.UserListElement;
@@ -39,6 +40,15 @@ public class AdminController {
 	UserService userService;
 	
 	private static final String InternalError = "内部错误";
+	
+	@GetMapping("/blogs")
+	public MyResponseEntity<List<AdminBlogElement>> getBlogs(@RequestBody AdminValidationBody validation) {
+		if (this.adminService.check(validation.getAdmin(), validation.getPassword()) == -1) {
+			log.error("管理员密码错误");
+			return new MyResponseEntity<>(Code.BAD_OPERATION, "管理员账号或密码错误", null);
+		}
+		return new MyResponseEntity<>(Code.OK, "ok", this.adminService.getAllBlogs());
+	}
 	
 	@GetMapping("/users")
 	public MyResponseEntity<List<UserListElement>> getUserList(@RequestBody AdminValidationBody validation) {
@@ -110,11 +120,11 @@ public class AdminController {
 		long blogId;
 		try {
 			blogId = Long.parseLong(blogBody.getBlogId());
-		}catch (Exception e){
+		} catch (Exception e) {
 			log.error(blogBody.getBlogId());
 			return new MyResponseEntity<>(Code.BAD_REQUEST, "Invalid blogId", null);
 		}
-
+		
 		if (this.adminService.deleteBlog(blogId)) {
 			return MyResponseEntity.sendOK(null);
 		} else {
@@ -124,7 +134,7 @@ public class AdminController {
 	
 	@DeleteMapping("user")
 	public MyResponseEntity<Object> deleteUser(@RequestBody DeleteUserBody userBody) {
-
+		
 		long admin_ = this.adminService.check(userBody.getAdmin(), userBody.getPassword());
 		if (admin_ == -1) {
 			log.error("管理员密码错误");
@@ -134,11 +144,11 @@ public class AdminController {
 		long userId;
 		try {
 			userId = Long.parseLong(userBody.getUserId());
-		}catch (Exception e){
+		} catch (Exception e) {
 			log.error(userBody.getUserId());
 			return new MyResponseEntity<>(Code.BAD_REQUEST, "Invalid userId", null);
 		}
-
+		
 		if (this.adminService.deleteUser(userId)) {
 			return MyResponseEntity.sendOK(null);
 		} else {

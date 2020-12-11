@@ -2,6 +2,7 @@ package com.nwpu.bsss.serviceimpl;
 
 import com.nwpu.bsss.domain.*;
 import com.nwpu.bsss.repository.*;
+import com.nwpu.bsss.response.AdminBlogElement;
 import com.nwpu.bsss.service.AdminService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.dao.InvalidDataAccessApiUsageException;
@@ -12,6 +13,7 @@ import org.springframework.transaction.interceptor.TransactionAspectSupport;
 import javax.annotation.Resource;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 /**
  * @author alecHe
@@ -39,18 +41,25 @@ public class AdminServiceImpl implements AdminService {
 		return this.announRepository.save(announcementEntity).getId();
 	}
 	
+	@Override
+	public List<AdminBlogElement> getAllBlogs() {
+		return this.blogRepository.findRecentBlogs(0).stream()
+				.map(AdminBlogElement::new)
+				.collect(Collectors.toList());
+	}
+	
 	@Transactional(rollbackFor = {Exception.class})
 	@Override
 	public boolean deleteBlog(long blogId) {
 		//删除一个博客并删除所有依赖于这个博客的记录，如博客的likes
 		try {
 			BlogEntity blogEntity = this.blogRepository.findByBlogId(blogId);
-            this.blogRepository.delete(blogEntity);
-		} catch (InvalidDataAccessApiUsageException e){
-			log.warn("博客:" + blogId +"不存在");
+			this.blogRepository.delete(blogEntity);
+		} catch (InvalidDataAccessApiUsageException e) {
+			log.warn("博客:" + blogId + "不存在");
 			TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
 			return false;
-		} catch(Exception e) {
+		} catch (Exception e) {
 			e.printStackTrace();
 			TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
 			return false;
@@ -64,9 +73,9 @@ public class AdminServiceImpl implements AdminService {
 		//删除一个用户即删除所有依赖于这个用户的记录，如他的博客
 		try {
 			UserEntity userEntity = this.userRepository.findUserById(userId);
-            this.userRepository.delete(userEntity);
-		} catch (InvalidDataAccessApiUsageException e){
-			log.warn("用户:" + userId +"不存在");
+			this.userRepository.delete(userEntity);
+		} catch (InvalidDataAccessApiUsageException e) {
+			log.warn("用户:" + userId + "不存在");
 			TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
 			return false;
 		} catch (Exception e) {
