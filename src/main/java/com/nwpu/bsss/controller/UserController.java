@@ -167,7 +167,7 @@ public class UserController {
         if (userService.findByUsername(newUserName) != null){
             UserEntity AnotherUser = userService.findByUsername(newUserName);
             if (!userEntity.equals(AnotherUser)){
-                return new MyResponseEntity(Code.BAD_REQUEST, "用户名已存在", null);
+                return new MyResponseEntity(Code.BAD_OPERATION, "用户名已存在", null);
             }
         }
 
