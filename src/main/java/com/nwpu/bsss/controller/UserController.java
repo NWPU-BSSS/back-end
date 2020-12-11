@@ -201,25 +201,35 @@ public class UserController {
      * @author JiangZhe
      */
     @PostMapping("/user/browse/blogs")
-    public MyResponseEntity<BrowseBlogsBody> getUserBrowseBlogs(@RequestHeader("accessToken") String accessToken,
+    public MyResponseEntity getUserBrowseBlogs(@RequestHeader("accessToken") String accessToken,
                                                                 @RequestParam("userId") String userId){
         Long id = Long.parseLong(userId);
 
         UserEntity userEntity = userService.findByUserID(id);
 
+        if (userEntity == null){
+            return new MyResponseEntity<>(Code.BAD_OPERATION, "用户不存在", null);
+        }
+
         List<BrowseBlogsBody> blogList = new ArrayList<>();
 
         List<BrowseEntity> browseList = userService.findBrowseBlogsByUserId(id);
 
-        Iterator iterator = browseList.iterator();
-        while(iterator.hasNext()){
-            BrowseEntity browseEntity = (BrowseEntity) iterator.next();
-            long blogId = browseEntity.getBlogId();
-            BlogEntity blogEntity = userService.findByBlogId(blogId);
+        if (browseList == null){
+            return new MyResponseEntity<>(Code.OK, "OK", null);
+        }else{
 
-            blogList.add(new BrowseBlogsBody(blogEntity.getId(),blogEntity.getTitle()));
+            Iterator iterator = browseList.iterator();
+            while(iterator.hasNext()){
+                BrowseEntity browseEntity = (BrowseEntity) iterator.next();
+                long blogId = browseEntity.getBlogId();
+                BlogEntity blogEntity = userService.findByBlogId(blogId);
+
+                blogList.add(new BrowseBlogsBody(blogEntity.getId(),blogEntity.getTitle()));
+            }
+
+            return new MyResponseEntity(Code.OK, "OK", blogList);
         }
 
-        return new MyResponseEntity(Code.OK, "OK", blogList);
     }
 }
