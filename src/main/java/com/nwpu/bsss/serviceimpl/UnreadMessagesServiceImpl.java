@@ -19,13 +19,17 @@ public class UnreadMessagesServiceImpl implements UnreadMessagesService {
     }
 
     @Override
-    public long createUnreadMessages(UnreadMessagesEntity unreadMessagesEntity) {
-        return unreadMessagesRepository.save(unreadMessagesEntity).getId();
+    public long createUnreadMessages(UnreadMessagesEntity unreadMessagesEntity, long userId) {
+
+        return unreadMessagesRepository.createUnreadMessage(userId, unreadMessagesEntity.getAnnouncement(),
+                unreadMessagesEntity.getFollow(), unreadMessagesEntity.getMessage(),
+                unreadMessagesEntity.getReply(), unreadMessagesEntity.getNotice(),
+                unreadMessagesEntity.getLike(), unreadMessagesEntity.getComment());
     }
 
     @Override
-    public void deleteUnreadMessageById(long id) {
-        unreadMessagesRepository.delete(unreadMessagesRepository.findById(id));
+    public void deleteUnreadMessageByUserId(long UserId) {
+        unreadMessagesRepository.deleteUnreadMessage(UserId);
     }
 
 }

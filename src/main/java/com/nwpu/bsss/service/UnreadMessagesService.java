@@ -7,7 +7,7 @@ public interface UnreadMessagesService {
 
     UnreadMessagesEntity getUnreadMessagesByUserId(long userId);
 
-    long createUnreadMessages(UnreadMessagesEntity unreadMessagesEntity);
+    long createUnreadMessages(UnreadMessagesEntity unreadMessagesEntity, long userId);
 
-    void deleteUnreadMessageById(long id);
+    void deleteUnreadMessageByUserId(long userId);
 }

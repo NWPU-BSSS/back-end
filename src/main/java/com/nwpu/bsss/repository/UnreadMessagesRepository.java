@@ -16,4 +16,15 @@ public interface UnreadMessagesRepository extends JpaRepository<UnreadMessagesEn
 
     @Query(nativeQuery = true, value = "select * from UnreadMessages where Id = ?1")
     UnreadMessagesEntity findById(long id);
+
+    @Transactional
+    @Modifying
+    @Query(nativeQuery = true, value = "insert into UnreadMessages (UserId, Announcement, Follow, Message, Reply, Notice, `Like`, Comment) " +
+            "values (?1, ?2, ?3, ?4, ?5, ?6, ?7, ?8)")
+    int createUnreadMessage(long userId, int announcement, int follow, int message, int reply, int notice, int like, int comment);
+
+    @Transactional
+    @Modifying
+    @Query(nativeQuery = true, value = "delete from UnreadMessages where UserId = ?1")
+    int deleteUnreadMessage(long userId);
 }

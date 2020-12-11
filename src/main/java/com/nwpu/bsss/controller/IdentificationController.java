@@ -100,7 +100,7 @@ public class IdentificationController {
                 //外键设置
                 userInfo.setId(userId);
                 //添加未读消息行
-                long unreadMessagesId = unreadMessagesService.createUnreadMessages(new UnreadMessagesEntity());
+                long unreadMessagesId = unreadMessagesService.createUnreadMessages(new UnreadMessagesEntity(), userId);
                 try {
                     //创建用户扩展信息
                     userInfo.setNickName(user.getUserName());//默认nickname为用户名,其他均为空
@@ -110,7 +110,7 @@ public class IdentificationController {
                     e.printStackTrace();
                     //如果UserInfo创建失败，同时删除刚创建的新user以及未读消息行。
                     userService.deleteUser(user);
-                    unreadMessagesService.deleteUnreadMessageById(unreadMessagesId);
+                    unreadMessagesService.deleteUnreadMessageByUserId(userId);
                     return new MyResponseEntity<>(Code.BAD_OPERATION, "Unknown error in server", null);
                 }
             } catch (DataIntegrityViolationException e) {
