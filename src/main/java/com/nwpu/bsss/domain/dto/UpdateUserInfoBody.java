@@ -15,7 +15,7 @@ import java.util.Date;
 public class UpdateUserInfoBody {
 
     private String userName;
-    private String nickName;
+    private String nickname;
     private String introduction;
     private String realName;
     private String gender;

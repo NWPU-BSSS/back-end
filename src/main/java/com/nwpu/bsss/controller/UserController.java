@@ -184,7 +184,7 @@ public class UserController {
         userEntity.setUserName(updateUserInfoBody.getUserName());
         userService.updateUserEntity(userEntity);
 
-        userInfoEntity.setNickName(updateUserInfoBody.getNickName());
+        userInfoEntity.setNickName(updateUserInfoBody.getNickname());
         userInfoEntity.setIntroduction(updateUserInfoBody.getIntroduction());
         userInfoEntity.setRealName(updateUserInfoBody.getRealName());
         userInfoEntity.setGender(Integer.parseInt(updateUserInfoBody.getGender()));
