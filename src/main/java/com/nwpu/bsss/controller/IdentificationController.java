@@ -88,7 +88,7 @@ public class IdentificationController {
         String result = verifyClient.verifyEmail(registerBody.getEmail(), String.valueOf(registerBody.getVerifyCode()));
 
         if (result.equals("false")) {
-            return new MyResponseEntity<>(Code.BAD_OPERATION, "Email check fail", null);
+            return new MyResponseEntity<>(Code.BAD_OPERATION, "Verification code check fail", null);
         } else {    //true
             try {
                 //创建用户
