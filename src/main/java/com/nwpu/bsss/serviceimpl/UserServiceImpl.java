@@ -53,6 +53,9 @@ public class UserServiceImpl implements UserService {
     @Value("${avatarPath}")
     private String avatarPath;
 
+    @Value("${serverURL}")
+    private String serverURL;
+
     @Override
     @Transactional
     public long createUser(UserEntity userEntity) {
@@ -185,7 +188,7 @@ public class UserServiceImpl implements UserService {
             Long bloggerId = follow.getBloggerId();
             UserInfoEntity userInfo = userInfoRepository.findUserInfoById(bloggerId);
             subscribeAndFansBody.setNickname(userInfo.getNickName());
-            subscribeAndFansBody.setAvatar(userInfo.getAvatarUrl());
+            subscribeAndFansBody.setAvatar(serverURL+userInfo.getAvatarUrl());
             subscribeAndFansBody.setBloggerId(bloggerId);
             subscribeAndFansBody.setIntroduction(userInfo.getIntroduction());
             subscribeAndFansBody.setIsSubscribed(true);
@@ -207,7 +210,7 @@ public class UserServiceImpl implements UserService {
             Long bId = follow.getBloggerId();
             UserInfoEntity userInfo = userInfoRepository.findUserInfoById(bId);
             subscribeAndFansBody.setNickname(userInfo.getNickName());
-            subscribeAndFansBody.setAvatar(userInfo.getAvatarUrl());
+            subscribeAndFansBody.setAvatar(serverURL+userInfo.getAvatarUrl());
             subscribeAndFansBody.setBloggerId(bId);
             subscribeAndFansBody.setIntroduction(userInfo.getIntroduction());
             if(bId == userId){
@@ -236,7 +239,7 @@ public class UserServiceImpl implements UserService {
             Long uId = follow.getUserId();
             UserInfoEntity userInfo = userInfoRepository.findUserInfoById(uId);
             subscribeAndFansBody.setNickname(userInfo.getNickName());
-            subscribeAndFansBody.setAvatar(userInfo.getAvatarUrl());
+            subscribeAndFansBody.setAvatar(serverURL+userInfo.getAvatarUrl());
             subscribeAndFansBody.setBloggerId(uId);
             subscribeAndFansBody.setIntroduction(userInfo.getIntroduction());
             if(uId == userId){

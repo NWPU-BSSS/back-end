@@ -10,4 +10,10 @@ spring:
     username: root
     password: Bsss1234!
 #路径最后的/得加上，因为代码的路径是我字符串上加的
-avatarPath: ./root/avatar/
+  resources:
+    static-locations: classpath:/resources/, file:/root/BSSS/
+
+#数据库中存储的头像数据为avatar/xxx.jpg
+avatarPath: avatar/
+#返回的前端的均为头像完整的URL
+serverURL: http://47.108.48.139:8080/api/

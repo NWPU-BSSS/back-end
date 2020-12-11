@@ -15,6 +15,7 @@ import com.nwpu.bsss.service.UserService;
 import com.nwpu.bsss.utils.Tools;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
@@ -38,6 +39,8 @@ public class AdminController {
 	AdminService adminService;
 	@Resource
 	UserService userService;
+	@Value("${serverURL}")
+	private String serverURL;
 	
 	private static final String InternalError = "内部错误";
 	
@@ -64,7 +67,7 @@ public class AdminController {
 								e.getId(),
 								this.userService.findByUserID(e.getId()).getUserName(),
 								e.getNickName(),
-								e.getAvatarUrl(),
+								serverURL+e.getAvatarUrl(),
 								e.getIntroduction(),
 								e.getGender()
 						)
