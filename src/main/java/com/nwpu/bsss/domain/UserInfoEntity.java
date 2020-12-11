@@ -25,7 +25,7 @@ public class UserInfoEntity {
 	private UserEntity usersById;
 
 	public UserInfoEntity(){
-		gender = 3;//unknown
+		gender = 2;//unknown
 		level = 1;
 		isVerified = false;
 		studentNo=2018303188;//TODO:这里写死学号是因为API没有修改学号的选项
