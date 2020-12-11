@@ -1,11 +1,7 @@
 package com.nwpu.bsss.serviceimpl;
 
-import com.nwpu.bsss.domain.FollowEntity;
-import com.nwpu.bsss.domain.UserEntity;
-import com.nwpu.bsss.domain.UserInfoEntity;
-import com.nwpu.bsss.repository.FollowRepository;
-import com.nwpu.bsss.repository.UserInfoRepository;
-import com.nwpu.bsss.repository.UserRepository;
+import com.nwpu.bsss.domain.*;
+import com.nwpu.bsss.repository.*;
 import com.nwpu.bsss.response.UserSubscribeStatusResponse;
 import com.nwpu.bsss.service.UserService;
 
@@ -13,7 +9,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
-import java.util.Optional;
+import java.util.List;
 
 @Service    //注入spring容器
 public class UserServiceImpl implements UserService {
@@ -26,6 +22,12 @@ public class UserServiceImpl implements UserService {
 
     @Resource
     private FollowRepository followRepository;
+
+    @Resource
+    private BrowseRepository browseRepository;
+
+    @Resource
+    private BlogRepository blogRepository;
 
     @Override
     @Transactional
@@ -54,6 +56,16 @@ public class UserServiceImpl implements UserService {
     @Transactional
     public void updateUserInfoEntity(UserInfoEntity userInfoEntity){
         userInfoRepository.save(userInfoEntity);
+    }
+
+    @Override
+    public List<BrowseEntity> findBrowseBlogsByUserId(long userId) {
+        return browseRepository.findAllByUserId(userId);
+    }
+
+    @Override
+    public BlogEntity findByBlogId(long blogId) {
+        return blogRepository.findByBlogId(blogId);
     }
 
     @Override
