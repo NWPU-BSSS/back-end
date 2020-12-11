@@ -10,6 +10,7 @@ import com.nwpu.bsss.service.FollowService;
 import com.nwpu.bsss.service.UserService;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.repository.query.Param;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -31,6 +32,8 @@ public class UserController {
     private UserService userService;
     @Resource
     private FollowService followService;
+    @Value("${serverURL}")
+    private String serverURL;
 
     @GetMapping("/baseInfo")
     public MyResponseEntity<UserBaseInfoResponse> getUserBaseInfo(@RequestHeader("accessToken") String accessToken,
@@ -140,9 +143,9 @@ public class UserController {
         long codeAgeTime=new Date().getTime()-userEntity.getTime().getTime();
         userInfoResponse.setCodeAge(codeAgeTime/31536000000L);
         userInfoResponse.setLevel(userInfoEntity.getLevel());
-        userInfoResponse.setAvatar(userInfoEntity.getAvatarUrl());
+        userInfoResponse.setAvatar(serverURL+userInfoEntity.getAvatarUrl());
 
-        return new MyResponseEntity<UserInfoResponse>(Code.OK,"ok",userInfoResponse);
+        return new MyResponseEntity<>(Code.OK,"ok",userInfoResponse);
     }
 
     /**
@@ -203,11 +206,11 @@ public class UserController {
      */
     @PostMapping("user/avatar")
     public MyResponseEntity<Object> setUserAvatar(@Param("userId") String userId,
-//                                            @RequestHeader("accessToken")String accessToken,
+                                            @RequestHeader("accessToken")String accessToken,
                                             @RequestParam("file") MultipartFile file){
         List<String> format = Arrays.asList(".jpg",".jpeg",".png");
         String prefix;
-        String url;
+        String url = serverURL;
         try {
 
             int lastIndexOf = Objects.requireNonNull(file.getOriginalFilename()).lastIndexOf(".");
@@ -217,7 +220,7 @@ public class UserController {
             if (!format.contains(suffix)){
                 return new MyResponseEntity<>(Code.BAD_OPERATION,"文件格式不支持",null);
             }
-            url = userService.setUserAvatar(file,Long.parseLong(userId));
+            url += userService.setUserAvatar(file,Long.parseLong(userId));
         }catch (Exception e){
             log.error("上传失败");
             return new MyResponseEntity<>(Code.BAD_OPERATION,"文件上传失败或文件格式不支持",null);
