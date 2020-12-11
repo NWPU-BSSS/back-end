@@ -70,12 +70,37 @@ public class BlogListController {
 			return new MyResponseEntity<>(Code.BAD_REQUEST, "page为空", null);
 		try {
 			long uId = Long.parseLong(userId);
-			List<KeywordBlogJsonBody> blogList = blogListService.getFollowedBlog(uId);
+			int pageNum = Integer.parseInt(page);
+			if (pageNum < 0)
+				return new MyResponseEntity<>(Code.BAD_OPERATION, "page为负数", null);
 			if (userService.findByUserID(uId) == null)
 				return new MyResponseEntity<>(Code.BAD_OPERATION, "用户不存在", null);
+			List<KeywordBlogJsonBody> blogList = blogListService.getFollowedBlog(uId);
 			return new MyResponseEntity<>(Code.OK, "ok", blogList);
 		}catch (NumberFormatException e){
-			return new MyResponseEntity<>(Code.BAD_REQUEST, "userId格式错误", null);
+			return new MyResponseEntity<>(Code.BAD_REQUEST, "参数格式错误", null);
+		}
+	}
+
+	@GetMapping("/blog/list/user")
+	public MyResponseEntity<Object> getUserBlogs(@RequestParam("page") String page,
+												 @RequestParam("userId") String userId){
+		int pageSize = 15;
+		if (StringUtils.isBlank(userId))
+			return new MyResponseEntity<>(Code.BAD_REQUEST, "userId为空", null);
+		if (StringUtils.isBlank(page))
+			return new MyResponseEntity<>(Code.BAD_REQUEST, "page为空", null);
+		try {
+			long uId = Long.parseLong(userId);
+			int pageNum = Integer.parseInt(page);
+			if (pageNum < 0)
+				return new MyResponseEntity<>(Code.BAD_REQUEST, "page为负数", null);
+			if (userService.findByUserID(uId) == null)
+				return new MyResponseEntity<>(Code.BAD_OPERATION, "用户不存在", null);
+			List<KeywordBlogJsonBody> blogList = blogListService.getBlogsPageByUserId(uId, pageNum, pageSize);
+			return new MyResponseEntity<>(Code.OK, "ok", blogList);
+		}catch (NumberFormatException e){
+			return new MyResponseEntity<>(Code.BAD_REQUEST, "参数格式错误", null);
 		}
 	}
 

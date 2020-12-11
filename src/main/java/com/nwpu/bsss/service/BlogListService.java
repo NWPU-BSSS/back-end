@@ -24,4 +24,6 @@ public interface BlogListService {
 	List<KeywordBlogJsonBody> getFollowedBlog(long userId);
 
     List<KeywordBlogJsonBody> getRecentBlog(long page);
+
+	List<KeywordBlogJsonBody> getBlogsPageByUserId(long userId, int page, int pageSize);
 }
