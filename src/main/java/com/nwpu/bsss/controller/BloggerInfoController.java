@@ -11,6 +11,7 @@ import com.nwpu.bsss.service.LikeService;
 import com.nwpu.bsss.service.BlogService;
 import com.nwpu.bsss.service.UserService;
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -32,6 +33,9 @@ public class BloggerInfoController {
 	@Resource
 	private BlogService blogService;
 
+	@Value("${serverURL}")
+	private String serverURL;
+
 	@GetMapping(path = "/blogger")
 	public MyResponseEntity<BloggerInfoResponse> getBloggerInfo(@RequestParam("bloggerId") String bloggerId) {
 		try {
@@ -41,7 +45,7 @@ public class BloggerInfoController {
 
 			BloggerInfoResponse bloggerInfoResponse = new BloggerInfoResponse();
 
-			bloggerInfoResponse.setAvatar(userInfoEntity.getAvatarUrl());//Avatar
+			bloggerInfoResponse.setAvatar(serverURL+userInfoEntity.getAvatarUrl());//Avatar
 			bloggerInfoResponse.setClassName(userInfoEntity.getClassName());//class
 			bloggerInfoResponse.setLevel(userInfoEntity.getLevel());//level
 			bloggerInfoResponse.setNickname(userInfoEntity.getNickName());//nickname

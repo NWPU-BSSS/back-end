@@ -44,7 +44,7 @@ public class UserController {
 
             UserBaseInfoResponse userBaseInfoResponse = new UserBaseInfoResponse();
 
-            userBaseInfoResponse.setAvatar(userInfoEntity.getAvatarUrl());
+            userBaseInfoResponse.setAvatar(serverURL+userInfoEntity.getAvatarUrl());
             userBaseInfoResponse.setNickname(userInfoEntity.getNickName());
             userBaseInfoResponse.setLevel(1);
             userBaseInfoResponse.setCodeAge(1);
