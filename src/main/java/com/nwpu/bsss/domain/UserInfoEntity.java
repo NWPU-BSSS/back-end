@@ -28,6 +28,7 @@ public class UserInfoEntity {
 		gender = 3;//unknown
 		level = 1;
 		isVerified = false;
+		studentNo=2018303188;//TODO:这里写死学号是因为API没有修改学号的选项
 	}
 
 	@Id
