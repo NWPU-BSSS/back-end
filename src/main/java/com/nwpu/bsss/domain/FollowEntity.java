@@ -36,8 +36,8 @@ public class FollowEntity {
         return bloggerId;
     }
 
-    public void setBloggerId(long blogerId) {
-        this.bloggerId = blogerId;
+    public void setBloggerId(long bloggerId) {
+        this.bloggerId = bloggerId;
     }
 
     @Basic
