@@ -8,7 +8,9 @@ import com.nwpu.bsss.response.BloggerTagResponse;
 import com.nwpu.bsss.response.Code;
 import com.nwpu.bsss.response.MyResponseEntity;
 import com.nwpu.bsss.service.LikeService;
+import com.nwpu.bsss.service.BlogService;
 import com.nwpu.bsss.service.UserService;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -17,6 +19,8 @@ import org.springframework.web.bind.annotation.RestController;
 import javax.annotation.Resource;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
 
 @RestController
 @RequestMapping("/blog")
@@ -24,7 +28,10 @@ public class BloggerInfoController {
 	
 	@Resource
 	private UserService userService;
-	
+
+	@Resource
+	private BlogService blogService;
+
 	@GetMapping(path = "/blogger")
 	public MyResponseEntity<BloggerInfoResponse> getBloggerInfo(@RequestParam("bloggerId") String bloggerId) {
 		try {
@@ -61,9 +68,14 @@ public class BloggerInfoController {
 	@GetMapping(path = "/blogger/tags")
 	public MyResponseEntity<ArrayList<Tag>> getBloggerTag(@RequestParam("bloggerId") String bloggerId) {
 		try {
+			if(StringUtils.isBlank(bloggerId)){
+				return new MyResponseEntity<>(Code.BAD_REQUEST,"用户id为空",null);
+			}
 			long id = Long.parseLong(bloggerId);
 			BloggerTagResponse bloggerTagResponse = new BloggerTagResponse();
-			return new MyResponseEntity<>(Code.OK, "ok", bloggerTagResponse.getTagList());
+			bloggerTagResponse = blogService.getTags(id);
+			ArrayList<Tag> tagList = new ArrayList<Tag>(bloggerTagResponse.getTagList().values());
+			return new MyResponseEntity<>(Code.OK, "ok", tagList);
 		} catch (NumberFormatException e) {
 			return new MyResponseEntity<>(Code.BAD_REQUEST, "用户ID格式错误", null);
 		} catch (NullPointerException e) {
