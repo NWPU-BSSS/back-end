@@ -45,21 +45,22 @@ public class AdminController {
 	private static final String InternalError = "内部错误";
 	
 	@GetMapping("/blogs")
-	public MyResponseEntity<List<AdminBlogElement>> getBlogs(@RequestBody AdminValidationBody validation) {
-		if (this.adminService.check(validation.getAdmin(), validation.getPassword()) == -1) {
+	public MyResponseEntity<List<AdminBlogElement>> getBlogs() {
+		/*if (this.adminService.check(validation.getAdmin(), validation.getPassword()) == -1) {
 			log.error("管理员密码错误");
 			return new MyResponseEntity<>(Code.BAD_OPERATION, "管理员账号或密码错误", null);
-		}
+		}*/
 		return new MyResponseEntity<>(Code.OK, "ok", this.adminService.getAllBlogs());
 	}
 	
 	@GetMapping("/users")
-	public MyResponseEntity<List<UserListElement>> getUserList(@RequestBody AdminValidationBody validation) {
-		
+	public MyResponseEntity<List<UserListElement>> getUserList() {
+
+		/*
 		if (this.adminService.check(validation.getAdmin(), validation.getPassword()) == -1) {
 			log.error("管理员密码错误");
 			return new MyResponseEntity<>(Code.BAD_OPERATION, "管理员账号或密码错误", null);
-		}
+		}*/
 		
 		List<UserInfoEntity> entities = this.adminService.findAllUsers();
 		List<UserListElement> list = entities.stream()
