@@ -32,20 +32,20 @@ public class GlobalExceptionHandler {
 	@ResponseStatus(HttpStatus.OK)
 	public MyResponseEntity<Object> handleMissingParamExceptions(MissingServletRequestParameterException e) {
 		log.error(e.getMessage());
-		return new MyResponseEntity<>(Code.BAD_REQUEST, "缺少参数", null);
+		return new MyResponseEntity<>(Code.BAD_REQUEST, "Missing param in parameter", null);
 	}
 
 	@ExceptionHandler(MissingRequestHeaderException.class)
 	@ResponseStatus(HttpStatus.OK)
 	public MyResponseEntity<Object> handleMissingParamExceptions(MissingRequestHeaderException e) {
 		log.error(e.getMessage());
-		return new MyResponseEntity<>(Code.BAD_REQUEST, "缺少请求头参数", null);
+		return new MyResponseEntity<>(Code.BAD_REQUEST, "Missing param in header", null);
 	}
 	
 	@ExceptionHandler(MethodArgumentTypeMismatchException.class)
 	@ResponseStatus(HttpStatus.OK)
 	public MyResponseEntity<Object> handleMisParamTypeExceptions(MethodArgumentTypeMismatchException e) {
 		log.error(e.getMessage());
-		return new MyResponseEntity<>(Code.BAD_REQUEST, "参数类型错误", null);
+		return new MyResponseEntity<>(Code.BAD_REQUEST, "Invalid param format", null);
 	}
 }
