@@ -61,9 +61,9 @@ public class UserController {
             userBaseInfoResponse.setFollowNum(0);
             userBaseInfoResponse.setFanNum(0);
 
-            return new MyResponseEntity<>(Code.OK, "成功查找到本用户信息", userBaseInfoResponse);
+            return new MyResponseEntity<>(Code.OK, "ok", userBaseInfoResponse);
         } catch (NullPointerException e) {
-            return new MyResponseEntity<>(Code.BAD_OPERATION, "用户不存在", null);
+            return new MyResponseEntity<>(Code.BAD_OPERATION, "User not exist", null);
         }
     }
 
@@ -72,7 +72,7 @@ public class UserController {
                                                                           @RequestParam("bloggerId") String bloggerId) {
         try {
             if (StringUtils.isBlank(bloggerId)) {
-                return new MyResponseEntity<>(Code.BAD_REQUEST, "bloggerId为空", null);
+                return new MyResponseEntity<>(Code.BAD_REQUEST, "Invalid bloggerId", null);
             }
             Long uId = Long.parseLong(userId);
             Long bId = Long.parseLong(bloggerId);
@@ -82,10 +82,10 @@ public class UserController {
                 return new MyResponseEntity<>(Code.OK,"ok",userSubscribeStatusResponse);
             }
             userSubscribeStatusResponse = userService.findUserSubscribeStatusResponse(uId, bId);
-            return new MyResponseEntity<>(Code.OK, "OK", userSubscribeStatusResponse);
+            return new MyResponseEntity<>(Code.OK, "ok", userSubscribeStatusResponse);
         }
         catch(NumberFormatException e){
-            return new MyResponseEntity<>(Code.BAD_REQUEST, "参数类型错误", null);
+            return new MyResponseEntity<>(Code.BAD_REQUEST, "Invalid param", null);
         }
 
     }
@@ -97,12 +97,12 @@ public class UserController {
         boolean subscribe = subscribeBloggerBody.isSubscribe();
         long bloggerId = subscribeBloggerBody.getBloggerId();
         if(userService.findByUserID(bloggerId) == null)
-            return new MyResponseEntity<>(Code.BAD_OPERATION, "博主不存在", null);
+            return new MyResponseEntity<>(Code.BAD_OPERATION, "Blogger not exist", null);
         if(bloggerId == uId)
-            return new MyResponseEntity<>(Code.BAD_OPERATION, "不能关注自己", null);
+            return new MyResponseEntity<>(Code.BAD_OPERATION, "Cannot subscribe myself", null);
         if(subscribe){
             if(followService.isFollowed(bloggerId, uId)){
-                return new MyResponseEntity<>(Code.BAD_OPERATION, "已经关注该博主", null);
+                return new MyResponseEntity<>(Code.BAD_OPERATION, "Already subscribed", null);
             }
             else{
                 followService.addFollow(bloggerId, uId);
@@ -115,7 +115,7 @@ public class UserController {
                 return new MyResponseEntity<>(Code.OK, "ok", null);
             }
             else {
-                return new MyResponseEntity<>(Code.BAD_OPERATION, "已经取关该博主", null);
+                return new MyResponseEntity<>(Code.BAD_OPERATION, "Already unsubscribed", null);
             }
         }
     }
@@ -128,14 +128,14 @@ public class UserController {
     public MyResponseEntity<UserInfoResponse> getUserInfo(@RequestParam("userId") String userId){
         //TODO:university and academy set as default values
         if(StringUtils.isBlank(userId)){
-            return new MyResponseEntity<>(Code.BAD_REQUEST,"用户id为空值",null);
+            return new MyResponseEntity<>(Code.BAD_REQUEST,"Invalid userId",null);
         }
         Long userIdLong=Long.valueOf(userId);
         UserEntity userEntity=userService.findByUserID(userIdLong);
         UserInfoEntity userInfoEntity=userService.findUserInfoByUserId(userIdLong);
 
         if(userEntity==null || userInfoEntity==null){
-            return new MyResponseEntity<>(Code.BAD_OPERATION,"用户不存在",null);
+            return new MyResponseEntity<>(Code.BAD_OPERATION,"User not exist",null);
         }
 
         UserInfoResponse userInfoResponse=new UserInfoResponse();
@@ -144,8 +144,8 @@ public class UserController {
         userInfoResponse.setIntroduction(userInfoEntity.getIntroduction());
         userInfoResponse.setRealName(userInfoEntity.getRealName());
         userInfoResponse.setGender(userInfoEntity.getGender());
-        userInfoResponse.setUniversity("西北工业大学");
-        userInfoResponse.setAcademy("软件学院");
+        userInfoResponse.setUniversity("Northwestern Polytechnical University");
+        userInfoResponse.setAcademy("School of Software");
         userInfoResponse.setClassName(userInfoEntity.getClassName());
         long enrollTime=userInfoEntity.getStudentNo()/1000000L;
         userInfoResponse.setGraduateTime(String.valueOf(enrollTime+4));
