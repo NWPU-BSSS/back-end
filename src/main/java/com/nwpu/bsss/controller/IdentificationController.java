@@ -45,9 +45,9 @@ public class IdentificationController {
 
         UserEntity userEntity = userService.findByUsername(registerBody.getUsername());
         if (userEntity == null) {
-            return new MyResponseEntity<>(Code.OK, "Username is useful", new UsernameCheckResponse(false));
+            return new MyResponseEntity<>(Code.OK, "ok", new UsernameCheckResponse(false));
         }
-        return new MyResponseEntity<>(Code.OK, "Username is already used", new UsernameCheckResponse(true));
+        return new MyResponseEntity<>(Code.OK, "ok", new UsernameCheckResponse(true));
     }
 
     @PostMapping(path = "/emailCheck")
@@ -55,9 +55,9 @@ public class IdentificationController {
 
         UserEntity userEntity = userService.findByUserEmail(registerBody.getEmail());
         if (userEntity == null) {
-            return new MyResponseEntity<>(Code.OK, "Email is useful", new UsernameCheckResponse(false));
+            return new MyResponseEntity<>(Code.OK, "ok", new UsernameCheckResponse(false));
         }
-        return new MyResponseEntity<>(Code.OK, "Email is already used", new UsernameCheckResponse(true));
+        return new MyResponseEntity<>(Code.OK, "ok", new UsernameCheckResponse(true));
     }
 
     @PostMapping(path = "/register/verifyCode")
@@ -67,7 +67,7 @@ public class IdentificationController {
         String result = verifyClient.sentVerifyCode(registerBody.getEmail());
 
         if (result.equals("true")) {
-            return new MyResponseEntity<>(Code.OK, "Send verification code success", null);
+            return new MyResponseEntity<>(Code.OK, "ok", null);
         } else {    //false
             return new MyResponseEntity<>(Code.BAD_OPERATION, "Send verification code fail", null);
         }
@@ -105,7 +105,7 @@ public class IdentificationController {
                     //创建用户扩展信息
                     userInfo.setNickName(user.getUserName());//默认nickname为用户名,其他均为空
                     userService.createUserInfo(userInfo);
-                    return new MyResponseEntity<>(Code.OK, "Register success", null);
+                    return new MyResponseEntity<>(Code.OK, "ok", null);
                 } catch (Exception e) {
                     e.printStackTrace();
                     //如果UserInfo创建失败，同时删除刚创建的新user以及未读消息行。
@@ -166,7 +166,7 @@ public class IdentificationController {
             userLoginResponse.setAccessToken(token);
             userLoginResponse.setUserId(userEntity.getId());
 
-            return new MyResponseEntity<>(Code.OK, "Login success", userLoginResponse);
+            return new MyResponseEntity<>(Code.OK, "ok", userLoginResponse);
         } else {
             //登录失败
             return new MyResponseEntity<>(Code.BAD_OPERATION, "Password error", null);
