@@ -35,7 +35,9 @@ public class ValidateAspect {
 	public void checkAccess() {
 	}
 	
-	@Pointcut("execution(* com.nwpu.bsss.controller.AdminController.*(..))")
+	@Pointcut("execution(* com.nwpu.bsss.controller.AdminController.*(..))" +
+			"&& !execution(* com.nwpu.bsss.controller.AdminController.getBlogs())"+
+			"&& !execution(* com.nwpu.bsss.controller.AdminController.getUserList())")
 	@Deprecated
 	public void checkAdminPointCut() {
 	}
