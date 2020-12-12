@@ -4,6 +4,7 @@ import com.nwpu.bsss.response.Code;
 import com.nwpu.bsss.response.MyResponseEntity;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
+import org.springframework.web.bind.MissingRequestHeaderException;
 import org.springframework.web.bind.MissingServletRequestParameterException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -19,8 +20,12 @@ public class GlobalExceptionHandler {
 	@ExceptionHandler(Exception.class)
 	@ResponseStatus(HttpStatus.OK)
 	public MyResponseEntity<Object> handleGlobalExceptions(Exception e) {
-		log.error(e.getMessage());
-		return new MyResponseEntity<>(Code.BAD_OPERATION, e.getMessage(), null);
+		String msg = e.getMessage();
+		if(msg == null) {
+			msg = e.getLocalizedMessage();
+		}
+		log.error(msg);
+		return new MyResponseEntity<>(Code.BAD_OPERATION, msg, null);
 	}
 	
 	@ExceptionHandler(MissingServletRequestParameterException.class)
@@ -28,6 +33,13 @@ public class GlobalExceptionHandler {
 	public MyResponseEntity<Object> handleMissingParamExceptions(MissingServletRequestParameterException e) {
 		log.error(e.getMessage());
 		return new MyResponseEntity<>(Code.BAD_REQUEST, "缺少参数", null);
+	}
+
+	@ExceptionHandler(MissingRequestHeaderException.class)
+	@ResponseStatus(HttpStatus.OK)
+	public MyResponseEntity<Object> handleMissingParamExceptions(MissingRequestHeaderException e) {
+		log.error(e.getMessage());
+		return new MyResponseEntity<>(Code.BAD_REQUEST, "缺少请求头参数", null);
 	}
 	
 	@ExceptionHandler(MethodArgumentTypeMismatchException.class)
