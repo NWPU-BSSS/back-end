@@ -5,6 +5,7 @@ import com.nwpu.bsss.domain.dto.Tag;
 import com.nwpu.bsss.repository.BlogRepository;
 import com.nwpu.bsss.response.BloggerTagResponse;
 import com.nwpu.bsss.service.BlogService;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
@@ -33,7 +34,7 @@ public class BlogServiceImpl implements BlogService {
 		Set<BlogEntity> blogList = new HashSet<BlogEntity>();
 		blogList = blogRepository.findAllByAuthorId(bloggerId);
 		for(BlogEntity blog :blogList){
-			if(tagList.containsKey(blog.getTagA())){
+			if(tagList.containsKey(blog.getTagA()) ){
 				Tag tag = tagList.get(blog.getTagA());
 				long count = tag.getCount();
 				count++;
@@ -42,10 +43,12 @@ public class BlogServiceImpl implements BlogService {
 				tagList.put(blog.getTagA(),tag);
 			}
 			else{
-				Tag tag = new Tag();
-				tag.setTag(blog.getTagA());
-				tag.setCount(1);
-				tagList.put(blog.getTagA(),tag);
+				if(!StringUtils.isBlank(blog.getTagA())) {
+					Tag tag = new Tag();
+					tag.setTag(blog.getTagA());
+					tag.setCount(1);
+					tagList.put(blog.getTagA(), tag);
+				}
 			}
 			if(tagList.containsKey(blog.getTagB())){
 				Tag tag = tagList.get(blog.getTagB());
@@ -56,10 +59,12 @@ public class BlogServiceImpl implements BlogService {
 				tagList.put(blog.getTagB(),tag);
 			}
 			else{
-				Tag tag = new Tag();
-				tag.setTag(blog.getTagB());
-				tag.setCount(1);
-				tagList.put(blog.getTagB(),tag);
+				if(!StringUtils.isBlank(blog.getTagB())) {
+					Tag tag = new Tag();
+					tag.setTag(blog.getTagB());
+					tag.setCount(1);
+					tagList.put(blog.getTagB(), tag);
+				}
 			}
 			if(tagList.containsKey(blog.getTagC())){
 				Tag tag = tagList.get(blog.getTagC());
@@ -67,13 +72,15 @@ public class BlogServiceImpl implements BlogService {
 				count++;
 				tag.setCount(count);
 				tagList.remove(blog.getTagC());
-				tagList.put(blog.getTagC(),tag);
+				tagList.put(blog.getTagC(), tag);
 			}
 			else{
-				Tag tag = new Tag();
-				tag.setTag(blog.getTagC());
-				tag.setCount(1);
-				tagList.put(blog.getTagC(),tag);
+				if(!StringUtils.isBlank(blog.getTagC())) {
+					Tag tag = new Tag();
+					tag.setTag(blog.getTagC());
+					tag.setCount(1);
+					tagList.put(blog.getTagC(),tag);
+				}
 			}
 
 		}
