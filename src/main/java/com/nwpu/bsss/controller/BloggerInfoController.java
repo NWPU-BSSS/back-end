@@ -62,9 +62,9 @@ public class BloggerInfoController {
 
 			return new MyResponseEntity<>(Code.OK, "ok", bloggerInfoResponse);
 		} catch (NumberFormatException e) {
-			return new MyResponseEntity<>(Code.BAD_REQUEST, "用户ID格式错误", null);
+			return new MyResponseEntity<>(Code.BAD_REQUEST, "Invalid userId", null);
 		} catch (NullPointerException e) {
-			return new MyResponseEntity<>(Code.BAD_OPERATION, "用户不存在", null);
+			return new MyResponseEntity<>(Code.BAD_OPERATION, "User not exist", null);
 		}
 		
 	}
@@ -73,7 +73,7 @@ public class BloggerInfoController {
 	public MyResponseEntity<List<Tag>> getBloggerTag(@RequestParam("bloggerId") String bloggerId) {
 		try {
 			if(StringUtils.isBlank(bloggerId)){
-				return new MyResponseEntity<>(Code.BAD_REQUEST,"用户id为空",null);
+				return new MyResponseEntity<>(Code.BAD_REQUEST,"Invalid param",null);
 			}
 			long id = Long.parseLong(bloggerId);
 			BloggerTagResponse bloggerTagResponse = new BloggerTagResponse();
@@ -81,9 +81,9 @@ public class BloggerInfoController {
 			List<Tag> tagList = new ArrayList<>(bloggerTagResponse.getTagList().values());
 			return new MyResponseEntity<>(Code.OK, "ok", tagList);
 		} catch (NumberFormatException e) {
-			return new MyResponseEntity<>(Code.BAD_REQUEST, "用户ID格式错误", null);
+			return new MyResponseEntity<>(Code.BAD_REQUEST, "Invalid userId", null);
 		} catch (NullPointerException e) {
-			return new MyResponseEntity<>(Code.BAD_OPERATION, "用户不存在", null);
+			return new MyResponseEntity<>(Code.BAD_OPERATION, "User not exist", null);
 		}
 	}
 }

@@ -45,7 +45,7 @@ public class BlogController {
 		try {
 			bId = Long.parseLong(blogId);
 		} catch (Exception e) {
-			return new MyResponseEntity<>(Code.BAD_REQUEST, "参数类型错误", null);
+			return new MyResponseEntity<>(Code.BAD_REQUEST, "Illegal Param", null);
 		}
 		List<CommentElement> commentList = this.commentService.getCommentList(bId);
 		return new MyResponseEntity<>(Code.OK, "ok", commentList);
@@ -58,7 +58,7 @@ public class BlogController {
 			long blog_id = Long.parseLong(blogId);
 			BlogEntity blogEntity = this.blogService.findByBlogId(blog_id);
 			if (blogEntity == null) {
-				return new MyResponseEntity<>(Code.BAD_OPERATION, "没有找到博客", null);
+				return new MyResponseEntity<>(Code.BAD_OPERATION, "Blog not exist", null);
 			}
 			
 			GetBlogResponse getBlogResponse = new GetBlogResponse();
@@ -72,7 +72,7 @@ public class BlogController {
 			
 			return new MyResponseEntity<>(Code.OK, "ok", getBlogResponse);
 		} catch (NumberFormatException e) {
-			return new MyResponseEntity<>(Code.BAD_REQUEST, "blogId格式错误", null);
+			return new MyResponseEntity<>(Code.BAD_REQUEST, "Invalid blogId", null);
 		}
 		
 	}
@@ -83,14 +83,14 @@ public class BlogController {
 	                                         @RequestBody PostBlogBody body) {
 
 		if (StringUtils.isBlank(body.getTitle())){
-			return new MyResponseEntity<>(Code.BAD_OPERATION,"缺少博客标题",null);
+			return new MyResponseEntity<>(Code.BAD_OPERATION,"Blog title is missing",null);
 		}
 
 		BlogEntity blogEntity = new BlogEntity(body.getTitle(), body.getTagA(), body.getTagB(), body.getTagC(), Long.parseLong(userId),
 				new Timestamp(new Date().getTime()), new Timestamp(new Date().getTime()), body.getContent());
 		
 		this.blogService.saveBlog(blogEntity);
-		return new MyResponseEntity<>(Code.OK, "博客发布成功", null);
+		return new MyResponseEntity<>(Code.OK, "Publish success", null);
 		
 	}
 	
@@ -107,12 +107,12 @@ public class BlogController {
 			uId = Long.parseLong(userId);
 			cId = body.getCommentId() == 0 ? null : body.getCommentId();
 		} catch (Exception e) {
-			return new MyResponseEntity<>(Code.BAD_REQUEST, "参数类型错误", null);
+			return new MyResponseEntity<>(Code.BAD_REQUEST, "Illegal Param", null);
 		}
 		CommentEntity commentEntity = new CommentEntity(uId, bId, cId, body.getContent());
 		
 		this.commentService.saveComment(commentEntity);
-		return new MyResponseEntity<>(Code.OK, "评论发布成功", null);
+		return new MyResponseEntity<>(Code.OK, "Comment success", null);
 		
 	}
 	
@@ -125,11 +125,11 @@ public class BlogController {
 			long user_id = Long.parseLong(userId);
 			this.likeService.likeBlog(body.getBlogId(), user_id, body.isLike());
 		} catch (NumberFormatException e) {
-			return new MyResponseEntity<>(Code.BAD_REQUEST, "userId或其它参数格式错误", null);
+			return new MyResponseEntity<>(Code.BAD_REQUEST, "Illegal Param", null);
 		} catch (HttpMessageNotReadableException e) {
-			return new MyResponseEntity<>(Code.BAD_REQUEST, "Json请求参数格式错误", null);
+			return new MyResponseEntity<>(Code.BAD_REQUEST, "Illegal Request body", null);
 		} catch (DataIntegrityViolationException e) {//点赞的博客不存在，导致插入时导致违反数据完整性
-			return new MyResponseEntity<>(Code.BAD_OPERATION, "点赞的博客不存在！", null);
+			return new MyResponseEntity<>(Code.BAD_OPERATION, "Blog not exist", null);
 		}
 		return new MyResponseEntity<>(Code.OK, "ok", null);
 	}
@@ -147,7 +147,7 @@ public class BlogController {
 			likeStatusResponse.setStatus(status);
 			return new MyResponseEntity<>(Code.OK, "ok", likeStatusResponse);
 		} catch (NumberFormatException e) {
-			return new MyResponseEntity<>(Code.BAD_REQUEST, "userId格式错误", null);
+			return new MyResponseEntity<>(Code.BAD_REQUEST, "Invalid BlogId", null);
 		}
 	}
 	
@@ -163,10 +163,10 @@ public class BlogController {
 			lBlogId = favBody.getBlogId();
 			bIsFavorite = favBody.isFavorite();
 		} catch (NumberFormatException e) {
-			return new MyResponseEntity<>(Code.BAD_REQUEST, "userId或其他参数格式错误", null);
+			return new MyResponseEntity<>(Code.BAD_REQUEST, "Illegal Param", null);
 		}
 		if (this.blogService.findByBlogId(lBlogId) == null) {
-			return new MyResponseEntity<>(Code.BAD_REQUEST, "博客不存在", null);
+			return new MyResponseEntity<>(Code.BAD_REQUEST, "Blog not exist", null);
 		}
 		this.favoriteService.setFavorite(lUserId, lBlogId, bIsFavorite);
 		return new MyResponseEntity<>(Code.OK, "ok", null);
@@ -181,10 +181,10 @@ public class BlogController {
 			lUserId = Long.parseLong(userId);
 			lBlogId = Long.parseLong(blogId);
 		} catch (NumberFormatException e) {
-			return new MyResponseEntity<>(Code.BAD_REQUEST, "userId或其他参数格式错误", null);
+			return new MyResponseEntity<>(Code.BAD_REQUEST, "Illegal Param", null);
 		}
 		if (this.blogService.findByBlogId(lBlogId) == null) {
-			return new MyResponseEntity<>(Code.BAD_REQUEST, "博客不存在", null);
+			return new MyResponseEntity<>(Code.BAD_REQUEST, "Blog not exist", null);
 		}
 		boolean status = this.favoriteService.isFavorite(lUserId, lBlogId);
 		return new MyResponseEntity<>(Code.OK, "ok", new IsFavoriteResponse(status));
