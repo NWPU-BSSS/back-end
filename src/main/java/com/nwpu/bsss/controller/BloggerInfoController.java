@@ -75,7 +75,11 @@ public class BloggerInfoController {
 			if(StringUtils.isBlank(bloggerId)){
 				return new MyResponseEntity<>(Code.BAD_REQUEST,"Invalid param",null);
 			}
+
 			long id = Long.parseLong(bloggerId);
+			if(userService.findByUserID(id) == null){
+				return new MyResponseEntity<>(Code.BAD_REQUEST,"User not exist",null);
+			}
 			BloggerTagResponse bloggerTagResponse = new BloggerTagResponse();
 			bloggerTagResponse = blogService.getTags(id);
 			List<Tag> tagList = new ArrayList<>(bloggerTagResponse.getTagList().values());
