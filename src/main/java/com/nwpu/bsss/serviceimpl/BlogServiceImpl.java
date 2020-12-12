@@ -34,7 +34,7 @@ public class BlogServiceImpl implements BlogService {
 		Set<BlogEntity> blogList = new HashSet<BlogEntity>();
 		blogList = blogRepository.findAllByAuthorId(bloggerId);
 		for(BlogEntity blog :blogList){
-			if(tagList.containsKey(blog.getTagA()) ){
+			if(tagList.containsKey(blog.getTagA())){//already has the tag in list, cnt++
 				Tag tag = tagList.get(blog.getTagA());
 				long count = tag.getCount();
 				count++;
@@ -42,8 +42,8 @@ public class BlogServiceImpl implements BlogService {
 				tagList.remove(blog.getTagA());
 				tagList.put(blog.getTagA(),tag);
 			}
-			else{
-				if(!StringUtils.isBlank(blog.getTagA())) {
+			else{//add a new tag to list
+				if(!StringUtils.isBlank(blog.getTagA())) {//not a empty string
 					Tag tag = new Tag();
 					tag.setTag(blog.getTagA());
 					tag.setCount(1);
@@ -56,7 +56,7 @@ public class BlogServiceImpl implements BlogService {
 				count++;
 				tag.setCount(count);
 				tagList.remove(blog.getTagB());
-				tagList.put(blog.getTagB(),tag);
+				tagList.put(blog.getTagB(), tag);
 			}
 			else{
 				if(!StringUtils.isBlank(blog.getTagB())) {
@@ -79,7 +79,7 @@ public class BlogServiceImpl implements BlogService {
 					Tag tag = new Tag();
 					tag.setTag(blog.getTagC());
 					tag.setCount(1);
-					tagList.put(blog.getTagC(),tag);
+					tagList.put(blog.getTagC(), tag);
 				}
 			}
 

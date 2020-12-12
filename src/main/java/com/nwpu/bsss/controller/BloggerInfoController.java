@@ -78,7 +78,7 @@ public class BloggerInfoController {
 
 			long id = Long.parseLong(bloggerId);
 			if(userService.findByUserID(id) == null){
-				return new MyResponseEntity<>(Code.BAD_REQUEST,"User not exist",null);
+				return new MyResponseEntity<>(Code.BAD_OPERATION,"Blogger not exist",null);
 			}
 			BloggerTagResponse bloggerTagResponse = new BloggerTagResponse();
 			bloggerTagResponse = blogService.getTags(id);
