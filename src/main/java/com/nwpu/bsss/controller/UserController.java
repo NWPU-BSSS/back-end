@@ -172,29 +172,29 @@ public class UserController {
         UserInfoEntity userInfoEntity = userService.findUserInfoByUserId(id);
 
         if (userEntity == null || userInfoEntity == null){
-            return new MyResponseEntity(Code.BAD_OPERATION, "用户不存在", null);
+            return new MyResponseEntity(Code.BAD_OPERATION, "User not exist", null);
         }
 
         String newUserName = updateUserInfoBody.getUserName();
 
         if (StringUtils.isBlank(newUserName)){
-            return new MyResponseEntity(Code.BAD_REQUEST, "用户名不能为空", null);
+            return new MyResponseEntity(Code.BAD_REQUEST, "Invalid username", null);
         }
         if (userService.findByUsername(newUserName) != null){
             UserEntity AnotherUser = userService.findByUsername(newUserName);
             if (!userEntity.equals(AnotherUser)){
-                return new MyResponseEntity(Code.BAD_OPERATION, "用户名已存在", null);
+                return new MyResponseEntity(Code.BAD_OPERATION, "username is already used", null);
             }
         }
 
         String introduction = updateUserInfoBody.getIntroduction();
         if (StringUtils.isBlank(introduction)){
-            return new MyResponseEntity(Code.BAD_REQUEST, "简介信息不能为空", null);
+            return new MyResponseEntity(Code.BAD_REQUEST, "Invalid introduction", null);
         }
 
         String gender = updateUserInfoBody.getGender();
         if (!gender.equals("1") && !gender.equals("0") && !gender.equals("2")){
-            return new MyResponseEntity(Code.BAD_REQUEST, "性别有误：0为男，1为女，2为未知", null);
+            return new MyResponseEntity(Code.BAD_REQUEST, "Invalid gender：0:male，1:female，2:unknown", null);
         }
 
         userEntity.setUserName(updateUserInfoBody.getUserName());
@@ -227,12 +227,12 @@ public class UserController {
             String suffix = file.getOriginalFilename().substring(lastIndexOf);
             log.info(suffix);
             if (!format.contains(suffix)){
-                return new MyResponseEntity<>(Code.BAD_OPERATION,"文件格式不支持",null);
+                return new MyResponseEntity<>(Code.BAD_OPERATION,"File format not support",null);
             }
             url += userService.setUserAvatar(file,Long.parseLong(userId));
         }catch (Exception e){
             log.error("上传失败");
-            return new MyResponseEntity<>(Code.BAD_OPERATION,"文件上传失败或文件格式不支持",null);
+            return new MyResponseEntity<>(Code.BAD_OPERATION,"File upload fail",null);
         }
         log.info("上传成功");
         return MyResponseEntity.sendOK(new JsonAvatarResponse(url));
@@ -244,17 +244,17 @@ public class UserController {
                                                                              @RequestParam("bloggerId") String bloggerId){
 
         if (StringUtils.isBlank(bloggerId)) {
-            return new MyResponseEntity<>(Code.BAD_REQUEST, "博主id为空", null);
+            return new MyResponseEntity<>(Code.BAD_REQUEST, "Invalid bloggerId", null);
         }
         try{
             long uId = Long.parseLong(userId);
             long bId = Long.parseLong(bloggerId);
 
             if (userService.findByUserID(uId)==null){
-                return new MyResponseEntity<>(Code.BAD_REQUEST,"用户id不存在",null);
+                return new MyResponseEntity<>(Code.BAD_REQUEST,"User not exist",null);
             }
             if (userService.findByUserID(bId)==null){
-                return new MyResponseEntity<>(Code.BAD_REQUEST,"博主id不存在",null);
+                return new MyResponseEntity<>(Code.BAD_REQUEST,"Invalid BloggerId",null);
             }
             if(uId == bId){
                 UserSubscribesAndFansResponse userSubscribesAndFansResponse = new UserSubscribesAndFansResponse();
@@ -268,7 +268,7 @@ public class UserController {
             }
             }
         catch(NumberFormatException e){
-            return new MyResponseEntity<>(Code.BAD_REQUEST,"参数类型不正确",null);
+            return new MyResponseEntity<>(Code.BAD_REQUEST,"Invalid param",null);
         }
     }
         @GetMapping(path = "user/fans" )
@@ -276,24 +276,24 @@ public class UserController {
                                                                                                               @RequestParam("bloggerId") String bloggerId) {
 
             if (StringUtils.isBlank(bloggerId)) {
-                return new MyResponseEntity<>(Code.BAD_REQUEST, "博主id为空", null);
+                return new MyResponseEntity<>(Code.BAD_REQUEST, "Invalid bloggerId", null);
             }
             try {
                 long uId = Long.parseLong(userId);
                 long bId = Long.parseLong(bloggerId);
 
                 if (userService.findByUserID(uId) == null) {
-                    return new MyResponseEntity<>(Code.BAD_REQUEST, "用户id不存在", null);
+                    return new MyResponseEntity<>(Code.BAD_REQUEST, "User not exist", null);
                 }
                 if (userService.findByUserID(bId) == null) {
-                    return new MyResponseEntity<>(Code.BAD_REQUEST, "博主id不存在", null);
+                    return new MyResponseEntity<>(Code.BAD_REQUEST, "Invalid bloggerId", null);
                 }
                     UserSubscribesAndFansResponse userSubscribesAndFansResponse = new UserSubscribesAndFansResponse();
                     userSubscribesAndFansResponse = userService.findBloggerFansByUserId(uId,bId);
                     return new MyResponseEntity<>(Code.OK, "ok", userSubscribesAndFansResponse.getUserSubscribesAndFans());
 
             } catch (NumberFormatException e) {
-                return new MyResponseEntity<>(Code.BAD_REQUEST, "参数类型不正确", null);
+                return new MyResponseEntity<>(Code.BAD_REQUEST, "Invalid param", null);
             }
     }
 
@@ -308,7 +308,7 @@ public class UserController {
         UserEntity userEntity = userService.findByUserID(id);
 
         if (userEntity == null){
-            return new MyResponseEntity<>(Code.BAD_OPERATION, "用户不存在", null);
+            return new MyResponseEntity<>(Code.BAD_OPERATION, "User not exist", null);
         }
 
         List<BrowseEntity> browseList = userService.findBrowseBlogsByUserId(id);

@@ -36,10 +36,10 @@ public class BlogListController {
 			p = Integer.parseInt(page);
 			if (p<0) throw new ArrayIndexOutOfBoundsException();
 		}catch (Exception e){
-			return new MyResponseEntity<>(Code.BAD_REQUEST,"页数无效",null);
+			return new MyResponseEntity<>(Code.BAD_REQUEST,"Invalid page",null);
 		}
 		List<ReBlogJsonBody> blogList = this.blogListService.getRecomBlog(p);
-		return new MyResponseEntity<>(Code.OK, "推荐博文15条", blogList);
+		return new MyResponseEntity<>(Code.OK, "ok", blogList);
 	}
 
 	@GetMapping("/search")
@@ -56,7 +56,7 @@ public class BlogListController {
 			List<FavBlogJsonBody> favBlogList = blogListService.getFavsBlog(user_id);
 			return new MyResponseEntity<>(Code.OK, "ok", favBlogList);
 		}catch (NumberFormatException e){
-			return new MyResponseEntity<>(Code.BAD_REQUEST,"userId格式错误",null);
+			return new MyResponseEntity<>(Code.BAD_REQUEST,"Invalid userId",null);
 		}
 
 	}
@@ -65,20 +65,20 @@ public class BlogListController {
 	public MyResponseEntity<Object> getFollowedBloggersBlogs(@RequestParam("page") String page,
 															 @RequestParam("userId") String userId){
 		if (StringUtils.isBlank(userId))
-			return new MyResponseEntity<>(Code.BAD_REQUEST, "userId为空", null);
+			return new MyResponseEntity<>(Code.BAD_REQUEST, "Invalid userId", null);
 		if (StringUtils.isBlank(page))
-			return new MyResponseEntity<>(Code.BAD_REQUEST, "page为空", null);
+			return new MyResponseEntity<>(Code.BAD_REQUEST, "Invalid page", null);
 		try {
 			long uId = Long.parseLong(userId);
 			int pageNum = Integer.parseInt(page);
 			if (pageNum < 0)
-				return new MyResponseEntity<>(Code.BAD_OPERATION, "page为负数", null);
+				return new MyResponseEntity<>(Code.BAD_OPERATION, "Invalid page", null);
 			if (userService.findByUserID(uId) == null)
-				return new MyResponseEntity<>(Code.BAD_OPERATION, "用户不存在", null);
+				return new MyResponseEntity<>(Code.BAD_OPERATION, "User not exist", null);
 			List<KeywordBlogJsonBody> blogList = blogListService.getFollowedBlog(uId);
 			return new MyResponseEntity<>(Code.OK, "ok", blogList);
 		}catch (NumberFormatException e){
-			return new MyResponseEntity<>(Code.BAD_REQUEST, "参数格式错误", null);
+			return new MyResponseEntity<>(Code.BAD_REQUEST, "Invalid param", null);
 		}
 	}
 
@@ -87,20 +87,20 @@ public class BlogListController {
 												 @RequestParam("userId") String userId){
 		int pageSize = 15;
 		if (StringUtils.isBlank(userId))
-			return new MyResponseEntity<>(Code.BAD_REQUEST, "userId为空", null);
+			return new MyResponseEntity<>(Code.BAD_REQUEST, "Invalid userId", null);
 		if (StringUtils.isBlank(page))
-			return new MyResponseEntity<>(Code.BAD_REQUEST, "page为空", null);
+			return new MyResponseEntity<>(Code.BAD_REQUEST, "Invalid page", null);
 		try {
 			long uId = Long.parseLong(userId);
 			int pageNum = Integer.parseInt(page);
 			if (pageNum < 0)
-				return new MyResponseEntity<>(Code.BAD_REQUEST, "page为负数", null);
+				return new MyResponseEntity<>(Code.BAD_REQUEST, "Invalid page", null);
 			if (userService.findByUserID(uId) == null)
-				return new MyResponseEntity<>(Code.BAD_OPERATION, "用户不存在", null);
+				return new MyResponseEntity<>(Code.BAD_OPERATION, "User not exist", null);
 			List<KeywordBlogJsonBody> blogList = blogListService.getBlogsPageByUserId(uId, pageNum, pageSize);
 			return new MyResponseEntity<>(Code.OK, "ok", blogList);
 		}catch (NumberFormatException e){
-			return new MyResponseEntity<>(Code.BAD_REQUEST, "参数格式错误", null);
+			return new MyResponseEntity<>(Code.BAD_REQUEST, "Invalid param", null);
 		}
 	}
 
@@ -110,7 +110,7 @@ public class BlogListController {
 		try{
 			pageNum=Long.valueOf(page);
 		}catch (NumberFormatException numberFormatException){
-			return new MyResponseEntity(Code.BAD_REQUEST,"page格式错误",null);
+			return new MyResponseEntity(Code.BAD_REQUEST,"Invalid page",null);
 		}
 		List<KeywordBlogJsonBody> blogList=this.blogListService.getRecentBlog(pageNum);
 		return new MyResponseEntity(Code.OK,"ok",blogList);

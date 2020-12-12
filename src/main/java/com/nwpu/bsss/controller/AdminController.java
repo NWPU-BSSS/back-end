@@ -42,7 +42,7 @@ public class AdminController {
 	@Value("${serverURL}")
 	private String serverURL;
 	
-	private static final String InternalError = "内部错误";
+	private static final String InternalError = "Internal error";
 	
 	@GetMapping("/blogs")
 	public MyResponseEntity<List<AdminBlogElement>> getBlogs() {
@@ -87,7 +87,7 @@ public class AdminController {
 		
 		if (publisher == -1) {
 			log.error("管理员密码错误");
-			return new MyResponseEntity<>(Code.BAD_OPERATION, "管理员账号或密码错误", null);
+			return new MyResponseEntity<>(Code.BAD_OPERATION, "Invalid Admin username or password", null);
 		}
 		try {
 			start = new Timestamp(new SimpleDateFormat("yyyy-MM-dd HH:mm").parse(annBody.getStartTime()).getTime());
@@ -104,7 +104,7 @@ public class AdminController {
 			
 		} catch (ParseException e) {
 			log.error("时间格式或内容缺失错误");
-			return new MyResponseEntity<>(Code.BAD_OPERATION, "时间格式或内容缺失错误", null);
+			return new MyResponseEntity<>(Code.BAD_OPERATION, "Invalid Time format or ontent", null);
 		} catch (Exception e) {
 			return new MyResponseEntity<>(Code.BAD_OPERATION, InternalError, null);
 		}
