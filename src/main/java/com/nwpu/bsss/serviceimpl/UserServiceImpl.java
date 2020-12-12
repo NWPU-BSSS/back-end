@@ -39,6 +39,9 @@ public class UserServiceImpl implements UserService {
     private BlogRepository blogRepository;
 
     @Resource
+    private BrowseRepository browseRepository;
+
+    @Resource
     private CommentRepository commentRepository;
 
     @Resource
@@ -83,6 +86,16 @@ public class UserServiceImpl implements UserService {
     @Transactional
     public void updateUserInfoEntity(UserInfoEntity userInfoEntity){
         userInfoRepository.save(userInfoEntity);
+    }
+
+    @Override
+    public List<BrowseEntity> findBrowseBlogsByUserId(long userId) {
+        return browseRepository.findAllByUserId(userId);
+    }
+
+    @Override
+    public BlogEntity findByBlogId(long blogId) {
+        return blogRepository.findByBlogId(blogId);
     }
 
     @Override

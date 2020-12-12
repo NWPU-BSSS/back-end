@@ -1,8 +1,11 @@
 package com.nwpu.bsss.controller;
 
+import com.nwpu.bsss.domain.BlogEntity;
+import com.nwpu.bsss.domain.BrowseEntity;
 import com.nwpu.bsss.domain.UserEntity;
 import com.nwpu.bsss.domain.UserInfoEntity;
 import com.nwpu.bsss.domain.dto.JsonAvatarResponse;
+import com.nwpu.bsss.domain.dto.BrowseBlogsBody;
 import com.nwpu.bsss.domain.dto.SubscribeBloggerBody;
 import com.nwpu.bsss.domain.dto.UpdateUserInfoBody;
 import com.nwpu.bsss.response.*;
@@ -13,6 +16,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.repository.query.Param;
+import org.springframework.security.core.userdetails.User;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -20,6 +24,8 @@ import javax.annotation.Resource;
 import java.util.*;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.Iterator;
+import java.util.List;
 
 /**
  * @author JerryChan
@@ -289,5 +295,35 @@ public class UserController {
             } catch (NumberFormatException e) {
                 return new MyResponseEntity<>(Code.BAD_REQUEST, "参数类型不正确", null);
             }
+    }
+
+    /**
+     * @author JiangZhe
+     */
+    @PostMapping("/user/browse/blogs")
+    public MyResponseEntity getUserBrowseBlogs(@RequestHeader("accessToken") String accessToken,
+                                                                @RequestParam("userId") String userId){
+        Long id = Long.parseLong(userId);
+
+        UserEntity userEntity = userService.findByUserID(id);
+
+        if (userEntity == null){
+            return new MyResponseEntity<>(Code.BAD_OPERATION, "用户不存在", null);
         }
+
+        List<BrowseEntity> browseList = userService.findBrowseBlogsByUserId(id);
+
+        List<BrowseBlogsBody> blogList = new ArrayList<>();
+
+        Iterator iterator = browseList.iterator();
+        while(iterator.hasNext()){
+            BrowseEntity browseEntity = (BrowseEntity) iterator.next();
+            long blogId = browseEntity.getBlogId();
+            BlogEntity blogEntity = userService.findByBlogId(blogId);
+
+            blogList.add(new BrowseBlogsBody(blogEntity.getId(),blogEntity.getTitle()));
+        }
+        return new MyResponseEntity(Code.OK, "OK", blogList);
+
+    }
 }
