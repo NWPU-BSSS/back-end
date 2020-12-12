@@ -90,7 +90,7 @@ public class BlogController {
 				new Timestamp(new Date().getTime()), new Timestamp(new Date().getTime()), body.getContent());
 		
 		this.blogService.saveBlog(blogEntity);
-		return new MyResponseEntity<>(Code.OK, "Publish success", null);
+		return new MyResponseEntity<>(Code.OK, "ok", null);
 		
 	}
 	
@@ -112,7 +112,7 @@ public class BlogController {
 		CommentEntity commentEntity = new CommentEntity(uId, bId, cId, body.getContent());
 		
 		this.commentService.saveComment(commentEntity);
-		return new MyResponseEntity<>(Code.OK, "Comment success", null);
+		return new MyResponseEntity<>(Code.OK, "ok", null);
 		
 	}
 	

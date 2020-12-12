@@ -21,7 +21,7 @@ public class HomeController {
 		Optional<AnnouncementsEntity> anno = this.announService.getFisrtAnnoun();
 		
 		if (anno.isPresent()) {
-			return new MyResponseEntity<>(Code.OK, "今日公告", anno);
+			return new MyResponseEntity<>(Code.OK, "ok", anno);
 		} else {
 			AnnouncementsEntity emptyAnn = new AnnouncementsEntity();
 			emptyAnn.setId(-1);

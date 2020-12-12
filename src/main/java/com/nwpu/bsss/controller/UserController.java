@@ -207,7 +207,7 @@ public class UserController {
         userInfoEntity.setClassName(updateUserInfoBody.getClassName());
         userService.updateUserInfoEntity(userInfoEntity);
 
-        return new MyResponseEntity(Code.OK, "OK", null);
+        return new MyResponseEntity(Code.OK, "ok", null);
     }
     /**
      * @author alecHe
@@ -323,7 +323,7 @@ public class UserController {
 
             blogList.add(new BrowseBlogsBody(blogEntity.getId(),blogEntity.getTitle()));
         }
-        return new MyResponseEntity(Code.OK, "OK", blogList);
+        return new MyResponseEntity(Code.OK, "ok", blogList);
 
     }
 }
