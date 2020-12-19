@@ -2,6 +2,7 @@ package com.nwpu.bsss.domain;
 
 
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 
@@ -9,19 +10,6 @@ import javax.persistence.*;
 @Entity
 @Table(name = "UserInfos")
 public class UserInfoEntity {
-
-	public UserInfoEntity() {
-		this.nickName = "yourNickName";
-		this.gender = 0;
-		this.studentNo = 2000000000;
-		this.className = "14000000";
-		this.isVerified = false;
-		this.resume = "I'm a NPUer";
-		this.introduction = "I love NPU";
-		this.realName = "";
-		this.level = 1;
-		this.avatarUrl = "/avatar/default";
-	}
 
 	private long id;
 	private String nickName;
@@ -34,80 +22,77 @@ public class UserInfoEntity {
 	private String realName;
 	private int level;
 	private String avatarUrl;
-	
+	private UserEntity usersById;
+
+	public UserInfoEntity(){
+		gender = 2;//unknown
+		level = 1;
+		isVerified = false;
+		studentNo=2018303188;//TODO:这里写死学号是因为API没有修改学号的选项
+	}
+
 	@Id
 	@Column(name = "Id")
-	//@GeneratedValue(strategy = GenerationType.IDENTITY)
 	public long getId() {
 		return this.id;
 	}
-	
-	@Basic(optional = false)
+
 	@Column(name = "Nickname")
 	public String getNickName() {
 		return this.nickName;
 	}
-	
-	@Basic(optional = false)
+
 	@Column(name = "Gender")
 	public int getGender() {
 		return this.gender;
 	}
-	
-	@Basic(optional = false)
+
 	@Column(name = "Sno")
 	public long getStudentNo() {
 		return this.studentNo;
 	}
-	
-	@Basic(optional = false)
+
 	@Column(name = "Class")
 	public String getClassName() {
 		return this.className;
 	}
-	
-	@Basic(optional = false)
+
 	@Column(name = "VerifyStatus")
 	public boolean isVerified() {
 		return this.isVerified;
 	}
-	
-	@Basic(optional = false)
+
 	@Column(name = "Resume")
 	public String getResume() {
 		return this.resume;
 	}
-	
-	@Basic(optional = false)
+
 	@Column(name = "Introduction")
 	public String getIntroduction() {
 		return this.introduction;
 	}
-	
-	@Basic(optional = false)
+
 	@Column(name = "RealName")
 	public String getRealName() {
 		return this.realName;
 	}
 
-	@Basic(optional = false)
 	@Column(name = "level")
 	public int getLevel(){return this.level;}
 
-	@Basic(optional = false)
 	@Column(name = "Avatar")
 	public String getAvatarUrl() {
 		return this.avatarUrl;
 	}
-	
+
 	public void setId(long id) {
 		this.id = id;
 	}
-	
+
 	public void setNickName(String nickName) {
 		this.nickName = nickName;
 	}
-	
+
 	public void setGender(int gender) {
 		this.gender = gender;
 	}
@@ -115,23 +100,23 @@ public class UserInfoEntity {
 	public void setStudentNo(long studentNo) {
 		this.studentNo = studentNo;
 	}
-	
+
 	public void setClassName(String className) {
 		this.className = className;
 	}
-	
+
 	public void setVerified(boolean verified) {
 		this.isVerified = verified;
 	}
-	
+
 	public void setResume(String resume) {
 		this.resume = resume;
 	}
-	
+
 	public void setIntroduction(String introduction) {
 		this.introduction = introduction;
 	}
-	
+
 	public void setRealName(String realName) {
 		this.realName = realName;
 	}
@@ -140,5 +125,15 @@ public class UserInfoEntity {
 
 	public void setAvatarUrl(String avatarUrl) {
 		this.avatarUrl = avatarUrl;
+	}
+
+	@OneToOne
+	@JoinColumn(name = "Id", referencedColumnName = "Id", nullable = false)
+	public UserEntity getUsersById() {
+		return usersById;
+	}
+
+	public void setUsersById(UserEntity usersById) {
+		this.usersById = usersById;
 	}
 }

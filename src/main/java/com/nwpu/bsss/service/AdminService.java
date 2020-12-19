@@ -2,6 +2,7 @@ package com.nwpu.bsss.service;
 
 import com.nwpu.bsss.domain.AnnouncementsEntity;
 import com.nwpu.bsss.domain.UserInfoEntity;
+import com.nwpu.bsss.response.AdminBlogElement;
 
 import java.util.List;
 
@@ -18,6 +19,8 @@ public interface AdminService {
 	 * @return 博客id
 	 */
 	long makeAnnounce(AnnouncementsEntity announcementEntity);
+	
+	List<AdminBlogElement> getAllBlogs();
 	
 	/**
 	 * 强制删除博客
@@ -42,5 +45,8 @@ public interface AdminService {
 	 */
 	List<UserInfoEntity> findAllUsers();
 	
+	/**
+	 * @return ID of the admin, -1 if invalid
+	 */
 	long check(String admin, String password);
 }

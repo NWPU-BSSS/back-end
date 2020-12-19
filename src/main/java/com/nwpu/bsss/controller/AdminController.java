@@ -1,8 +1,12 @@
 package com.nwpu.bsss.controller;
 
-
 import com.nwpu.bsss.domain.AnnouncementsEntity;
 import com.nwpu.bsss.domain.UserInfoEntity;
+import com.nwpu.bsss.domain.dto.AdminValidationBody;
+import com.nwpu.bsss.domain.dto.DeleteBlogBody;
+import com.nwpu.bsss.domain.dto.DeleteUserBody;
+import com.nwpu.bsss.domain.dto.PostAnnouncementBody;
+import com.nwpu.bsss.response.AdminBlogElement;
 import com.nwpu.bsss.response.Code;
 import com.nwpu.bsss.response.MyResponseEntity;
 import com.nwpu.bsss.response.UserListElement;
@@ -11,6 +15,7 @@ import com.nwpu.bsss.service.UserService;
 import com.nwpu.bsss.utils.Tools;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
@@ -26,7 +31,7 @@ import java.util.stream.Collectors;
  * @date 2020-12-07 10:28:25
  */
 @Slf4j
-@RequestMapping("admin")
+@RequestMapping("/admin")
 @RestController
 public class AdminController {
 	
@@ -34,18 +39,36 @@ public class AdminController {
 	AdminService adminService;
 	@Resource
 	UserService userService;
+	@Value("${serverURL}")
+	private String serverURL;
 	
-	private static final String InternalError = "内部错误";
+	private static final String InternalError = "Internal error";
+	
+	@GetMapping("/blogs")
+	public MyResponseEntity<List<AdminBlogElement>> getBlogs() {
+		/*if (this.adminService.check(validation.getAdmin(), validation.getPassword()) == -1) {
+			log.error("管理员密码错误");
+			return new MyResponseEntity<>(Code.BAD_OPERATION, "管理员账号或密码错误", null);
+		}*/
+		return new MyResponseEntity<>(Code.OK, "ok", this.adminService.getAllBlogs());
+	}
 	
 	@GetMapping("/users")
 	public MyResponseEntity<List<UserListElement>> getUserList() {
+
+		/*
+		if (this.adminService.check(validation.getAdmin(), validation.getPassword()) == -1) {
+			log.error("管理员密码错误");
+			return new MyResponseEntity<>(Code.BAD_OPERATION, "管理员账号或密码错误", null);
+		}*/
+		
 		List<UserInfoEntity> entities = this.adminService.findAllUsers();
 		List<UserListElement> list = entities.stream()
 				.map(e -> new UserListElement(
 								e.getId(),
 								this.userService.findByUserID(e.getId()).getUserName(),
 								e.getNickName(),
-								e.getAvatarUrl(),
+								serverURL+e.getAvatarUrl(),
 								e.getIntroduction(),
 								e.getGender()
 						)
@@ -55,80 +78,85 @@ public class AdminController {
 	}
 	
 	@PostMapping("announcement")
-	public MyResponseEntity<Object> makeAnnouncement(@RequestParam("admin") String admin,
-	                                                 @RequestParam("password") String password,
-	                                                 @RequestParam("content") String content,
-	                                                 @RequestParam("title") String title,
-	                                                 @RequestParam("endTime") String endTime,
-	                                                 @RequestParam("startTime") String startTime) {
+	public MyResponseEntity<Object> makeAnnouncement(@RequestBody PostAnnouncementBody annBody) {
 		
-		long publisher = this.adminService.check(admin, password);
+		long publisher = this.adminService.check(annBody.getAdmin(), annBody.getPassword());
 		Timestamp start;
 		Timestamp end;
 		long annId;
 		
 		if (publisher == -1) {
 			log.error("管理员密码错误");
-			return new MyResponseEntity<>(Code.BAD_OPERATION, "管理员账号或密码错误", null);
+			return new MyResponseEntity<>(Code.BAD_OPERATION, "Invalid Admin username or password", null);
 		}
 		try {
-			start = new Timestamp(new SimpleDateFormat("yyyy-MM-dd HH:mm").parse(startTime).getTime());
-			end = new Timestamp(new SimpleDateFormat("yyyy-MM-dd HH:mm").parse(endTime).getTime());
+			start = new Timestamp(new SimpleDateFormat("yyyy-MM-dd HH:mm").parse(annBody.getStartTime()).getTime());
+			end = new Timestamp(new SimpleDateFormat("yyyy-MM-dd HH:mm").parse(annBody.getEndTime()).getTime());
 			
-			if (start.after(end) || StringUtils.isBlank(content)) {
+			if (start.after(end) || StringUtils.isBlank(annBody.getContent())) {
 				throw new ParseException("", 0);
-			}
-			else if(StringUtils.isBlank(title)){
-				title = "无标题";
+			} else if (StringUtils.isBlank(annBody.getTitle())) {
+				annBody.setTitle("无标题");
 			}
 			
-			annId = this.adminService.makeAnnounce(new AnnouncementsEntity(title, publisher, start, end,
-					Tools.timestamp(), content));
+			annId = this.adminService.makeAnnounce(new AnnouncementsEntity(annBody.getTitle(), publisher, start, end,
+					Tools.timestamp(), annBody.getContent()));
 			
 		} catch (ParseException e) {
 			log.error("时间格式或内容缺失错误");
-			return new MyResponseEntity<>(Code.BAD_OPERATION, "时间格式或内容缺失错误", null);
+			return new MyResponseEntity<>(Code.BAD_OPERATION, "Invalid Time format or ontent", null);
 		} catch (Exception e) {
-			e.printStackTrace();
 			return new MyResponseEntity<>(Code.BAD_OPERATION, InternalError, null);
 		}
 		
-		return new MyResponseEntity<>(Code.OK, "公告已发布", null);
+		return MyResponseEntity.sendOK(null);
 		
 	}
 	
-	@DeleteMapping("blog/{blogId}")
-	public MyResponseEntity<Object> deleteBlog(@RequestParam("admin") String admin,
-	                                           @RequestParam("password") String password,
-	                                           @PathVariable("blogId") long blogId) {
-		log.info(String.valueOf(blogId));
-		long admin_ = this.adminService.check(admin, password);
+	@DeleteMapping("blog")
+	public MyResponseEntity<Object> deleteBlog(@RequestBody DeleteBlogBody blogBody) {
+		long admin_ = this.adminService.check(blogBody.getAdmin(), blogBody.getPassword());
 		if (admin_ == -1) {
 			log.error("管理员密码错误");
-			return new MyResponseEntity<>(Code.BAD_OPERATION, "管理员账号或密码错误", null);
+			return new MyResponseEntity<>(Code.BAD_OPERATION,
+					"Invalid Admin username or password", null);
 		}
+		long blogId;
+		try {
+			blogId = Long.parseLong(blogBody.getBlogId());
+		} catch (Exception e) {
+			log.error(blogBody.getBlogId());
+			return new MyResponseEntity<>(Code.BAD_REQUEST, "Invalid blogId", null);
+		}
+		
 		if (this.adminService.deleteBlog(blogId)) {
-			return new MyResponseEntity<>(Code.OK, "成功了", null);
+			return MyResponseEntity.sendOK(null);
 		} else {
-			return new MyResponseEntity<>(Code.BAD_OPERATION, "博客不存在", null);
+			return new MyResponseEntity<>(Code.BAD_OPERATION, "Blog not exist", null);
 		}
-		
 	}
 	
-	@DeleteMapping("user/{userId}")
-	public MyResponseEntity<Object> deleteUser(@RequestParam("admin") String admin,
-	                                           @RequestParam("password") String password,
-	                                           @PathVariable("userId") long userId) {
-		long admin_ = this.adminService.check(admin, password);
+	@DeleteMapping("user")
+	public MyResponseEntity<Object> deleteUser(@RequestBody DeleteUserBody userBody) {
+		
+		long admin_ = this.adminService.check(userBody.getAdmin(), userBody.getPassword());
 		if (admin_ == -1) {
 			log.error("管理员密码错误");
-			return new MyResponseEntity<>(Code.BAD_OPERATION, "管理员账号或密码错误", null);
+			return new MyResponseEntity<>(Code.BAD_OPERATION,
+					"Invalid Admin username or password", null);
+		}
+		long userId;
+		try {
+			userId = Long.parseLong(userBody.getUserId());
+		} catch (Exception e) {
+			log.error(userBody.getUserId());
+			return new MyResponseEntity<>(Code.BAD_REQUEST, "Invalid userId", null);
 		}
 		
 		if (this.adminService.deleteUser(userId)) {
-			return new MyResponseEntity<>(Code.OK, "成功了", null);
+			return MyResponseEntity.sendOK(null);
 		} else {
-			return new MyResponseEntity<>(Code.BAD_OPERATION, "用户不存在", null);
+			return new MyResponseEntity<>(Code.BAD_OPERATION, "User not exist", null);
 		}
 	}
 	

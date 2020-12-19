@@ -33,10 +33,10 @@ public class FileController {
             id = shareService.uploadFile(file,Long.parseLong(userId));
         }catch (IOException e){
             log.info("上传失败");
-            return new MyResponseEntity<>(Code.BAD_OPERATION,"文件上传失败",null);
+            return new MyResponseEntity<>(Code.BAD_OPERATION,"Upload fail",null);
         }
         log.info("上传成功");
-        return new MyResponseEntity<>(Code.BAD_OPERATION,"文件上传成功",id);
+        return MyResponseEntity.sendOK(null);
 
     }
 

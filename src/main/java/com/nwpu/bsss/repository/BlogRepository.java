@@ -22,4 +22,14 @@ public interface BlogRepository extends JpaRepository<BlogEntity, Long> {
 
 	@Query(nativeQuery = true, value = "select * from Blogs,Favorites where Favorites.UserId=?1 and Blogs.Id=Favorites.BlogId ")
 	List<BlogEntity> findFavoritesByUserId(long userId);
+
+	//通过userId查询用户关注的博主的博客列表，pageSize为一页最多包含的博客数量
+	@Query(nativeQuery = true, value = "select * from Blogs,Follow where Follow.BloggerId = Blogs.AuthorId and Follow.UserId = ?1 limit ?2")
+	List<BlogEntity> findFollowedByUserId(long userId, int pageSize);
+
+	@Query(value = "select * from Blogs ORDER BY LastModifiedTime DESC, Id DESC LIMIT ?1,15", nativeQuery = true)
+	List<BlogEntity> findRecentBlogs(long begin);
+
+	@Query(nativeQuery = true, value = "select * from Blogs where AuthorId = ?1 limit ?2,?3")
+	List<BlogEntity> findBlogsPageByUserId(long userId, int num, int pageSize);
 }

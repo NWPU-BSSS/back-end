@@ -4,17 +4,19 @@ package com.nwpu.bsss.response;
 import com.nwpu.bsss.domain.dto.Tag;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 //Todo:Tag的view还没做，现在反回空的tag列表
 public class BloggerTagResponse {
-    private ArrayList<Tag> tagList = new ArrayList<Tag>();
+    private HashMap<String,Tag> tagList ;
     public BloggerTagResponse(){
-        Tag tag = new Tag();
-        tag.setCount(1);
-        tag.setTagName("1");
-        tagList.add(tag);
+        this.tagList = new HashMap<String,Tag>();
     }
-    public ArrayList<Tag> getTagList(){
+    public HashMap<String,Tag> getTagList(){
         return tagList;
+    }
+
+    public void setTagList(HashMap<String, Tag> tagList) {
+        this.tagList = tagList;
     }
 }

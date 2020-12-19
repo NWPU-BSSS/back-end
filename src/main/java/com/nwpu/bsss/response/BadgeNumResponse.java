@@ -9,16 +9,7 @@ public class BadgeNumResponse {
     private int notice;
     private int like;
 
-    //TODO release2中，数据库暂时没有对应数据，无法得到具体数据，所以还没有写service层，冯凌畅 2020-11-22
-    public BadgeNumResponse(){
-        this.announcement = 1;
-        this.comment = 1;
-        this.follow = 1;
-        this.message = 1;
-        this.reply = 1;
-        this.notice = 1;
-        this.like = 1;
-    }
+
     public int getAnnouncement() {
         return announcement;
     }

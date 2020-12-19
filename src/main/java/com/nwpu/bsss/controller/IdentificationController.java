@@ -1,6 +1,7 @@
 package com.nwpu.bsss.controller;
 
 import com.nwpu.bsss.domain.AccessTokensEntity;
+import com.nwpu.bsss.domain.UnreadMessagesEntity;
 import com.nwpu.bsss.domain.UserEntity;
 import com.nwpu.bsss.domain.UserInfoEntity;
 import com.nwpu.bsss.domain.dto.LoginUserBody;
@@ -8,6 +9,7 @@ import com.nwpu.bsss.domain.dto.RegisterBody;
 import com.nwpu.bsss.exceptions.ValidationException;
 import com.nwpu.bsss.response.*;
 import com.nwpu.bsss.service.TokenCheckService;
+import com.nwpu.bsss.service.UnreadMessagesService;
 import com.nwpu.bsss.service.UserService;
 import com.nwpu.bsss.utils.UserInfoValidator;
 import com.nwpu.bsss.utils.VerifyClient;
@@ -35,15 +37,17 @@ public class IdentificationController {
     private TokenCheckService tokenCheckService;
     @Resource
     private VerifyClient verifyClient;
+    @Resource
+    private UnreadMessagesService unreadMessagesService;
 
     @PostMapping(path = "/usernameCheck")
     public MyResponseEntity<UsernameCheckResponse> checkUsername(@RequestBody RegisterBody registerBody) {
 
         UserEntity userEntity = userService.findByUsername(registerBody.getUsername());
         if (userEntity == null) {
-            return new MyResponseEntity<>(Code.OK, "用户名未被占用", new UsernameCheckResponse(false));
+            return new MyResponseEntity<>(Code.OK, "ok", new UsernameCheckResponse(false));
         }
-        return new MyResponseEntity<>(Code.OK, "用户名已被占用", new UsernameCheckResponse(true));
+        return new MyResponseEntity<>(Code.OK, "ok", new UsernameCheckResponse(true));
     }
 
     @PostMapping(path = "/emailCheck")
@@ -51,9 +55,9 @@ public class IdentificationController {
 
         UserEntity userEntity = userService.findByUserEmail(registerBody.getEmail());
         if (userEntity == null) {
-            return new MyResponseEntity<>(Code.OK, "邮箱未被占用", new UsernameCheckResponse(false));
+            return new MyResponseEntity<>(Code.OK, "ok", new UsernameCheckResponse(false));
         }
-        return new MyResponseEntity<>(Code.OK, "邮箱已被占用", new UsernameCheckResponse(true));
+        return new MyResponseEntity<>(Code.OK, "ok", new UsernameCheckResponse(true));
     }
 
     @PostMapping(path = "/register/verifyCode")
@@ -63,9 +67,9 @@ public class IdentificationController {
         String result = verifyClient.sentVerifyCode(registerBody.getEmail());
 
         if (result.equals("true")) {
-            return new MyResponseEntity<>(Code.OK, "验证码发送成功", null);
+            return new MyResponseEntity<>(Code.OK, "ok", null);
         } else {    //false
-            return new MyResponseEntity<>(Code.BAD_OPERATION, "验证码发送失败", null);
+            return new MyResponseEntity<>(Code.BAD_OPERATION, "Send verification code fail", null);
         }
     }
 
@@ -81,32 +85,36 @@ public class IdentificationController {
 
         //the exception throw here will be taken over by the 'advice' layer
         if (bindingResult.hasErrors()) {
-            throw new ValidationException("邮箱格式错误");
+            throw new ValidationException("Invalid email format");
         }
 
         //请求验证服务器验证邮箱和验证码
         String result = verifyClient.verifyEmail(registerBody.getEmail(), String.valueOf(registerBody.getVerifyCode()));
 
         if (result.equals("false")) {
-            return new MyResponseEntity<>(Code.BAD_OPERATION, "邮箱验证失败", null);
+            return new MyResponseEntity<>(Code.BAD_OPERATION, "Verification code check fail", null);
         } else {    //true
             try {
                 //创建用户
                 long userId = userService.createUser(user);
                 //外键设置
                 userInfo.setId(userId);
+                //添加未读消息行
+                long unreadMessagesId = unreadMessagesService.createUnreadMessages(new UnreadMessagesEntity(), userId);
                 try {
                     //创建用户扩展信息
+                    userInfo.setNickName(user.getUserName());//默认nickname为用户名,其他均为空
                     userService.createUserInfo(userInfo);
-                    return new MyResponseEntity<>(Code.OK, "注册成功", null);
+                    return new MyResponseEntity<>(Code.OK, "ok", null);
                 } catch (Exception e) {
                     e.printStackTrace();
-                    //如果UserInfo创建失败，同时删除刚创建的新user。
+                    //如果UserInfo创建失败，同时删除刚创建的新user以及未读消息行。
                     userService.deleteUser(user);
-                    return new MyResponseEntity<>(Code.BAD_OPERATION, "未知错误", null);
+                    unreadMessagesService.deleteUnreadMessageByUserId(userId);
+                    return new MyResponseEntity<>(Code.BAD_OPERATION, "Unknown error in server", null);
                 }
             } catch (DataIntegrityViolationException e) {
-                return new MyResponseEntity<>(Code.BAD_OPERATION, "该邮箱已被占用，请重试", null);
+                return new MyResponseEntity<>(Code.BAD_OPERATION, "Email or userName is already used", null);
             }
         }
     }
@@ -133,7 +141,7 @@ public class IdentificationController {
         try {
             password = userEntity.getPassword();
         } catch (NullPointerException e) {
-            return new MyResponseEntity<>(Code.BAD_OPERATION, "用户不存在", null);
+            return new MyResponseEntity<>(Code.BAD_OPERATION, "User not exist", null);
         }
 
         if (password.equals(loginUserBody.getPassword())) {
@@ -158,10 +166,10 @@ public class IdentificationController {
             userLoginResponse.setAccessToken(token);
             userLoginResponse.setUserId(userEntity.getId());
 
-            return new MyResponseEntity<>(Code.OK, "登录成功", userLoginResponse);
+            return new MyResponseEntity<>(Code.OK, "ok", userLoginResponse);
         } else {
             //登录失败
-            return new MyResponseEntity<>(Code.BAD_OPERATION, "密码错误", null);
+            return new MyResponseEntity<>(Code.BAD_OPERATION, "Password error", null);
         }
     }
 }

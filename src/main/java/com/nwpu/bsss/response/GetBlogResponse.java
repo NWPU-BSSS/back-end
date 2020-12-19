@@ -22,6 +22,7 @@ public class GetBlogResponse {
 	protected long commentNum;
 	protected long shareNum;
 	protected long favoriteNum;
+	private long bloggerId;
 	
 }
 

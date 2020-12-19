@@ -8,6 +8,7 @@ import com.nwpu.bsss.domain.dto.KeywordBlogJsonBody;
 import com.nwpu.bsss.domain.dto.ReBlogJsonBody;
 import com.nwpu.bsss.repository.*;
 import com.nwpu.bsss.service.BlogListService;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
@@ -31,6 +32,8 @@ public class BlogListServiceImpl implements BlogListService {
 	private FavoriteRepository favoriteRepository;
 	@Resource
 	private LikeRepository likeRepository;
+	@Value("${serverURL}")
+	private String serverURL;
 
 	@Override
 	public List<ReBlogJsonBody> getRecomBlog(int page) {
@@ -43,7 +46,7 @@ public class BlogListServiceImpl implements BlogListService {
 		for (int i=fromNum; i<toNum; i++) {
 			BlogEntity blog = blogList.get(i);
 			UserInfoEntity userInfo = this.userInfoRepository.findUserInfoById(blog.getAuthorId());
-			res.add(ReBlogJsonBody.parseJson(blog, userInfo.getNickName(), userInfo.getAvatarUrl()));
+			res.add(ReBlogJsonBody.parseJson(blog, userInfo.getNickName(),serverURL+userInfo.getAvatarUrl()));
 		}
 		return res;
 	}
@@ -72,6 +75,52 @@ public class BlogListServiceImpl implements BlogListService {
 		for (BlogEntity blog : blogList) {
 			UserInfoEntity userInfo = userInfoRepository.findUserInfoById(blog.getAuthorId());
 			res.add(FavBlogJsonBody.parseJson(blog, userInfo.getNickName()));
+		}
+		return res;
+	}
+
+	@Override
+	public List<KeywordBlogJsonBody> getFollowedBlog(long userId) {
+		int pageSize = 15;
+		List<BlogEntity> blogList = blogRepository.findFollowedByUserId(userId, pageSize);
+		List<KeywordBlogJsonBody> res = new ArrayList<KeywordBlogJsonBody>();
+		for(BlogEntity blogEntity:blogList){
+			long authorId = blogEntity.getAuthorId();
+			UserInfoEntity userInfo = userInfoRepository.findUserInfoById(authorId);
+			long favoriteNum = favoriteRepository.getBlogFavoritesNum(blogEntity.getId());
+			long likeNum = likeRepository.getBlogLikesNum(blogEntity.getId());
+			long commentNum = commentRepository.getBlogCommentsNum(blogEntity.getId());
+			res.add(KeywordBlogJsonBody.parseJson(blogEntity,userInfo.getNickName(),serverURL+userInfo.getAvatarUrl(),favoriteNum,likeNum,commentNum));
+		}
+		return res;
+	}
+
+	@Override
+	public List<KeywordBlogJsonBody> getRecentBlog(long page) {
+		long begin=page*15;
+		List<BlogEntity> blogEntityList=this.blogRepository.findRecentBlogs(begin);
+		List<KeywordBlogJsonBody> res=new ArrayList<KeywordBlogJsonBody>();
+		for(BlogEntity currentBlog:blogEntityList){
+			UserInfoEntity userInfo = this.userInfoRepository.findUserInfoById(currentBlog.getAuthorId());
+			long favoriteNum=this.favoriteRepository.getBlogFavoritesNum(currentBlog.getId());
+			long likeNum=this.likeRepository.getBlogLikesNum(currentBlog.getId());
+			long commentNum=this.commentRepository.getBlogCommentsNum(currentBlog.getId());
+			res.add(KeywordBlogJsonBody.parseJson(currentBlog,userInfo.getNickName(),serverURL+userInfo.getAvatarUrl(),favoriteNum,likeNum,commentNum));
+		}
+		return res;
+	}
+
+	@Override
+	public List<KeywordBlogJsonBody> getBlogsPageByUserId(long userId, int page, int pageSize) {
+		int num = page * pageSize;
+		List<BlogEntity> blogList = blogRepository.findBlogsPageByUserId(userId, num, pageSize);
+		List<KeywordBlogJsonBody> res = new ArrayList<>();
+		UserInfoEntity userInfo = userInfoRepository.findUserInfoById(userId);
+		for(BlogEntity blogEntity:blogList){
+			long favoriteNum = favoriteRepository.getBlogFavoritesNum(blogEntity.getId());
+			long likeNum = likeRepository.getBlogLikesNum(blogEntity.getId());
+			long commentNum = commentRepository.getBlogCommentsNum(blogEntity.getId());
+			res.add(KeywordBlogJsonBody.parseJson(blogEntity, userInfo.getNickName(),serverURL+userInfo.getAvatarUrl(), favoriteNum, likeNum, commentNum));
 		}
 		return res;
 	}

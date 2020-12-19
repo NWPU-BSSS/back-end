@@ -3,15 +3,18 @@ package com.nwpu.bsss.domain;
 import javax.persistence.*;
 
 @Entity
-@Table(name = "Follow", schema = "BSSS")
+@Table(name = "Follow", schema = "BSSS", catalog = "")
 public class FollowEntity {
     private long id;
     private long bloggerId;
     private long userId;
+    private UserEntity usersByBloggerId;
+    private UserEntity usersByUserId;
 
     public FollowEntity(){
 
     }
+
     public FollowEntity(long bloggerId, long userId){
         this.bloggerId = bloggerId;
         this.userId = userId;
@@ -29,12 +32,12 @@ public class FollowEntity {
 
     @Basic
     @Column(name = "BloggerId")
-    public long getBlogerId() {
+    public long getBloggerId() {
         return bloggerId;
     }
 
-    public void setBlogerId(long blogerId) {
-        this.bloggerId = blogerId;
+    public void setBloggerId(long bloggerId) {
+        this.bloggerId = bloggerId;
     }
 
     @Basic
@@ -63,5 +66,25 @@ public class FollowEntity {
         result = 31 * result + (int) (bloggerId ^ (bloggerId >>> 32));
         result = 31 * result + (int) (userId ^ (userId >>> 32));
         return result;
+    }
+
+    @ManyToOne
+    @JoinColumn(name = "BloggerId", referencedColumnName = "Id", nullable = false,insertable = false, updatable = false)
+    public UserEntity getUsersByBloggerId() {
+        return usersByBloggerId;
+    }
+
+    public void setUsersByBloggerId(UserEntity usersByBloggerId) {
+        this.usersByBloggerId = usersByBloggerId;
+    }
+
+    @ManyToOne
+    @JoinColumn(name = "UserId", referencedColumnName = "Id", nullable = false,insertable = false, updatable = false)
+    public UserEntity getUsersByUserId() {
+        return usersByUserId;
+    }
+
+    public void setUsersByUserId(UserEntity usersByUserId) {
+        this.usersByUserId = usersByUserId;
     }
 }

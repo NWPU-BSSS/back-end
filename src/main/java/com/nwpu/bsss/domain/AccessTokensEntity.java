@@ -20,6 +20,7 @@ public class AccessTokensEntity {
     private String accessToken;
     private long userId;
     private Timestamp time;
+    private UserEntity usersByUserId;
 
     public AccessTokensEntity(String accessToken, long userId) {
         this.accessToken = accessToken;
@@ -79,5 +80,15 @@ public class AccessTokensEntity {
     @Override
     public int hashCode() {
         return Objects.hash(id, accessToken, userId, time);
+    }
+
+    @ManyToOne
+    @JoinColumn(name = "UserId", referencedColumnName = "Id", nullable = false,insertable = false, updatable = false)
+    public UserEntity getUsersByUserId() {
+        return usersByUserId;
+    }
+
+    public void setUsersByUserId(UserEntity usersByUserId) {
+        this.usersByUserId = usersByUserId;
     }
 }

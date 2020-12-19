@@ -30,6 +30,7 @@ server:
     context-path: /api
 
 filepath: ./file/
+avatarPath: ./root/avatar/
 
 #mybatis:
 #  mapper-locations: classpath:mapper/*.xml

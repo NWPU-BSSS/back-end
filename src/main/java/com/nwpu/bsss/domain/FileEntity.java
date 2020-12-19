@@ -5,12 +5,13 @@ import java.sql.Timestamp;
 import java.util.Objects;
 
 @Entity
-@Table(name = "File", schema = "BSSS")
+@Table(name = "File", schema = "BSSS", catalog = "")
 public class FileEntity {
     private long fileId;
     private String fileName;
     private Timestamp time;
     private long userId;
+    private UserEntity usersByUserId;
 
     @Id
     @Column(name = "FileId")
@@ -66,5 +67,15 @@ public class FileEntity {
 
     public void setUserId(long userId) {
         this.userId = userId;
+    }
+
+    @ManyToOne
+    @JoinColumn(name = "UserId", referencedColumnName = "Id",insertable = false, updatable = false)
+    public UserEntity getUsersByUserId() {
+        return usersByUserId;
+    }
+
+    public void setUsersByUserId(UserEntity usersByUserId) {
+        this.usersByUserId = usersByUserId;
     }
 }
